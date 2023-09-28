@@ -13,9 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
-        android:text="@string/sign_in"
-        android:textColor="@color/black"
-        android:textSize="36sp"
+        android:text="@string/login"
+        android:textColor="@color/background_dark"
+        android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,10 +25,9 @@
         style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:boxCornerRadiusBottomEnd="16dp"
-        app:boxCornerRadiusBottomStart="16dp"
-        app:boxCornerRadiusTopEnd="16dp"
-        app:boxCornerRadiusTopStart="16dp"
+        android:layout_marginTop="24dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
         app:endIconMode="clear_text"
         app:helperText="Required"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,20 +38,22 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/round_corners"
             android:hint="@string/username"
             android:inputType="text"
             tools:ignore="TouchTargetSizeCheck" />
     </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordTxtInLayout"
         style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:boxCornerRadiusBottomEnd="16dp"
-        app:boxCornerRadiusBottomStart="16dp"
-        app:boxCornerRadiusTopEnd="16dp"
-        app:boxCornerRadiusTopStart="16dp"
+
+        android:layout_marginTop="8dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
         app:endIconMode="password_toggle"
         app:helperText="Required"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,10 +65,65 @@
             android:id="@+id/passwordTxtInET"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/round_corners"
             android:hint="@string/password"
             android:inputType="textPassword"
             tools:ignore="TouchTargetSizeCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/signInBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/round_corners"
+        android:backgroundTint="@color/background_dark"
+        android:text="@string/login"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@id/passwordTxtInLayout"
+        app:layout_constraintStart_toStartOf="@id/passwordTxtInLayout"
+        app:layout_constraintTop_toBottomOf="@id/passwordTxtInLayout" />
+
+    <TextView
+        android:id="@+id/registerBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/register"
+        android:textColor="@color/background_dark"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@id/signInBtn"
+        app:layout_constraintTop_toBottomOf="@id/signInBtn" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/signInWithGoogleBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:background="@drawable/round_corners"
+        android:drawableStart="@drawable/icons8_google"
+        android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
+        android:padding="8dp"
+        android:text="@string/login_with_google"
+        app:layout_constraintEnd_toEndOf="@id/signInBtn"
+        app:layout_constraintStart_toStartOf="@id/signInBtn"
+        app:layout_constraintTop_toBottomOf="@id/registerBtn" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/signInWithFacebookBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/round_corners"
+        android:drawableStart="@drawable/icons8_facebook"
+        android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
+        android:padding="8dp"
+        android:text="@string/login_with_facebook"
+        app:layout_constraintEnd_toEndOf="@id/signInWithGoogleBtn"
+        app:layout_constraintStart_toStartOf="@id/signInWithGoogleBtn"
+        app:layout_constraintTop_toBottomOf="@id/signInWithGoogleBtn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
