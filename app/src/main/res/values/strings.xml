@@ -6,5 +6,11 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="login_with_google">Login with Google</string>
     <string name="login_with_facebook">Login with Facebook</string>
-    <string name="register"><u>Register</u></string>
+    <string name="underline_register_button"><u>Register</u></string>
+    <string name="underline_login_button"><u>Login</u></string>
+    <string name="register">Register</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register_with_google">Register with Google</string>
+    <string name="register_with_facebook">Register with Facebook</string>
+    <string name="welcome_to_your_food_planner">Welcome to Your Food Planner</string>
 </resources>

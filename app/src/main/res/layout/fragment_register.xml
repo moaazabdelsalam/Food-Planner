@@ -6,14 +6,14 @@
     android:layout_height="wrap_content"
     android:background="@drawable/custom_corners"
     android:padding="24dp"
-    tools:context=".LoginFragment">
+    tools:context=".RegisterFragment">
 
     <TextView
-        android:id="@+id/singInTxt"
+        android:id="@+id/registerTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
-        android:text="@string/login"
+        android:text="@string/register"
         android:textColor="@color/background_dark"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/loginUsernameTxtInLayout"
+        android:id="@+id/registerUsernameTxtInLayout"
         style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -32,11 +32,11 @@
         app:helperText="Required"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/singInTxt"
+        app:layout_constraintTop_toBottomOf="@id/registerTxt"
         app:startIconDrawable="@drawable/ic_baseline_person_24">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/loginUsernameTxtInET"
+            android:id="@+id/registerUsernameTxtInET"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/round_corners"
@@ -47,7 +47,7 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/loginPasswordTxtInLayout"
+        android:id="@+id/RegisterPasswordTxtInLayout"
         style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -58,11 +58,11 @@
         app:helperText="Required"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginUsernameTxtInLayout"
+        app:layout_constraintTop_toBottomOf="@id/registerUsernameTxtInLayout"
         app:startIconDrawable="@drawable/ic_baseline_lock_24">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/loginPasswordTxtInET"
+            android:id="@+id/registerPasswordTxtInET"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/round_corners"
@@ -72,31 +72,57 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/confirmPasswordTxtInLayout"
+        style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:endIconMode="password_toggle"
+        app:helperText="Required"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/RegisterPasswordTxtInLayout"
+        app:startIconDrawable="@drawable/ic_baseline_lock_24">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/confirmPasswordTxtInET"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/round_corners"
+            android:hint="@string/confirm_password"
+            android:inputType="textPassword"
+            tools:ignore="TouchTargetSizeCheck" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/loginBtn"
+        android:id="@+id/registerBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:background="@drawable/round_corners"
         android:backgroundTint="@color/background_dark"
-        android:text="@string/login"
+        android:text="@string/register"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@id/loginPasswordTxtInLayout"
-        app:layout_constraintStart_toStartOf="@id/loginPasswordTxtInLayout"
-        app:layout_constraintTop_toBottomOf="@id/loginPasswordTxtInLayout" />
+        app:layout_constraintEnd_toEndOf="@id/confirmPasswordTxtInLayout"
+        app:layout_constraintStart_toStartOf="@id/confirmPasswordTxtInLayout"
+        app:layout_constraintTop_toBottomOf="@id/confirmPasswordTxtInLayout" />
 
     <TextView
-        android:id="@+id/underlineRegisterBtn"
+        android:id="@+id/underlineLoginBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:clickable="true"
         android:focusable="true"
-        android:text="@string/underline_register_button"
+        android:text="@string/underline_login_button"
         android:textColor="@color/background_dark"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@id/loginBtn"
-        app:layout_constraintTop_toBottomOf="@id/loginBtn" />
+        app:layout_constraintStart_toStartOf="@id/registerBtn"
+        app:layout_constraintTop_toBottomOf="@id/registerBtn" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signInWithGoogleBtn"
@@ -107,10 +133,10 @@
         android:drawableStart="@drawable/icons8_google"
         android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
         android:padding="8dp"
-        android:text="@string/login_with_google"
-        app:layout_constraintEnd_toEndOf="@id/loginBtn"
-        app:layout_constraintStart_toStartOf="@id/loginBtn"
-        app:layout_constraintTop_toBottomOf="@id/underlineRegisterBtn" />
+        android:text="@string/register_with_google"
+        app:layout_constraintEnd_toEndOf="@id/registerBtn"
+        app:layout_constraintStart_toStartOf="@id/registerBtn"
+        app:layout_constraintTop_toBottomOf="@id/underlineLoginBtn" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signInWithFacebookBtn"
@@ -122,7 +148,7 @@
         android:drawableStart="@drawable/icons8_facebook"
         android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
         android:padding="8dp"
-        android:text="@string/login_with_facebook"
+        android:text="@string/register_with_facebook"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/signInWithGoogleBtn"
         app:layout_constraintStart_toStartOf="@id/signInWithGoogleBtn"
