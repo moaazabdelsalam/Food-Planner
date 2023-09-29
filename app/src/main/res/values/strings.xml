@@ -13,4 +13,10 @@
     <string name="register_with_google">Register with Google</string>
     <string name="register_with_facebook">Register with Facebook</string>
     <string name="welcome_to_your_food_planner">Welcome to Your Food Planner</string>
+    <string name="home">Home</string>
+    <string name="favorite">Favorite</string>
+    <string name="search">Search</string>
+    <string name="my_plan">My Plan</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
