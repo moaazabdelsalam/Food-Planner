@@ -1,15 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".search.view.SearchFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Search Fragment" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_corners"
+        app:iconifiedByDefault="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryHint="Search for a meal" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/allIngredientsTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/all_ingredients"
+        android:textColor="?attr/textFillColor"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/searchView" />
+
+    <TextView
+        android:id="@+id/showAllIngredients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/show_all"
+        android:textColor="?attr/textFillColor"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/allIngredientsTxt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/allIngredientsTxt" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allIngredientsRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/allIngredientsTxt" />
+
+    <TextView
+        android:id="@+id/allCategoriesTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/all_categories"
+        android:textColor="?attr/textFillColor"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/allIngredientsRV" />
+
+    <TextView
+        android:id="@+id/showAllCategories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/show_all"
+        android:textColor="?attr/textFillColor"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/allCategoriesTxt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/allCategoriesTxt" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allCategoriesRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/allCategoriesTxt" />
+
+    <TextView
+        android:id="@+id/allCountriesTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/all_countries"
+        android:textColor="?attr/textFillColor"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/allCategoriesRV" />
+
+    <TextView
+        android:id="@+id/showAllCountries"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/show_all"
+        android:textColor="?attr/textFillColor"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@id/allCountriesTxt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/allCountriesTxt" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/allCountriesRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/allCountriesTxt" />
+</androidx.constraintlayout.widget.ConstraintLayout>
