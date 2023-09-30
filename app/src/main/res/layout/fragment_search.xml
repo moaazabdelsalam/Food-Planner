@@ -42,11 +42,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/allIngredientsTxt" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="306dp" />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/ingredientShimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/allIngredientsTxt">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <include layout="@layout/list_item_shimmer" />
+
+            <include layout="@layout/list_item_shimmer" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/allIngredientsRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@id/allIngredientsTxt" />
 
     <TextView
@@ -58,7 +84,7 @@
         android:textColor="?attr/textFillColor"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/allIngredientsRV" />
+        app:layout_constraintTop_toBottomOf="@id/guideline" />
 
     <TextView
         android:id="@+id/showAllCategories"
@@ -73,41 +99,62 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/allCategoriesTxt" />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/categoryShimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/allCategoriesTxt">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <include layout="@layout/list_item_shimmer" />
+
+            <include layout="@layout/list_item_shimmer" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/allCategoriesRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@id/allCategoriesTxt" />
 
-    <TextView
-        android:id="@+id/allCountriesTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/all_countries"
-        android:textColor="?attr/textFillColor"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/allCategoriesRV" />
+    <!--    <TextView-->
+    <!--        android:id="@+id/allCountriesTxt"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="16dp"-->
+    <!--        android:text="@string/all_countries"-->
+    <!--        android:textColor="?attr/textFillColor"-->
+    <!--        android:textSize="18sp"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/allCategoriesRV" />-->
 
-    <TextView
-        android:id="@+id/showAllCountries"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="@string/show_all"
-        android:textColor="?attr/textFillColor"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="@id/allCountriesTxt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/allCountriesTxt" />
+    <!--    <TextView-->
+    <!--        android:id="@+id/showAllCountries"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:clickable="true"-->
+    <!--        android:focusable="true"-->
+    <!--        android:text="@string/show_all"-->
+    <!--        android:textColor="?attr/textFillColor"-->
+    <!--        android:textSize="14sp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/allCountriesTxt"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/allCountriesTxt" />-->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/allCountriesRV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/allCountriesTxt" />
+    <!--    <androidx.recyclerview.widget.RecyclerView-->
+    <!--        android:id="@+id/allCountriesRV"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/allCountriesTxt" />-->
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
