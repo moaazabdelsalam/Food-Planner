@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.project.foodplanner.home.view.HomeViewInterface;
-import com.project.foodplanner.model.Category;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.RepositoryInterface;
 import com.project.foodplanner.model.RequestCode;
@@ -24,6 +23,11 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback {
     @Override
     public void getRandomMeal() {
         repository.makeRandomMealCall(this);
+    }
+
+    @Override
+    public void addMealToFavorite(Meal meal) {
+        repository.addMealToDatabase(meal);
     }
 
     @Override

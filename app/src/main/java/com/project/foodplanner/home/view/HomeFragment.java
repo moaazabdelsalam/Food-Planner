@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.project.foodplanner.R;
+import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.home.presenter.HomePresenter;
 import com.project.foodplanner.home.presenter.HomePresenterInterface;
 import com.project.foodplanner.model.Meal;
@@ -31,6 +32,7 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
     ImageView addFavoriteIcon;
     TextView todayMealNameTxt;
     Button addToPlanBtn;
+    Meal todayMeal;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,9 +51,15 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
         super.onViewCreated(view, savedInstanceState);
 
         initializeViews(view);
-
-        presenter = new HomePresenter(this, Repository.getInstance(MealClient.getInstance()));
         presenter.getRandomMeal();
+        addFavoriteIcon.setOnClickListener(view1 -> {
+            if (todayMeal.isFavorite()) {
+                addFavoriteIcon.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+            } else {
+                addFavoriteIcon.setImageResource(R.drawable.ic_baseline_favorite_24);
+                presenter.addMealToFavorite(todayMeal);
+            }
+        });
     }
 
     @Override
@@ -60,9 +68,10 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
         todayMealShimmerLayout.setVisibility(View.GONE);
         todayMealView.setVisibility(View.VISIBLE);
 
-        Glide.with(getContext()).load(meal.getStrMealThumb()).into(todayMealImgView);
+        Glide.with(getContext()).load(meal.getStrMealThumb()).placeholder(R.drawable.image_placeholder).into(todayMealImgView);
         todayMealNameTxt.setText(meal.getStrMeal());
         addFavoriteIcon.setImageResource(meal.isFavorite() ? R.drawable.ic_baseline_favorite_24 : R.drawable.ic_baseline_favorite_border_24);
+        todayMeal = meal;
     }
 
     private void initializeViews(View view) {
@@ -74,5 +83,6 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
         addFavoriteIcon = view.findViewById(R.id.addFavoriteIcon);
         todayMealNameTxt = view.findViewById(R.id.todayMealNameTxt);
         addToPlanBtn = view.findViewById(R.id.addToPlanBtn);
+        presenter = new HomePresenter(this, Repository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())));
     }
 }

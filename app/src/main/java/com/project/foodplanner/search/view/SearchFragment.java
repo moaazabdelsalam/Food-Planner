@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.project.foodplanner.R;
+import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.model.Category;
 import com.project.foodplanner.model.Ingredient;
 import com.project.foodplanner.model.Repository;
@@ -100,6 +101,12 @@ public class SearchFragment extends Fragment implements SearchViewInterface {
         categoryShimmerFrameLayout = view.findViewById(R.id.categoryShimmerLayout);
         categoryShimmerFrameLayout.startShimmerAnimation();
 
-        presenter = new SearchPresenter(this, Repository.getInstance(MealClient.getInstance()));
+        presenter = new SearchPresenter(
+                this,
+                Repository.getInstance(
+                        MealClient.getInstance(),
+                        ConcreteLocalSource.getInstance(getContext())
+                )
+        );
     }
 }

@@ -1,5 +1,6 @@
 package com.project.foodplanner.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -8,6 +9,7 @@ import androidx.room.PrimaryKey;
 public class Meal {
 
     @PrimaryKey
+    @NonNull
     private String idMeal;
     private String strMeal;
     private String strCategory;
@@ -17,6 +19,9 @@ public class Meal {
 
     @Ignore
     private boolean isFavorite;
+
+    public Meal() {
+    }
 
     public Meal(String idMeal, String strMeal, String strCategory, String strArea, String strMealThumb, String strTags, boolean isFavorite) {
         this.idMeal = idMeal;

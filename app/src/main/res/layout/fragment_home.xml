@@ -31,6 +31,7 @@
             android:orientation="horizontal">
 
             <include layout="@layout/view_item_shimmer" />
+
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -48,34 +49,37 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/todayMealImgView"
                 android:layout_width="0dp"
-                android:layout_height="250dp"
+                android:layout_height="0dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/image_placeholder"
+                app:layout_constraintBottom_toTopOf="@id/guideline3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/addFavoriteIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/round_corners"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/oval_shape"
                 android:clickable="true"
                 android:focusable="true"
+                android:padding="2dp"
                 android:src="@drawable/ic_baseline_favorite_border_24"
-                app:layout_constraintBottom_toBottomOf="@id/todayMealImgView"
+                app:layout_constraintBottom_toTopOf="@id/todayMealNameTxt"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
                 android:id="@+id/todayMealNameTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -86,14 +90,24 @@
                 android:id="@+id/addToPlanBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/round_corners"
                 android:text="@string/add_to_your_plan"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/todayMealNameTxt" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="249dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
