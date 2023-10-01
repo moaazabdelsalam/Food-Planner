@@ -19,7 +19,8 @@ public class Repository implements RepositoryInterface {
     }
 
     public static Repository getInstance(RemoteSource remoteSource, LocalSource localSource) {
-        if (instance == null) return new Repository(remoteSource, localSource);
+        if (instance == null)
+            instance = new Repository(remoteSource, localSource);
         return instance;
     }
 

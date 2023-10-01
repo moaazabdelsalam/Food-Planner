@@ -22,15 +22,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MealClient implements RemoteSource {
     private static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
-    public static final String TAG = "products client";
+    public static final String TAG = "TAG products client";
     private static MealClient instance = null;
 
     public static MealClient getInstance() {
-        if (instance == null) {
-            return new MealClient();
-        } else {
-            return instance;
-        }
+        if (instance == null)
+            instance = new MealClient();
+        return instance;
     }
 
     @Override
@@ -46,7 +44,7 @@ public class MealClient implements RemoteSource {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                networkCallback.onFailureResult(t.getMessage());
+                networkCallback.onFailureResult(RequestCode.CATEGORIES_REQ, t.getMessage());
                 Log.i(TAG, "onFailure: " + t.getCause());
             }
         });
@@ -65,7 +63,7 @@ public class MealClient implements RemoteSource {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                networkCallback.onFailureResult(t.getMessage());
+                networkCallback.onFailureResult(RequestCode.INGREDIENTS_REQ, t.getMessage());
             }
         });
     }
@@ -83,7 +81,7 @@ public class MealClient implements RemoteSource {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                networkCallback.onFailureResult(t.getMessage());
+                networkCallback.onFailureResult(RequestCode.RANDOM_MEAL_REQ, t.getMessage());
             }
         });
     }

@@ -8,6 +8,7 @@ import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.RepositoryInterface;
 import com.project.foodplanner.model.RequestCode;
 import com.project.foodplanner.network.NetworkCallback;
+import com.project.foodplanner.utils.DummyCache;
 
 import java.util.List;
 
@@ -21,13 +22,18 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback {
     }
 
     @Override
-    public void getRandomMeal() {
+    public void getTodayMeal() {
+        if (DummyCache.getInstance().getTodayMealCache() != null) {
+            view.showTodayMeal(DummyCache.getInstance().getTodayMealCache());
+            return;
+        }
         repository.makeRandomMealCall(this);
     }
 
     @Override
     public void addMealToFavorite(Meal meal) {
         repository.addMealToDatabase(meal);
+        DummyCache.getInstance().setTodayMealCache(meal);
     }
 
     @Override
@@ -37,12 +43,13 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback {
                 TypeToken<List<Meal>> mealTypeToken = new TypeToken<List<Meal>>() {
                 };
                 List<Meal> todayMeal = new Gson().fromJson(jsonObject.get("meals"), mealTypeToken.getType());
+                DummyCache.getInstance().setTodayMealCache(todayMeal.get(0));
                 view.showTodayMeal(todayMeal.get(0));
         }
     }
 
     @Override
-    public void onFailureResult(String errorMsg) {
+    public void onFailureResult(RequestCode requestCode, String errorMsg) {
 
     }
 }

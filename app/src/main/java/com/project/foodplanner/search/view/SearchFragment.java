@@ -70,7 +70,7 @@ public class SearchFragment extends Fragment implements SearchViewInterface {
 
     @Override
     public void showIngredientList(List<Ingredient> ingredientList) {
-        ingredientsAdapter.updateIngredientList(ingredientList.subList(0, 10));
+        ingredientsAdapter.updateIngredientList(ingredientList);
         Log.i(TAG, "showIngredientList: " + ingredientList);
         ingredientShimmerFrameLayout.stopShimmerAnimation();
         ingredientShimmerFrameLayout.setVisibility(View.GONE);

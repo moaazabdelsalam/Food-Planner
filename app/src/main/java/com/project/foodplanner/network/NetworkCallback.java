@@ -9,5 +9,5 @@ import java.util.List;
 public interface NetworkCallback {
     void onSuccessResult(RequestCode requestCode, JsonObject jsonObject);
 
-    void onFailureResult(String errorMsg);
+    void onFailureResult(RequestCode requestCode, String errorMsg);
 }

@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
         super.onViewCreated(view, savedInstanceState);
 
         initializeViews(view);
-        presenter.getRandomMeal();
+        presenter.getTodayMeal();
         addFavoriteIcon.setOnClickListener(view1 -> {
             if (todayMeal.isFavorite()) {
                 addFavoriteIcon.setImageResource(R.drawable.ic_baseline_favorite_border_24);
@@ -59,6 +59,7 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
                 addFavoriteIcon.setImageResource(R.drawable.ic_baseline_favorite_24);
                 presenter.addMealToFavorite(todayMeal);
             }
+            todayMeal.setFavorite(!todayMeal.isFavorite());
         });
     }
 
