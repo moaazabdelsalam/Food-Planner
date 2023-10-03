@@ -69,6 +69,11 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
+    public Single<MealResponse> getMealById(String mealId) {
+        return remoteSource.getMealById(mealId);
+    }
+
+    @Override
     public void addMealToDatabase(Meal meal) {
         localSource.addMeal(meal);
     }

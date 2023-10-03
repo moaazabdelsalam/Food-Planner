@@ -36,4 +36,6 @@ public interface MealService {
     @GET("filter.php")
     Single<MealResponse> filterByCountry(@Query("a") String country);
 
+    @GET("lookup.php")
+    Single<MealResponse> getMealById(@Query(("i")) String mealId);
 }

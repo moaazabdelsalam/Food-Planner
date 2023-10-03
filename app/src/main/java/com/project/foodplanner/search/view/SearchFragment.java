@@ -104,7 +104,7 @@ public class SearchFragment extends Fragment implements SearchViewInterface {
         categoryRecyclerView.setLayoutManager(linearLayoutManager);
         categoryRecyclerView.setAdapter(categoriesAdapter);
 
-        ingredientsAdapter = new IngredientsAdapter(getContext(), new ArrayList<>());
+        ingredientsAdapter = new IngredientsAdapter(getActivity(), new ArrayList<>());
         ingredientRecyclerView.setLayoutManager(linearLayoutManager0);
         ingredientRecyclerView.setAdapter(ingredientsAdapter);
 

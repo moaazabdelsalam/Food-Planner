@@ -152,6 +152,14 @@ public class MealClient implements RemoteSource {
                 .doOnSuccess(success -> Log.i(TAG, "filterByCountry: success"));
     }
 
+    @Override
+    public Single<MealResponse> getMealById(String mealId) {
+        return makeNetworkCall().getMealById(mealId)
+                .doOnSubscribe(sub -> Log.i(TAG, "getMealById: subscribe"))
+                .doOnError(error -> Log.i(TAG, "getMealById: error" + error.getMessage()))
+                .doOnSuccess(success -> Log.i(TAG, "getMealById: success"));
+    }
+
     public MealService makeNetworkCall() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)

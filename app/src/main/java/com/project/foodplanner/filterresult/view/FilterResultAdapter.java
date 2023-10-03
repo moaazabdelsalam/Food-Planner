@@ -47,6 +47,7 @@ public class FilterResultAdapter extends RecyclerView.Adapter<FilterResultAdapte
         holder.mealNameTxt.setText(meal.getStrMeal());
         holder.addFavoriteIcon.setImageResource(meal.isFavorite() ? R.drawable.ic_baseline_favorite_24 : R.drawable.ic_baseline_favorite_border_24);
         holder.addToPlanBtn.setOnClickListener(view -> Log.i("TAG", "onBindViewHolder: showing meal..."));
+        holder.mealImgView.setOnClickListener(view -> filterClickListener.showMealDetails(meal));
     }
 
     @Override

@@ -57,4 +57,5 @@ public class FilterResultPresenter implements FilterResultPresenterInterface {
                         item -> view.updateAdapterList(item.getMeals())
                 );
     }
+
 }

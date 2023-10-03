@@ -87,4 +87,10 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
         } else
             filterResultAdapter.updateMealList(mealList);
     }
+
+    @Override
+    public void showMealDetails(Meal meal) {
+        FilterResultFragmentDirections.ActionFilterResultFragmentToMealDetailsFragment action = FilterResultFragmentDirections.actionFilterResultFragmentToMealDetailsFragment(meal);
+        Navigation.findNavController(recyclerView).navigate(action);
+    }
 }

@@ -26,6 +26,8 @@ public interface RepositoryInterface {
 
     Single<MealResponse> filterByCountry(String country);
 
+    Single<MealResponse> getMealById(String mealId);
+
     void addMealToDatabase(Meal meal);
 
     void removeMealFromDatabase(Meal meal);

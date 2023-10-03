@@ -21,4 +21,6 @@ public interface RemoteSource {
     Single<MealResponse> filterByCategory(String category);
 
     Single<MealResponse> filterByCountry(String country);
+
+    Single<MealResponse> getMealById(String mealId);
 }
