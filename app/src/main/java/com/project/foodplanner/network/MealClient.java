@@ -10,12 +10,15 @@ import com.project.foodplanner.model.Country;
 import com.project.foodplanner.model.Ingredient;
 import com.project.foodplanner.model.IngredientResponse;
 import com.project.foodplanner.model.CategoryResponse;
+import com.project.foodplanner.model.MealResponse;
 import com.project.foodplanner.model.RequestCode;
 import com.project.foodplanner.model.ResponseModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
+import io.reactivex.rxjava3.core.Single;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -125,10 +128,35 @@ public class MealClient implements RemoteSource {
         });
     }
 
+    @Override
+    public Single<MealResponse> filterByIngredient(String ingredient) {
+        return makeNetworkCall().filterByIngredient(ingredient)
+                .doOnSubscribe(sub -> Log.i(TAG, "filterByIngredient: subscribe"))
+                .doOnError(error -> Log.i(TAG, "filterByIngredient: error" + error.getMessage()))
+                .doOnSuccess(success -> Log.i(TAG, "filterByIngredient: success"));
+    }
+
+    @Override
+    public Single<MealResponse> filterByCategory(String category) {
+        return makeNetworkCall().filterByCategory(category)
+                .doOnSubscribe(sub -> Log.i(TAG, "filterByCategory: subscribe"))
+                .doOnError(error -> Log.i(TAG, "filterByCategory: error" + error.getMessage()))
+                .doOnSuccess(success -> Log.i(TAG, "filterByCategory: success"));
+    }
+
+    @Override
+    public Single<MealResponse> filterByCountry(String country) {
+        return makeNetworkCall().filterByCountry(country)
+                .doOnSubscribe(sub -> Log.i(TAG, "filterByCountry: subscribe"))
+                .doOnError(error -> Log.i(TAG, "filterByCountry: error" + error.getMessage()))
+                .doOnSuccess(success -> Log.i(TAG, "filterByCountry: success"));
+    }
+
     public MealService makeNetworkCall() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .build();
         return retrofit.create(MealService.class);
     }

@@ -1,12 +1,15 @@
 package com.project.foodplanner.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "favorite_meals")
-public class Meal {
+public class Meal implements Parcelable {
 
     @PrimaryKey
     @NonNull
@@ -32,6 +35,28 @@ public class Meal {
         this.strTags = strTags;
         this.isFavorite = isFavorite;
     }
+
+    protected Meal(Parcel in) {
+        idMeal = in.readString();
+        strMeal = in.readString();
+        strCategory = in.readString();
+        strArea = in.readString();
+        strMealThumb = in.readString();
+        strTags = in.readString();
+        isFavorite = in.readByte() != 0;
+    }
+
+    public static final Creator<Meal> CREATOR = new Creator<Meal>() {
+        @Override
+        public Meal createFromParcel(Parcel in) {
+            return new Meal(in);
+        }
+
+        @Override
+        public Meal[] newArray(int size) {
+            return new Meal[size];
+        }
+    };
 
     public String getIdMeal() {
         return idMeal;
@@ -87,5 +112,21 @@ public class Meal {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeString(idMeal);
+        parcel.writeString(strMeal);
+        parcel.writeString(strCategory);
+        parcel.writeString(strArea);
+        parcel.writeString(strMealThumb);
+        parcel.writeString(strTags);
+        parcel.writeByte((byte) (isFavorite ? 1 : 0));
     }
 }

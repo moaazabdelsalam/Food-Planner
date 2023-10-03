@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.foodplanner.R;
@@ -19,16 +20,18 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.ViewHold
 
     private final Context context;
     private List<Country> countryList;
+    FilterClickListener filterClickListener;
     private static CountryAdapter instance = null;
 
-    private CountryAdapter(Context context, List<Country> countryList) {
+    private CountryAdapter(Context context, List<Country> countryList, FilterClickListener filterClickListener) {
         this.context = context;
         this.countryList = countryList;
+        this.filterClickListener = filterClickListener;
     }
 
-    public static CountryAdapter getInstance(Context context, List<Country> countryList) {
+    public static CountryAdapter getInstance(Context context, List<Country> countryList, FilterClickListener filterClickListener) {
         if (instance == null)
-            instance = new CountryAdapter(context, countryList);
+            instance = new CountryAdapter(context, countryList, filterClickListener);
         return instance;
     }
 
@@ -41,11 +44,13 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Country country = countryList.get(position);
         holder.filterCategoryImg.setVisibility(View.GONE);
         holder.filterCategoryDescription.setVisibility(View.GONE);
         holder.filterCountryImg.setVisibility(View.VISIBLE);
-        holder.filterCategoryName.setText(countryList.get(position).getStrArea());
-        holder.filterCountryImg.setText(countryList.get(position).getStrArea().substring(0, 1));
+        holder.filterCategoryName.setText(country.getStrArea());
+        holder.filterCountryImg.setText(country.getStrArea().substring(0, 1));
+        holder.filterCardView.setOnClickListener(view -> filterClickListener.countryClicked(country));
     }
 
     @Override
@@ -59,6 +64,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        CardView filterCardView;
         ImageView filterCategoryImg;
         TextView filterCategoryName;
         TextView filterCategoryDescription;
@@ -66,6 +72,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.ViewHold
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            filterCardView = itemView.findViewById(R.id.filterCardView);
             filterCategoryImg = itemView.findViewById(R.id.filterImg);
             filterCategoryName = itemView.findViewById(R.id.filterTitleTxt);
             filterCategoryDescription = itemView.findViewById(R.id.filterDescriptionTxt);

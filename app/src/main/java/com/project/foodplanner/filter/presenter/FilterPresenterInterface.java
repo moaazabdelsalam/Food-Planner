@@ -1,5 +1,10 @@
 package com.project.foodplanner.filter.presenter;
 
+import com.project.foodplanner.model.MealResponse;
+import com.project.foodplanner.model.ResponseModel;
+
+import io.reactivex.rxjava3.core.Single;
+
 public interface FilterPresenterInterface {
     void getAllCategories();
 

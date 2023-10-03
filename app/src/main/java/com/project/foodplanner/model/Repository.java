@@ -9,6 +9,8 @@ import com.project.foodplanner.utils.DummyCache;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Single;
+
 public class Repository implements RepositoryInterface {
     RemoteSource remoteSource;
     LocalSource localSource;
@@ -49,6 +51,21 @@ public class Repository implements RepositoryInterface {
     @Override
     public void searchByFirstCharacterCall(char charToSearchWith, NetworkCallback networkCallback) {
         remoteSource.searchByFirstCharacterCall(charToSearchWith, networkCallback);
+    }
+
+    @Override
+    public Single<MealResponse> filterByIngredient(String ingredient) {
+        return remoteSource.filterByIngredient(ingredient);
+    }
+
+    @Override
+    public Single<MealResponse> filterByCategory(String category) {
+        return remoteSource.filterByCategory(category);
+    }
+
+    @Override
+    public Single<MealResponse> filterByCountry(String country) {
+        return remoteSource.filterByCountry(country);
     }
 
     @Override

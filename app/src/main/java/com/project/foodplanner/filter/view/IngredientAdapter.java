@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -20,16 +21,18 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     private final Context context;
     private List<Ingredient> ingredientList;
+    FilterClickListener filterClickListener;
     private static IngredientAdapter instance = null;
 
-    private IngredientAdapter(Context context, List<Ingredient> ingredientList) {
+    private IngredientAdapter(Context context, List<Ingredient> ingredientList, FilterClickListener filterClickListener) {
         this.context = context;
         this.ingredientList = ingredientList;
+        this.filterClickListener = filterClickListener;
     }
 
-    public static IngredientAdapter getInstance(Context context, List<Ingredient> ingredientList) {
+    public static IngredientAdapter getInstance(Context context, List<Ingredient> ingredientList, FilterClickListener filterClickListener) {
         if (instance == null)
-            instance = new IngredientAdapter(context, ingredientList);
+            instance = new IngredientAdapter(context, ingredientList, filterClickListener);
         return instance;
     }
 
@@ -42,12 +45,14 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Ingredient ingredient = ingredientList.get(position);
         holder.filterCountryImg.setVisibility(View.GONE);
         holder.filterIngredientImg.setVisibility(View.VISIBLE);
-        Glide.with(context).load("https://www.themealdb.com/images/ingredients/" + ingredientList.get(position).getStrIngredient() + ".png")
+        Glide.with(context).load("https://www.themealdb.com/images/ingredients/" + ingredient.getStrIngredient() + ".png")
                 .placeholder(R.drawable.image_placeholder).into(holder.filterIngredientImg);
-        holder.filterIngredientName.setText(ingredientList.get(position).getStrIngredient());
-        holder.filterIngredientDescription.setText(ingredientList.get(position).getStrDescription());
+        holder.filterIngredientName.setText(ingredient.getStrIngredient());
+        holder.filterIngredientDescription.setText(ingredient.getStrDescription());
+        holder.filterCardView.setOnClickListener(view -> filterClickListener.ingredientClicked(ingredient));
     }
 
     @Override
@@ -61,6 +66,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        CardView filterCardView;
         ImageView filterIngredientImg;
         TextView filterIngredientName;
         TextView filterIngredientDescription;
@@ -68,6 +74,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            filterCardView = itemView.findViewById(R.id.filterCardView);
             filterIngredientImg = itemView.findViewById(R.id.filterImg);
             filterIngredientName = itemView.findViewById(R.id.filterTitleTxt);
             filterIngredientDescription = itemView.findViewById(R.id.filterDescriptionTxt);

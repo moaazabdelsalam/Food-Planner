@@ -19,7 +19,7 @@
         android:id="@+id/searchFragment"
         android:name="com.project.foodplanner.search.view.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_filtersFragment"
             app:destination="@id/filtersFragment" />
@@ -33,5 +33,31 @@
         android:id="@+id/filtersFragment"
         android:name="com.project.foodplanner.filter.view.FiltersFragment"
         android:label="fragment_filters"
-        tools:layout="@layout/fragment_filters" />
+        tools:layout="@layout/fragment_filters">
+        <action
+            android:id="@+id/action_filtersFragment_to_filterResultFragment"
+            app:destination="@id/filterResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/filterResultFragment"
+        android:name="com.project.foodplanner.filterresult.view.FilterResultFragment"
+        android:label="fragment_filter_result"
+        tools:layout="@layout/fragment_filter_result">
+
+        <argument
+            android:name="ingredient"
+            android:defaultValue="@null"
+            app:argType="com.project.foodplanner.model.Ingredient"
+            app:nullable="true" />
+        <argument
+            android:name="category"
+            android:defaultValue="@null"
+            app:argType="com.project.foodplanner.model.Category"
+            app:nullable="true" />
+        <argument
+            android:name="country"
+            app:argType="com.project.foodplanner.model.Country"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>

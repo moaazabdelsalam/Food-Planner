@@ -6,6 +6,9 @@ import com.project.foodplanner.network.NetworkCallback;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Single;
+import retrofit2.http.Query;
+
 public interface RepositoryInterface {
     void makeCategoryListCall(NetworkCallback networkCallback);
 
@@ -16,6 +19,12 @@ public interface RepositoryInterface {
     void makeRandomMealCall(NetworkCallback networkCallback);
 
     void searchByFirstCharacterCall(char charToSearchWith, NetworkCallback networkCallback);
+
+    Single<MealResponse> filterByIngredient(String ingredient);
+
+    Single<MealResponse> filterByCategory(String category);
+
+    Single<MealResponse> filterByCountry(String country);
 
     void addMealToDatabase(Meal meal);
 

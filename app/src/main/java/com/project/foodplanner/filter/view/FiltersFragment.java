@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,12 +34,14 @@ import com.project.foodplanner.network.MealClient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
-public class FiltersFragment extends Fragment implements FilterViewInterface {
+public class FiltersFragment extends Fragment implements FilterViewInterface, FilterClickListener {
+
     public static final String TAG = "TAG filter screen";
     SearchView searchView;
     ChipGroup chipGroup;
@@ -53,6 +56,7 @@ public class FiltersFragment extends Fragment implements FilterViewInterface {
     CountryAdapter countryAdapter;
     IngredientAdapter ingredientAdapter;
     RequestCode requestCode = RequestCode.MEAL_BY_CHAR;
+    FiltersFragmentDirections.ActionFiltersFragmentToFilterResultFragment action;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -172,14 +176,22 @@ public class FiltersFragment extends Fragment implements FilterViewInterface {
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        mealAdapter = MealAdapter.getInstance(getContext(), new ArrayList<>());
-        ingredientAdapter = IngredientAdapter.getInstance(getContext(), new ArrayList<>());
-        countryAdapter = CountryAdapter.getInstance(getContext(), new ArrayList<>());
-        categoryAdapter = CategoryAdapter.getInstance(getContext(), new ArrayList<>());
+        mealAdapter = MealAdapter.getInstance(getContext(), new ArrayList<>(), this);
+        ingredientAdapter = IngredientAdapter.getInstance(getContext(), new ArrayList<>(), this);
+        countryAdapter = CountryAdapter.getInstance(getContext(), new ArrayList<>(), this);
+        categoryAdapter = CategoryAdapter.getInstance(getContext(), new ArrayList<>(), this);
 
-        recyclerView.setAdapter(MealAdapter.getInstance(getContext(), new ArrayList<>()));
+        recyclerView.setAdapter(mealAdapter);
 
-        presenter = new FilterPresenter(this, Repository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())));
+        presenter = new FilterPresenter(
+                this,
+                Repository.getInstance(
+                        MealClient.getInstance(),
+                        ConcreteLocalSource.getInstance(getContext())
+                )
+        );
+
+        action = FiltersFragmentDirections.actionFiltersFragmentToFilterResultFragment();
     }
 
     @Override
@@ -225,5 +237,31 @@ public class FiltersFragment extends Fragment implements FilterViewInterface {
                 mealAdapter.clearMealList();
                 break;
         }
+    }
+
+    @Override
+    public void categoryClicked(Category category) {
+        Log.i(TAG, "getting meal with category: " + category.getStrCategory());
+        action.setCategory(category);
+        Navigation.findNavController(recyclerView).navigate(action);
+    }
+
+    @Override
+    public void countryClicked(Country country) {
+        Log.i(TAG, "getting meal with country: " + country.getStrArea());
+        action.setCountry(country);
+        Navigation.findNavController(recyclerView).navigate(action);
+    }
+
+    @Override
+    public void ingredientClicked(Ingredient ingredient) {
+        Log.i(TAG, "getting meal with ingredient: " + ingredient.getStrIngredient());
+        action.setIngredient(ingredient);
+        Navigation.findNavController(recyclerView).navigate(action);
+    }
+
+    @Override
+    public void mealClicked(Meal meal) {
+        Log.i(TAG, "mealClicked: " + meal.getStrMeal());
     }
 }

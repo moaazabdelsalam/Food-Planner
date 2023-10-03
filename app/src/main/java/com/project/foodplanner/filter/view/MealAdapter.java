@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -21,16 +22,18 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.ViewHolder> {
 
     private final Context context;
     private List<Meal> mealList;
+    FilterClickListener filterClickListener;
     private static MealAdapter instance = null;
 
-    private MealAdapter(Context context, List<Meal> mealList) {
+    private MealAdapter(Context context, List<Meal> mealList, FilterClickListener filterClickListener) {
         this.context = context;
         this.mealList = mealList;
+        this.filterClickListener = filterClickListener;
     }
 
-    public static MealAdapter getInstance(Context context, List<Meal> mealList) {
+    public static MealAdapter getInstance(Context context, List<Meal> mealList, FilterClickListener filterClickListener) {
         if (instance == null)
-            instance = new MealAdapter(context, mealList);
+            instance = new MealAdapter(context, mealList, filterClickListener);
         return instance;
     }
 
@@ -43,16 +46,18 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Meal meal = mealList.get(position);
         holder.filterCountryImg.setVisibility(View.GONE);
         holder.filterIngredientImg.setVisibility(View.VISIBLE);
-        Glide.with(context).load(mealList.get(position).getStrMealThumb())
+        Glide.with(context).load(meal.getStrMealThumb())
                 .placeholder(R.drawable.image_placeholder).into(holder.filterIngredientImg);
-        holder.filterIngredientName.setText(mealList.get(position).getStrMeal());
-        holder.filterIngredientDescription.setText(mealList.get(position).getStrArea());
-        if (mealList.get(position).getStrCategory() != null)
-            holder.filterIngredientDescription.append(", " + mealList.get(position).getStrCategory());
-        if (mealList.get(position).getStrTags() != null)
-            holder.filterIngredientDescription.append(", " + mealList.get(position).getStrTags());
+        holder.filterIngredientName.setText(meal.getStrMeal());
+        holder.filterIngredientDescription.setText(meal.getStrArea());
+        if (meal.getStrCategory() != null)
+            holder.filterIngredientDescription.append(", " + meal.getStrCategory());
+        if (meal.getStrTags() != null)
+            holder.filterIngredientDescription.append(", " + meal.getStrTags());
+        holder.filterCardView.setOnClickListener(view -> filterClickListener.mealClicked(meal));
     }
 
     @Override
@@ -71,6 +76,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        CardView filterCardView;
         ImageView filterIngredientImg;
         TextView filterIngredientName;
         TextView filterIngredientDescription;
@@ -78,6 +84,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            filterCardView = itemView.findViewById(R.id.filterCardView);
             filterIngredientImg = itemView.findViewById(R.id.filterImg);
             filterIngredientName = itemView.findViewById(R.id.filterTitleTxt);
             filterIngredientDescription = itemView.findViewById(R.id.filterDescriptionTxt);
