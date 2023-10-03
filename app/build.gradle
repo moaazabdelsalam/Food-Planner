@@ -59,4 +59,11 @@ dependencies {
 
     //shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+
+    //Round Image
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //Rx android
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    implementation 'io.reactivex.rxjava3:rxjava:3.1.6'
 }

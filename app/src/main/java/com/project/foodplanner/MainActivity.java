@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
         navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
-            if (navDestination.getId() == R.id.searchFragment) {
-                bottomNavigationView.setVisibility(View.INVISIBLE);
+            if (navDestination.getId() == R.id.filtersFragment) {
+                bottomNavigationView.setVisibility(View.GONE);
             } else {
                 bottomNavigationView.setVisibility(View.VISIBLE);
             }

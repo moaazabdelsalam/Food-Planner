@@ -27,4 +27,8 @@
     <string name="all_categories">Categories</string>
     <string name="all_countries">Countries</string>
     <string name="show_all"><U>Show all</U></string>
+    <string name="category">Category</string>
+    <string name="ingredient">Ingredient</string>
+    <string name="country">Country</string>
+    <string name="meal">Meal</string>
 </resources>

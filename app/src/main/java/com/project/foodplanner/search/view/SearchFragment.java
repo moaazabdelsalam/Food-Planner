@@ -4,7 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,10 +33,11 @@ public class SearchFragment extends Fragment implements SearchViewInterface {
     RecyclerView categoryRecyclerView;
     RecyclerView ingredientRecyclerView;
     CategoriesAdapter categoriesAdapter;
-    IngredientAdapter ingredientsAdapter;
+    IngredientsAdapter ingredientsAdapter;
     SearchPresenter presenter;
     ShimmerFrameLayout ingredientShimmerFrameLayout;
     ShimmerFrameLayout categoryShimmerFrameLayout;
+    SearchView searchView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,9 +57,13 @@ public class SearchFragment extends Fragment implements SearchViewInterface {
 
         initializeViews(view);
 
-        Log.i(TAG, "onViewCreated: " + "calling category list...");
+        //Log.i(TAG, "onViewCreated: " + "calling category list...");
         presenter.getAllCategories();
         presenter.getAllIngredients();
+
+        searchView.setOnClickListener(view1 -> {
+            openFilterScreen(view);
+        });
     }
 
     @Override
@@ -65,19 +72,25 @@ public class SearchFragment extends Fragment implements SearchViewInterface {
         categoryShimmerFrameLayout.stopShimmerAnimation();
         categoryShimmerFrameLayout.setVisibility(View.GONE);
         categoryRecyclerView.setVisibility(View.VISIBLE);
-        Log.i(TAG, "showCategoryList: " + categoryList);
+        //Log.i(TAG, "showCategoryList: " + categoryList);
     }
 
     @Override
     public void showIngredientList(List<Ingredient> ingredientList) {
         ingredientsAdapter.updateIngredientList(ingredientList);
-        Log.i(TAG, "showIngredientList: " + ingredientList);
+        //Log.i(TAG, "showIngredientList: " + ingredientList);
         ingredientShimmerFrameLayout.stopShimmerAnimation();
         ingredientShimmerFrameLayout.setVisibility(View.GONE);
         ingredientRecyclerView.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void openFilterScreen(View view) {
+        Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_filtersFragment);
+    }
+
     public void initializeViews(@NonNull View view) {
+        searchView = view.findViewById(R.id.searchView);
         categoryRecyclerView = view.findViewById(R.id.allCategoriesRV);
         ingredientRecyclerView = view.findViewById(R.id.allIngredientsRV);
 
@@ -91,7 +104,7 @@ public class SearchFragment extends Fragment implements SearchViewInterface {
         categoryRecyclerView.setLayoutManager(linearLayoutManager);
         categoryRecyclerView.setAdapter(categoriesAdapter);
 
-        ingredientsAdapter = new IngredientAdapter(getContext(), new ArrayList<>());
+        ingredientsAdapter = new IngredientsAdapter(getContext(), new ArrayList<>());
         ingredientRecyclerView.setLayoutManager(linearLayoutManager0);
         ingredientRecyclerView.setAdapter(ingredientsAdapter);
 

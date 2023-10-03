@@ -1,4 +1,4 @@
-package com.project.foodplanner.search.view;
+package com.project.foodplanner.filter.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -20,24 +20,34 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     private final Context context;
     private List<Ingredient> ingredientList;
+    private static IngredientAdapter instance = null;
 
-    public IngredientAdapter(Context context, List<Ingredient> ingredientList) {
+    private IngredientAdapter(Context context, List<Ingredient> ingredientList) {
         this.context = context;
         this.ingredientList = ingredientList;
+    }
+
+    public static IngredientAdapter getInstance(Context context, List<Ingredient> ingredientList) {
+        if (instance == null)
+            instance = new IngredientAdapter(context, ingredientList);
+        return instance;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        return new IngredientAdapter.ViewHolder(inflater.inflate(R.layout.category_item, parent, false));
+        return new IngredientAdapter.ViewHolder(inflater.inflate(R.layout.filter_item_view, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.filterCountryImg.setVisibility(View.GONE);
+        holder.filterIngredientImg.setVisibility(View.VISIBLE);
         Glide.with(context).load("https://www.themealdb.com/images/ingredients/" + ingredientList.get(position).getStrIngredient() + ".png")
-                .placeholder(R.drawable.image_placeholder).into(holder.categoryImgView);
-        holder.categoryName.setText(ingredientList.get(position).getStrIngredient());
+                .placeholder(R.drawable.image_placeholder).into(holder.filterIngredientImg);
+        holder.filterIngredientName.setText(ingredientList.get(position).getStrIngredient());
+        holder.filterIngredientDescription.setText(ingredientList.get(position).getStrDescription());
     }
 
     @Override
@@ -51,13 +61,17 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView categoryImgView;
-        TextView categoryName;
+        ImageView filterIngredientImg;
+        TextView filterIngredientName;
+        TextView filterIngredientDescription;
+        TextView filterCountryImg;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            categoryImgView = itemView.findViewById(R.id.categoryImgView);
-            categoryName = itemView.findViewById(R.id.categoryNameTXT);
+            filterIngredientImg = itemView.findViewById(R.id.filterImg);
+            filterIngredientName = itemView.findViewById(R.id.filterTitleTxt);
+            filterIngredientDescription = itemView.findViewById(R.id.filterDescriptionTxt);
+            filterCountryImg = itemView.findViewById(R.id.filterCountryImg);
         }
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 import com.project.foodplanner.database.LocalSource;
 import com.project.foodplanner.network.NetworkCallback;
 import com.project.foodplanner.network.RemoteSource;
+import com.project.foodplanner.utils.DummyCache;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public class Repository implements RepositoryInterface {
     RemoteSource remoteSource;
     LocalSource localSource;
     private static Repository instance = null;
+    DummyCache cache = DummyCache.getInstance();
 
     private Repository(RemoteSource remoteSource, LocalSource localSource) {
         this.remoteSource = remoteSource;
@@ -30,6 +32,11 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
+    public void makeCountryListCall(NetworkCallback networkCallback) {
+        remoteSource.makeCountryListCall(networkCallback);
+    }
+
+    @Override
     public void makeIngredientListCall(NetworkCallback networkCallback) {
         remoteSource.makeIngredientListCall(networkCallback);
     }
@@ -37,6 +44,11 @@ public class Repository implements RepositoryInterface {
     @Override
     public void makeRandomMealCall(NetworkCallback networkCallback) {
         remoteSource.makeRandomMealCall(networkCallback);
+    }
+
+    @Override
+    public void searchByFirstCharacterCall(char charToSearchWith, NetworkCallback networkCallback) {
+        remoteSource.searchByFirstCharacterCall(charToSearchWith, networkCallback);
     }
 
     @Override

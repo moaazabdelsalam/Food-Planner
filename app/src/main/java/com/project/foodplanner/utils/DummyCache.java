@@ -1,15 +1,19 @@
 package com.project.foodplanner.utils;
 
 import com.project.foodplanner.model.Category;
+import com.project.foodplanner.model.Country;
 import com.project.foodplanner.model.Ingredient;
 import com.project.foodplanner.model.Meal;
 
 import java.util.List;
+import java.util.zip.CheckedOutputStream;
 
 public class DummyCache {
     private static DummyCache instance = null;
     private List<Category> categoryCache;
     private List<Ingredient> ingredientCache;
+    private List<Country> countryCache;
+    private List<Meal> mealCache;
     private Meal todayMealCache;
 
     private DummyCache() {
@@ -36,6 +40,22 @@ public class DummyCache {
 
     public void setIngredientCache(List<Ingredient> ingredientCache) {
         this.ingredientCache = ingredientCache;
+    }
+
+    public List<Country> getCountryCache() {
+        return countryCache;
+    }
+
+    public void setCountryCache(List<Country> countryCache) {
+        this.countryCache = countryCache;
+    }
+
+    public List<Meal> getMealCache() {
+        return mealCache;
+    }
+
+    public void setMealCache(List<Meal> mealCache) {
+        this.mealCache = mealCache;
     }
 
     public Meal getTodayMealCache() {

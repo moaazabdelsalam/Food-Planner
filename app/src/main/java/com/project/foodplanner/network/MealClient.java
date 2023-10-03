@@ -6,10 +6,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.project.foodplanner.model.Country;
 import com.project.foodplanner.model.Ingredient;
 import com.project.foodplanner.model.IngredientResponse;
 import com.project.foodplanner.model.CategoryResponse;
 import com.project.foodplanner.model.RequestCode;
+import com.project.foodplanner.model.ResponseModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MealClient implements RemoteSource {
     private static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
-    public static final String TAG = "TAG products client";
+    public static final String TAG = "TAG meals client";
     private static MealClient instance = null;
 
     public static MealClient getInstance() {
@@ -37,7 +39,7 @@ public class MealClient implements RemoteSource {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Log.i(TAG, "onSuccess: " + response.raw() + "categories: " + response.body().get("categories"));
+                    //Log.i(TAG, "onSuccess: " + response.raw() + "categories: " + response.body().get("categories"));
                     networkCallback.onSuccessResult(RequestCode.CATEGORIES_REQ, response.body());
                 }
             }
@@ -51,12 +53,31 @@ public class MealClient implements RemoteSource {
     }
 
     @Override
+    public void makeCountryListCall(NetworkCallback networkCallback) {
+        Log.i(TAG, "makeCountryListCall: ");
+        makeNetworkCall().getCountryList().enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.i(TAG, "onResponse: countries: " + response.body().get("meals"));
+                    networkCallback.onSuccessResult(RequestCode.COUNTRIES_REQ, response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                networkCallback.onFailureResult(RequestCode.COUNTRIES_REQ, t.getMessage());
+            }
+        });
+    }
+
+    @Override
     public void makeIngredientListCall(NetworkCallback networkCallback) {
         makeNetworkCall().getIngredientList().enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Log.i(TAG, "onSuccess: " + response.raw() + "ingredients: " + response.body().get("meals"));
+                    //Log.i(TAG, "onSuccess: " + response.raw() + "ingredients: " + response.body().get("meals"));
                     networkCallback.onSuccessResult(RequestCode.INGREDIENTS_REQ, response.body());
                 }
             }
@@ -74,7 +95,7 @@ public class MealClient implements RemoteSource {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Log.i(TAG, "onSuccess: " + response.body().get("meals"));
+                    //Log.i(TAG, "onSuccess: " + response.body().get("meals"));
                     networkCallback.onSuccessResult(RequestCode.RANDOM_MEAL_REQ, response.body());
                 }
             }
@@ -82,6 +103,24 @@ public class MealClient implements RemoteSource {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 networkCallback.onFailureResult(RequestCode.RANDOM_MEAL_REQ, t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void searchByFirstCharacterCall(char charToSearchWith, NetworkCallback networkCallback) {
+        makeNetworkCall().getMealsWithFirstLetter(charToSearchWith).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.i(TAG, "onSuccess: meals with char " + charToSearchWith + ": " + response.body().get("meals"));
+                    networkCallback.onSuccessResult(RequestCode.MEAL_BY_CHAR, response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                networkCallback.onFailureResult(RequestCode.MEAL_BY_CHAR, t.getMessage());
             }
         });
     }
