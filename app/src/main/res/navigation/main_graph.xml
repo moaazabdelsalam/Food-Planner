@@ -72,7 +72,7 @@
         android:label="fragment_meal_details"
         tools:layout="@layout/fragment_meal_details" >
         <argument
-            android:name="meal"
-            app:argType="com.project.foodplanner.model.Meal" />
+            android:name="mealID"
+            app:argType="string" />
     </fragment>
 </navigation>

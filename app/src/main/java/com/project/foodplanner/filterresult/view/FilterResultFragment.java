@@ -90,7 +90,7 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
 
     @Override
     public void showMealDetails(Meal meal) {
-        FilterResultFragmentDirections.ActionFilterResultFragmentToMealDetailsFragment action = FilterResultFragmentDirections.actionFilterResultFragmentToMealDetailsFragment(meal);
+        FilterResultFragmentDirections.ActionFilterResultFragmentToMealDetailsFragment action = FilterResultFragmentDirections.actionFilterResultFragmentToMealDetailsFragment(meal.getIdMeal());
         Navigation.findNavController(recyclerView).navigate(action);
     }
 }

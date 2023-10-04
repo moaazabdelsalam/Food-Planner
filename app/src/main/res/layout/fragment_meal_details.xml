@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="8dp"
     tools:context=".details.view.MealDetailsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,6 +40,7 @@
 
         </androidx.cardview.widget.CardView>
 
+
         <TextView
             android:id="@+id/mealName"
             android:layout_width="wrap_content"
@@ -63,6 +65,19 @@
             app:layout_constraintStart_toStartOf="@id/guideline7"
             tools:text="MEAL TAGS" />
 
+        <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+            android:id="@+id/videoPlayer"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:autoPlay="false"
+            app:handleNetworkEvents="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ImgCardView" />
+
         <TextView
             android:id="@+id/instruction"
             android:layout_width="wrap_content"
@@ -73,7 +88,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/guideline7"
-            app:layout_constraintTop_toBottomOf="@id/ImgCardView" />
+            app:layout_constraintTop_toBottomOf="@id/videoPlayer" />
 
         <TextView
             android:id="@+id/mealInstructionTxt"
