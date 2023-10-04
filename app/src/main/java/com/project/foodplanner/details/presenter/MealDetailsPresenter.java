@@ -1,5 +1,7 @@
 package com.project.foodplanner.details.presenter;
 
+import android.util.Log;
+
 import com.project.foodplanner.details.view.MealDetailsViewInterface;
 import com.project.foodplanner.model.RepositoryInterface;
 
@@ -15,14 +17,14 @@ public class MealDetailsPresenter implements MealDetailsPresenterInterface {
         this.repository = repository;
     }
 
-
     @Override
     public void getMealById(String id) {
         repository.getMealById(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        item -> view.showMeal(item.getMeals().get(0))
+                        item -> view.showMeal(item.getMeals().get(0)),
+                        error -> Log.i("TAG", "getMealById: error" + error.getMessage())
                 );
     }
 }

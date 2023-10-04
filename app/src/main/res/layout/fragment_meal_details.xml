@@ -11,6 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/detailsShimmerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:elevation="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include layout="@layout/details_shimmer" />
+
+            </LinearLayout>
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/ImgCardView"
             android:layout_width="match_parent"
@@ -27,7 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/image_placeholder" />
+                android:src="@drawable/image_placeholder"
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/addToFav"
@@ -36,10 +54,10 @@
                 android:layout_gravity="top|end"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_baseline_favorite_border_24" />
+                android:src="@drawable/ic_baseline_favorite_border_24"
+                android:visibility="invisible" />
 
         </androidx.cardview.widget.CardView>
-
 
         <TextView
             android:id="@+id/mealName"
@@ -72,6 +90,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:visibility="invisible"
             app:autoPlay="false"
             app:handleNetworkEvents="true"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,6 +102,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:visibility="invisible"
             android:text="@string/instructions"
             android:textColor="?attr/textFillColor"
             android:textSize="24sp"
@@ -96,6 +116,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="30dp"
+            android:background="@drawable/round_corners"
+            android:elevation="8dp"
+            android:padding="8dp"
+            android:textColor="?attr/textFillColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@id/barrier"
             app:layout_constraintEnd_toEndOf="parent"
@@ -109,6 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/ingredients"
+            android:visibility="invisible"
             android:textColor="?attr/textFillColor"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -121,10 +146,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="30dp"
+            android:background="@drawable/round_corners"
+            android:elevation="8dp"
+            android:padding="8dp"
+            android:textColor="?attr/textFillColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guideline7"
             app:layout_constraintTop_toBottomOf="@id/ingredients"
+            android:layout_marginBottom="8dp"
             tools:text="InstructionsInstructionsInstructionsInstructionsInstructionsInstructionsInstructionsInstructionsInstructionsInstructionsInstructionsInstructionsInstructionsInstructionsInstructionsInstructions" />
 
         <androidx.constraintlayout.widget.Guideline

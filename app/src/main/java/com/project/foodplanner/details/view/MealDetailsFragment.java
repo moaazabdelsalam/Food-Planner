@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
@@ -41,6 +42,9 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
     TextView mealInstructionTxt;
     TextView mealIngredientTxt;
     YouTubePlayerView youTubePlayerView;
+    ShimmerFrameLayout detailsShimmer;
+    TextView instructions;
+    TextView ingredients;
     MealDetailsPresenterInterface presenter;
 
     @Override
@@ -60,6 +64,8 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
         super.onViewCreated(view, savedInstanceState);
 
         initializeViews(view);
+        detailsShimmer.startShimmerAnimation();
+
         String mealID = MealDetailsFragmentArgs.fromBundle(getArguments()).getMealID();
         presenter.getMealById(mealID);
     }
@@ -71,9 +77,13 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
         mealTags = view.findViewById(R.id.mealTags);
         mealInstructionTxt = view.findViewById(R.id.mealInstructionTxt);
         mealIngredientTxt = view.findViewById(R.id.mealIngredientTxt);
+        instructions = view.findViewById(R.id.instruction);
+        ingredients = view.findViewById(R.id.ingredients);
 
         youTubePlayerView = view.findViewById(R.id.videoPlayer);
         getLifecycle().addObserver(youTubePlayerView);
+
+        detailsShimmer = view.findViewById(R.id.detailsShimmerLayout);
 
         presenter = new MealDetailsPresenter(this,
                 Repository.getInstance(
@@ -85,6 +95,14 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
 
     @Override
     public void showMeal(Meal meal) {
+        detailsShimmer.stopShimmerAnimation();
+        detailsShimmer.setVisibility(View.INVISIBLE);
+        mealImg.setVisibility(View.VISIBLE);
+        addToFav.setVisibility(View.VISIBLE);
+        youTubePlayerView.setVisibility(View.VISIBLE);
+        ingredients.setVisibility(View.VISIBLE);
+        instructions.setVisibility(View.VISIBLE);
+
         Glide.with(requireContext()).load(meal.getStrMealThumb()).placeholder(R.drawable.image_placeholder).into(mealImg);
         mealName.setText(meal.getStrMeal());
         if (meal.getStrArea() != null)
