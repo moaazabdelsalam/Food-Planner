@@ -18,7 +18,7 @@ public interface RepositoryInterface {
 
     void makeRandomMealCall(NetworkCallback networkCallback);
 
-    void searchByFirstCharacterCall(char charToSearchWith, NetworkCallback networkCallback);
+    Single<MealResponse> searchByFirstCharacterCall(char charToSearchWith);
 
     Single<MealResponse> filterByIngredient(String ingredient);
 

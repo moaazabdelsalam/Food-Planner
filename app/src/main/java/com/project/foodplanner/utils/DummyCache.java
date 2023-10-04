@@ -14,6 +14,7 @@ public class DummyCache {
     private List<Ingredient> ingredientCache;
     private List<Country> countryCache;
     private List<Meal> mealCache;
+    private List<Meal> filterResultMealCache;
     private Meal todayMealCache;
 
     private DummyCache() {
@@ -56,6 +57,18 @@ public class DummyCache {
 
     public void setMealCache(List<Meal> mealCache) {
         this.mealCache = mealCache;
+    }
+
+    public List<Meal> getFilterResultMealCache() {
+        return filterResultMealCache;
+    }
+
+    public void setFilterResultMealCache(List<Meal> filterResultMealCache) {
+        this.filterResultMealCache = filterResultMealCache;
+    }
+
+    public void clearFilterResultMealCache() {
+        filterResultMealCache = null;
     }
 
     public Meal getTodayMealCache() {

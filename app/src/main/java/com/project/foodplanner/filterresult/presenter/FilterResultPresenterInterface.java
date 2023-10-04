@@ -10,4 +10,6 @@ public interface FilterResultPresenterInterface {
     void filterByCategory(String category);
 
     void filterByCountry(String country);
+
+    void clearCache();
 }

@@ -49,8 +49,8 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public void searchByFirstCharacterCall(char charToSearchWith, NetworkCallback networkCallback) {
-        remoteSource.searchByFirstCharacterCall(charToSearchWith, networkCallback);
+    public Single<MealResponse> searchByFirstCharacterCall(char charToSearchWith) {
+        return remoteSource.searchByFirstCharacterCall(charToSearchWith);
     }
 
     @Override

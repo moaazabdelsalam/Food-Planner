@@ -33,4 +33,6 @@
     <string name="meal">Meal</string>
     <string name="instructions">Instructions</string>
     <string name="ingredients">Ingredients</string>
+    <string name="search_placeholder_text">First choose what to search for then enter your search.</string>
+    <string name="search_hint">What are you looking for?</string>
 </resources>

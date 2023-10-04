@@ -10,14 +10,23 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.reflect.TypeToken;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
@@ -43,7 +52,11 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 public class FiltersFragment extends Fragment implements FilterViewInterface, FilterClickListener {
 
     public static final String TAG = "TAG filter screen";
-    SearchView searchView;
+    LottieAnimationView searchAnimation;
+    TextView searchPlaceholderTxt;
+    EditText searchView;
+    /*TextInputLayout searchView;
+    TextInputEditText searchViewET;*/
     ChipGroup chipGroup;
     Chip categoryChip;
     Chip countryChip;
@@ -57,6 +70,7 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
     IngredientAdapter ingredientAdapter;
     RequestCode requestCode = RequestCode.MEAL_BY_CHAR;
     FiltersFragmentDirections.ActionFiltersFragmentToFilterResultFragment action;
+    Chip selectedChip;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,33 +93,53 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
         chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(@NonNull ChipGroup group, int checkedId) {
-                Chip chip = group.findViewById(checkedId);
-                switch (chip == null ? "" : chip.getText().toString()) {
+                selectedChip = group.findViewById(checkedId);
+                switch (selectedChip == null ? "" : selectedChip.getText().toString()) {
                     case "Category":
-                        searchView.setQuery("", false);
-                        searchView.setQueryHint("search Categories");
+                        searchView.setText("");
+                        searchView.setHint("search Categories");
                         recyclerView.setVisibility(View.INVISIBLE);
+                        searchAnimation.setVisibility(View.VISIBLE);
+                        searchPlaceholderTxt.setVisibility(View.VISIBLE);
+                        searchAnimation.setAnimation(R.raw.animation_searching);
+                        searchAnimation.playAnimation();
+                        searchPlaceholderTxt.setText("enter name of category");
                         presenter.getAllCategories();
                         requestCode = RequestCode.CATEGORIES_REQ;
                         break;
                     case "Ingredient":
-                        searchView.setQuery("", false);
-                        searchView.setQueryHint("search Ingredients");
+                        searchView.setText("");
+                        searchView.setHint("search Ingredients");
                         recyclerView.setVisibility(View.INVISIBLE);
+                        searchAnimation.setVisibility(View.VISIBLE);
+                        searchPlaceholderTxt.setVisibility(View.VISIBLE);
+                        searchAnimation.setAnimation(R.raw.animation_searching);
+                        searchAnimation.playAnimation();
+                        searchPlaceholderTxt.setText("enter ingredient name");
                         presenter.getAllIngredients();
                         requestCode = RequestCode.INGREDIENTS_REQ;
                         break;
                     case "Country":
-                        searchView.setQuery("", false);
-                        searchView.setQueryHint("search Countries");
+                        searchView.setText("");
+                        searchView.setHint("search Countries");
                         recyclerView.setVisibility(View.INVISIBLE);
+                        searchAnimation.setVisibility(View.VISIBLE);
+                        searchPlaceholderTxt.setVisibility(View.VISIBLE);
+                        searchAnimation.setAnimation(R.raw.animation_searching);
+                        searchAnimation.playAnimation();
+                        searchPlaceholderTxt.setText("enter country name");
                         presenter.getAllCountries();
                         requestCode = RequestCode.COUNTRIES_REQ;
                         break;
                     case "Meal":
-                        searchView.setQuery("", false);
-                        searchView.setQueryHint("search for a meal");
+                        searchView.setText("");
+                        searchView.setHint("search for a meal");
                         recyclerView.setVisibility(View.INVISIBLE);
+                        searchAnimation.setVisibility(View.VISIBLE);
+                        searchPlaceholderTxt.setVisibility(View.VISIBLE);
+                        searchAnimation.setAnimation(R.raw.animation_searching);
+                        searchAnimation.playAnimation();
+                        searchPlaceholderTxt.setText("enter meal name");
                         requestCode = RequestCode.MEAL_BY_CHAR;
                         break;
                 }
@@ -113,7 +147,28 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
         });
 
         PublishSubject<String> newString = PublishSubject.create();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!charSequence.toString().equals("")) {
+                    newString.onNext(charSequence.toString());
+                    searchPlaceholderTxt.setText("Searching...");
+                } else
+                    resetRecycler();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        /*searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -121,36 +176,41 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (!newText.equals(""))
+                if (!newText.equals("")) {
                     newString.onNext(newText);
-                else
+                    searchPlaceholderTxt.setText("Searching...");
+                } else
                     resetRecycler();
-                return false;
+                return true;
             }
-        });
+        });*/
 
         newString.debounce(300, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         item -> {
-                            Log.i(TAG, "on thread: " + Thread.currentThread().getName() + " onNext: " + item);
-                            switch (requestCode) {
-                                case MEAL_BY_CHAR:
-                                    presenter.filterMeals(item);
-                                    break;
-                                case CATEGORIES_REQ:
-                                    presenter.filterCategories(item);
-                                    break;
-                                case COUNTRIES_REQ:
-                                    presenter.filterCountries(item);
-                                    break;
-                                case INGREDIENTS_REQ:
-                                    presenter.filterIngredients(item);
-                                    break;
+                            if (selectedChip == null) {
+                                Toast.makeText(getContext(), "Please choose what to search for", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.i(TAG, "onNext: " + item);
+                                switch (requestCode) {
+                                    case MEAL_BY_CHAR:
+                                        presenter.filterMeals(item);
+                                        break;
+                                    case CATEGORIES_REQ:
+                                        presenter.filterCategories(item);
+                                        break;
+                                    case COUNTRIES_REQ:
+                                        presenter.filterCountries(item);
+                                        break;
+                                    case INGREDIENTS_REQ:
+                                        presenter.filterIngredients(item);
+                                        break;
+                                }
                             }
                         },
-                        error -> Log.i(TAG, "onError: " + error.getMessage())
+                        error -> Log.i(TAG, "onError: " + error.getMessage() + error.getCause())
                 );
 
         /*ViewGroup.LayoutParams layoutParams1 = categoryChip.getLayoutParams();
@@ -162,9 +222,12 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
         countryChip.setLayoutParams(layoutParams2);*/
     }
 
-
     private void initializeViews(View view) {
+        searchAnimation = view.findViewById(R.id.searchAnimation);
+        searchPlaceholderTxt = view.findViewById(R.id.searchPlaceholderTxt);
         searchView = view.findViewById(R.id.searchView);
+       /* searchView = view.findViewById(R.id.searchView);
+        searchViewET = view.findViewById(R.id.searchViewTxtInET);*/
         chipGroup = view.findViewById(R.id.chipGroup);
         categoryChip = view.findViewById(R.id.categoryChip);
         countryChip = view.findViewById(R.id.countryChip);
@@ -196,30 +259,74 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
 
     @Override
     public void showCategoryList(List<Category> categoryList) {
-        recyclerView.setVisibility(View.VISIBLE);
-        recyclerView.setAdapter(categoryAdapter);
-        categoryAdapter.updateCategoryList(categoryList);
+        if (categoryList.isEmpty()) {
+            recyclerView.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+            searchAnimation.setVisibility(View.VISIBLE);
+            searchAnimation.setAnimation(R.raw.animation_no_result);
+            searchAnimation.playAnimation();
+        } else {
+            searchAnimation.pauseAnimation();
+            searchAnimation.setVisibility(View.GONE);
+            searchPlaceholderTxt.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            recyclerView.setAdapter(categoryAdapter);
+            categoryAdapter.updateCategoryList(categoryList);
+        }
     }
 
     @Override
     public void showIngredientList(List<Ingredient> ingredientList) {
-        recyclerView.setVisibility(View.VISIBLE);
-        recyclerView.setAdapter(ingredientAdapter);
-        ingredientAdapter.updateIngredientList(ingredientList);
+        if (ingredientList.isEmpty()) {
+            recyclerView.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+            searchAnimation.setVisibility(View.VISIBLE);
+            searchAnimation.setAnimation(R.raw.animation_no_result);
+            searchAnimation.playAnimation();
+        } else {
+            searchAnimation.pauseAnimation();
+            searchAnimation.setVisibility(View.GONE);
+            searchPlaceholderTxt.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            recyclerView.setAdapter(ingredientAdapter);
+            ingredientAdapter.updateIngredientList(ingredientList);
+        }
     }
 
     @Override
     public void showCountryList(List<Country> countryList) {
-        recyclerView.setVisibility(View.VISIBLE);
-        recyclerView.setAdapter(countryAdapter);
-        countryAdapter.updateCategoryList(countryList);
+        if (countryList.isEmpty()) {
+            recyclerView.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+            searchAnimation.setVisibility(View.VISIBLE);
+            searchAnimation.setAnimation(R.raw.animation_no_result);
+            searchAnimation.playAnimation();
+        } else {
+            searchAnimation.pauseAnimation();
+            searchAnimation.setVisibility(View.GONE);
+            searchPlaceholderTxt.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            recyclerView.setAdapter(countryAdapter);
+            countryAdapter.updateCategoryList(countryList);
+        }
     }
 
     @Override
     public void showMealList(List<Meal> mealList) {
-        recyclerView.setVisibility(View.VISIBLE);
-        recyclerView.setAdapter(mealAdapter);
-        mealAdapter.updateMealList(mealList);
+        if (mealList.isEmpty()) {
+            recyclerView.setVisibility(View.INVISIBLE);
+            recyclerView.setVisibility(View.INVISIBLE);
+            searchAnimation.setVisibility(View.VISIBLE);
+            searchAnimation.setAnimation(R.raw.animation_no_result);
+            searchAnimation.playAnimation();
+        } else {
+            searchAnimation.pauseAnimation();
+            searchAnimation.setVisibility(View.GONE);
+            searchPlaceholderTxt.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            recyclerView.setAdapter(mealAdapter);
+            mealAdapter.updateMealList(mealList);
+        }
     }
 
     public void resetRecycler() {
@@ -235,6 +342,9 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
                 break;
             case MEAL_BY_CHAR:
                 mealAdapter.clearMealList();
+                recyclerView.setVisibility(View.INVISIBLE);
+                searchAnimation.setAnimation(R.raw.animation_search);
+                searchAnimation.playAnimation();
                 break;
         }
     }
@@ -263,5 +373,7 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
     @Override
     public void mealClicked(Meal meal) {
         Log.i(TAG, "mealClicked: " + meal.getStrMeal());
+        FiltersFragmentDirections.ActionFiltersFragmentToMealDetailsFragment mealAction = FiltersFragmentDirections.actionFiltersFragmentToMealDetailsFragment(meal.getIdMeal());
+        Navigation.findNavController(recyclerView).navigate(mealAction);
     }
 }

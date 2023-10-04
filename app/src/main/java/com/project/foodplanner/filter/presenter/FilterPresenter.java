@@ -18,6 +18,7 @@ import com.project.foodplanner.network.NetworkCallback;
 import com.project.foodplanner.utils.DummyCache;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,15 +72,30 @@ public class FilterPresenter implements FilterPresenterInterface, NetworkCallbac
         Log.i(TAG, "filterMeals: first character: " + charToSearchWith);
         if (charToSearchWith != ' ' && query.charAt(0) == charToSearchWith) {
             Log.i(TAG, "onNext: filter local list which contains: " + cache.getMealCache().size());
-            ArrayList<Meal> filteredMeals = cache.getMealCache().stream()
+            ArrayList<Meal> filteredMeals = cache.getMealCache()
+                    .stream()
                     .filter(meal -> meal.getStrMeal().toLowerCase().contains(query.toLowerCase()))
                     .collect(Collectors.toCollection(ArrayList::new));
             Log.i(TAG, "filterMeals: filtered list size: " + filteredMeals.size());
             view.showMealList(filteredMeals);
         } else {
-            charToSearchWith = query.charAt(0);
             Log.i(TAG, "onNext: getting meals starts with: " + charToSearchWith);
-            repository.searchByFirstCharacterCall(charToSearchWith, this);
+            repository.searchByFirstCharacterCall(query.charAt(0))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            item -> {
+                                Log.i(TAG, "filterMeals: success result: " + Arrays.toString(item.getMeals().toArray()));
+                                cache.setMealCache(item.getMeals());
+                                ArrayList<Meal> filteredMeals = item.getMeals()
+                                        .stream()
+                                        .filter(meal -> meal.getStrMeal().toLowerCase().contains(query.toLowerCase()))
+                                        .collect(Collectors.toCollection(ArrayList::new));
+                                view.showMealList(filteredMeals);
+                                charToSearchWith = query.charAt(0);
+                            },
+                            error -> Log.i(TAG, "filterMeals: error: " + error.getMessage() + error.getCause())
+                    );
         }
     }
 
@@ -138,14 +154,14 @@ public class FilterPresenter implements FilterPresenterInterface, NetworkCallbac
                 view.showCountryList(countryList);
                 Log.i(TAG, "onSuccessResult: countries: " + countryList);
                 break;
-            case MEAL_BY_CHAR:
+            /*case MEAL_BY_CHAR:
                 TypeToken<List<Meal>> mealTypeToken = new TypeToken<List<Meal>>() {
                 };
                 List<Meal> mealList = gson.fromJson(jsonObject.get("meals"), mealTypeToken.getType());
                 cache.setMealCache(mealList);
                 view.showMealList(mealList);
                 Log.i(TAG, "onSuccessResult: countries: " + mealList);
-                break;
+                break;*/
         }
     }
 

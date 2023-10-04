@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.project.foodplanner.R;
@@ -37,7 +38,7 @@ public class SearchFragment extends Fragment implements SearchViewInterface {
     SearchPresenter presenter;
     ShimmerFrameLayout ingredientShimmerFrameLayout;
     ShimmerFrameLayout categoryShimmerFrameLayout;
-    SearchView searchView;
+    ImageView searchIcon;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class SearchFragment extends Fragment implements SearchViewInterface {
         presenter.getAllCategories();
         presenter.getAllIngredients();
 
-        searchView.setOnClickListener(view1 -> {
+        searchIcon.setOnClickListener(view1 -> {
             openFilterScreen(view);
         });
     }
@@ -90,7 +91,7 @@ public class SearchFragment extends Fragment implements SearchViewInterface {
     }
 
     public void initializeViews(@NonNull View view) {
-        searchView = view.findViewById(R.id.searchView);
+        searchIcon = view.findViewById(R.id.searchIcon);
         categoryRecyclerView = view.findViewById(R.id.allCategoriesRV);
         ingredientRecyclerView = view.findViewById(R.id.allIngredientsRV);
 

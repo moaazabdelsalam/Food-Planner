@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -41,6 +42,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
     TextView mealTags;
     TextView mealInstructionTxt;
     TextView mealIngredientTxt;
+    AppCompatButton addToPlanBtn;
     YouTubePlayerView youTubePlayerView;
     ShimmerFrameLayout detailsShimmer;
     TextView instructions;
@@ -79,6 +81,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
         mealIngredientTxt = view.findViewById(R.id.mealIngredientTxt);
         instructions = view.findViewById(R.id.instruction);
         ingredients = view.findViewById(R.id.ingredients);
+        addToPlanBtn = view.findViewById(R.id.addToPlanBtn);
 
         youTubePlayerView = view.findViewById(R.id.videoPlayer);
         getLifecycle().addObserver(youTubePlayerView);
@@ -96,12 +99,15 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
     @Override
     public void showMeal(Meal meal) {
         detailsShimmer.stopShimmerAnimation();
-        detailsShimmer.setVisibility(View.INVISIBLE);
+        detailsShimmer.setVisibility(View.GONE);
         mealImg.setVisibility(View.VISIBLE);
         addToFav.setVisibility(View.VISIBLE);
         youTubePlayerView.setVisibility(View.VISIBLE);
         ingredients.setVisibility(View.VISIBLE);
+        mealIngredientTxt.setVisibility(View.VISIBLE);
         instructions.setVisibility(View.VISIBLE);
+        mealInstructionTxt.setVisibility(View.VISIBLE);
+        addToPlanBtn.setVisibility(View.VISIBLE);
 
         Glide.with(requireContext()).load(meal.getStrMealThumb()).placeholder(R.drawable.image_placeholder).into(mealImg);
         mealName.setText(meal.getStrMeal());

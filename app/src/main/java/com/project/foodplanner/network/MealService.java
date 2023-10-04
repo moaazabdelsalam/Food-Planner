@@ -25,7 +25,7 @@ public interface MealService {
     Call<JsonObject> getCountryList();
 
     @GET("search.php")
-    Call<JsonObject> getMealsWithFirstLetter(@Query("f") char ch);
+    Single<MealResponse> getMealsWithFirstLetter(@Query("f") char ch);
 
     @GET("filter.php")
     Single<MealResponse> filterByIngredient(@Query("i") String ingredient);

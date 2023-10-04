@@ -111,8 +111,12 @@ public class MealClient implements RemoteSource {
     }
 
     @Override
-    public void searchByFirstCharacterCall(char charToSearchWith, NetworkCallback networkCallback) {
-        makeNetworkCall().getMealsWithFirstLetter(charToSearchWith).enqueue(new Callback<JsonObject>() {
+    public Single<MealResponse> searchByFirstCharacterCall(char charToSearchWith) {
+        return makeNetworkCall().getMealsWithFirstLetter(charToSearchWith)
+                .doOnSubscribe(sub -> Log.i(TAG, "searchByFirstCharacterCall: subscribe"))
+                .doOnError(error -> Log.i(TAG, "searchByFirstCharacterCall: error" + error.getMessage()))
+                .doOnSuccess(success -> Log.i(TAG, "searchByFirstCharacterCall: success"));
+        /*makeNetworkCall().getMealsWithFirstLetter(charToSearchWith).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -125,7 +129,7 @@ public class MealClient implements RemoteSource {
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 networkCallback.onFailureResult(RequestCode.MEAL_BY_CHAR, t.getMessage());
             }
-        });
+        });*/
     }
 
     @Override
