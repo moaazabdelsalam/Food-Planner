@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -77,7 +76,6 @@ public class FilterResultAdapter extends RecyclerView.Adapter<FilterResultAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        CardView viewItemCard;
         ImageView mealImgView;
         ImageView addFavoriteIcon;
         TextView mealNameTxt;
@@ -85,8 +83,7 @@ public class FilterResultAdapter extends RecyclerView.Adapter<FilterResultAdapte
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            viewItemCard = itemView.findViewById(R.id.viewItemCard);
-            mealImgView = itemView.findViewById(R.id.MealImgView);
+            mealImgView = itemView.findViewById(R.id.mealImgView);
             addFavoriteIcon = itemView.findViewById(R.id.addFavoriteIcon);
             mealNameTxt = itemView.findViewById(R.id.mealNameTxt);
             addToPlanBtn = itemView.findViewById(R.id.addToPlanBtn);

@@ -58,8 +58,12 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
 
         initializeViews(view);
         presenter.getTodayMeal();
-        addFavoriteIcon.setOnClickListener(view1 -> presenter.todayMealClick());
+        addFavoriteIcon.setOnClickListener(view1 -> presenter.todayMealFavoriteClick());
         todayMealImgView.setOnClickListener(view1 -> presenter.sendMealID());
+        addToPlanBtn.setOnClickListener(view1 -> {
+            Log.i(TAG, "onViewCreated: add to plan clicked");
+            presenter.addTodayMealToPlan("2");
+        });
     }
 
     @Override
@@ -104,7 +108,7 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
         todayMealImgView = view.findViewById(R.id.todayMealImgView);
         addFavoriteIcon = view.findViewById(R.id.addFavoriteIcon);
         todayMealNameTxt = view.findViewById(R.id.todayMealNameTxt);
-        addToPlanBtn = view.findViewById(R.id.addToPlanBtn);
+        addToPlanBtn = view.findViewById(R.id.homeAddToPlanBtn);
         presenter = new HomePresenter(this, Repository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())));
     }
 }

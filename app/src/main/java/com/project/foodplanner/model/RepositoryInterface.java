@@ -34,6 +34,12 @@ public interface RepositoryInterface {
 
     void detailsMealClick(FavoriteDelegate favoriteDelegate);
 
+    void todayMealAddToPlanClicked(String dayID);
+
+    Completable insertMealToPlan(SimpleMeal simpleMeal);
+
+    void insertPlan(PlanModel planModel, SimpleMeal simpleMeal);
+
     Completable addMealToDatabase(Meal meal);
 
     Completable removeMealFromDatabase(Meal meal);

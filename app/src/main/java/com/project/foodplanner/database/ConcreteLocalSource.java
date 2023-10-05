@@ -5,6 +5,8 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 
 import com.project.foodplanner.model.Meal;
+import com.project.foodplanner.model.PlanModel;
+import com.project.foodplanner.model.SimpleMeal;
 
 import java.util.List;
 
@@ -41,5 +43,15 @@ public class ConcreteLocalSource implements LocalSource {
     @Override
     public LiveData<List<Meal>> getFavMealList() {
         return mealDAO.getAllMeals();
+    }
+
+    @Override
+    public Completable insertMealToPlan(SimpleMeal simpleMeal) {
+        return mealDAO.insertMealToPlan(simpleMeal);
+    }
+
+    @Override
+    public Completable insertPlan(PlanModel planModel) {
+        return mealDAO.insertPlan(planModel);
     }
 }

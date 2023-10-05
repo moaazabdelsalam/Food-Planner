@@ -172,6 +172,54 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
+    public void todayMealAddToPlanClicked(String dayID) {
+        Meal meal = DummyCache.getInstance().getTodayMealCache();
+        Log.i(TAG, "todayMealAddToPlanClicked: adding meal: " + meal.getStrMeal());
+        insertPlan(
+                new PlanModel(
+                        dayID,
+                        meal.getIdMeal()
+                ),
+                new SimpleMeal(
+                        meal.getIdMeal(),
+                        meal.getStrMeal(),
+                        meal.getStrCategory(),
+                        meal.getStrArea(),
+                        meal.getStrMealThumb(),
+                        meal.getStrTags()
+                )
+        );
+    }
+
+    @Override
+    public Completable insertMealToPlan(SimpleMeal simpleMeal) {
+        Log.i(TAG, "insertMealToPlan: inserting simple meal: " + simpleMeal.getStrMeal());
+        return localSource.insertMealToPlan(simpleMeal)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public void insertPlan(PlanModel planModel, SimpleMeal simpleMeal) {
+        Log.i(TAG, "insertPlan: inserting plan: " + planModel.getIdMeal());
+        insertMealToPlan(simpleMeal).subscribe(
+                () -> {
+                    Log.i(TAG, "insertMealToPlan: success" + simpleMeal.getStrMeal() + ", id: " + simpleMeal.getIdMeal());
+                    localSource.insertPlan(planModel)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(
+                                    () -> {
+                                        Log.i(TAG, "insertPlan: success: " + "day: " + planModel.getDayID() + ", meal: " + planModel.getIdMeal());
+                                    },
+                                    error -> Log.i(TAG, "insertPlan: error: " + error.getMessage())
+                            );
+                },
+                error -> Log.i(TAG, "insertMealToPlan: error " + error.getMessage())
+        );
+    }
+
+    @Override
     public String sendTodayMealId() {
         return cache.getTodayMealCache().getIdMeal();
     }

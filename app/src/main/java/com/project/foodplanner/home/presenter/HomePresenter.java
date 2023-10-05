@@ -1,8 +1,12 @@
 package com.project.foodplanner.home.presenter;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.project.foodplanner.model.PlanModel;
+import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.FavoriteDelegate;
 import com.project.foodplanner.home.view.HomeViewInterface;
 import com.project.foodplanner.model.Meal;
@@ -38,7 +42,7 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback {
     }
 
     @Override
-    public void todayMealClick() {
+    public void todayMealFavoriteClick() {
         repository.todayMealFavoriteClick(new FavoriteDelegate() {
             @Override
             public void onSuccess(String mealName, int status) {
@@ -55,6 +59,12 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback {
     @Override
     public void sendMealID() {
         view.gotToMealDetails(repository.sendTodayMealId());
+    }
+
+    @Override
+    public void addTodayMealToPlan(String dayID) {
+        Log.i(TAG, "addTodayMealToPlan: sending request to repo to add today meal to plan");
+        repository.todayMealAddToPlanClicked(dayID);
     }
 
     @Override

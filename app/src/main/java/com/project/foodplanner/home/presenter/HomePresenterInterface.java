@@ -5,7 +5,9 @@ public interface HomePresenterInterface {
 
     void addMealToFavorite();
 
-    void todayMealClick();
+    void todayMealFavoriteClick();
 
     void sendMealID();
+
+    void addTodayMealToPlan(String dayID);
 }

@@ -139,7 +139,7 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
         presenter.removeFromFavorite(meal, new FavoriteDelegate() {
             @Override
             public void onSuccess(String mealName, int Status) {
-                Snackbar.make(_view, meal + " removed from favorite", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(_view, meal.getStrMeal() + " removed from favorite", Snackbar.LENGTH_SHORT).show();
             }
 
             @Override
