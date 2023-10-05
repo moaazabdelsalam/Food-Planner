@@ -53,7 +53,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         Glide.with(context).load(category.getStrCategoryThumb()).placeholder(R.drawable.image_placeholder).into(holder.filterCategoryImg);
         holder.filterCategoryName.setText(category.getStrCategory());
         holder.filterCategoryDescription.setText(category.getStrCategoryDescription());
-        holder.filterCardView.setOnClickListener(view -> filterClickListener.categoryClicked(category));
+        holder.filterCardView.setOnClickListener(view -> filterClickListener.categoryClicked(category.getStrCategory()));
     }
 
     @Override

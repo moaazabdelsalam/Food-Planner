@@ -57,7 +57,7 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.ViewHolder> {
             holder.filterIngredientDescription.append(", " + meal.getStrCategory());
         if (meal.getStrTags() != null)
             holder.filterIngredientDescription.append(", " + meal.getStrTags());
-        holder.filterCardView.setOnClickListener(view -> filterClickListener.mealClicked(meal));
+        holder.filterCardView.setOnClickListener(view -> filterClickListener.mealClicked(meal.getIdMeal()));
     }
 
     @Override

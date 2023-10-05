@@ -2,12 +2,14 @@ package com.project.foodplanner.model;
 
 import androidx.lifecycle.LiveData;
 
+import com.project.foodplanner.network.FavoriteDelegate;
 import com.project.foodplanner.network.NetworkCallback;
+import com.project.foodplanner.network.NetworkDelegate;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
-import retrofit2.http.Query;
 
 public interface RepositoryInterface {
     void makeCategoryListCall(NetworkCallback networkCallback);
@@ -26,11 +28,17 @@ public interface RepositoryInterface {
 
     Single<MealResponse> filterByCountry(String country);
 
-    Single<MealResponse> getMealById(String mealId);
+    void getMealById(String mealId, NetworkDelegate networkDelegate);
 
-    void addMealToDatabase(Meal meal);
+    void todayMealFavoriteClick(FavoriteDelegate favoriteDelegate);
 
-    void removeMealFromDatabase(Meal meal);
+    void detailsMealClick(FavoriteDelegate favoriteDelegate);
+
+    Completable addMealToDatabase(Meal meal);
+
+    Completable removeMealFromDatabase(Meal meal);
 
     LiveData<List<Meal>> getDatabaseContent();
+
+    String sendTodayMealId();
 }

@@ -6,8 +6,10 @@ import com.project.foodplanner.model.Meal;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+
 public interface LocalSource {
-    void addMeal(Meal meal);
-    void removeMeal(Meal meal);
+    Completable addMeal(Meal meal);
+    Completable removeMeal(Meal meal);
     LiveData<List<Meal>> getFavMealList();
 }

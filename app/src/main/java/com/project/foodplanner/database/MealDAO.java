@@ -11,14 +11,17 @@ import com.project.foodplanner.model.Meal;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
+
 @Dao
 public interface MealDAO {
     @Query("SELECT * FROM favorite_meals")
     LiveData<List<Meal>> getAllMeals();
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertMeal(Meal meal);
+    Completable insertMeal(Meal meal);
 
     @Delete
-    void deleteMeal(Meal meal);
+    Completable deleteMeal(Meal meal);
 }

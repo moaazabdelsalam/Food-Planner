@@ -55,8 +55,6 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
     LottieAnimationView searchAnimation;
     TextView searchPlaceholderTxt;
     EditText searchView;
-    /*TextInputLayout searchView;
-    TextInputEditText searchViewET;*/
     ChipGroup chipGroup;
     Chip categoryChip;
     Chip countryChip;
@@ -70,7 +68,7 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
     IngredientAdapter ingredientAdapter;
     RequestCode requestCode = RequestCode.MEAL_BY_CHAR;
     FiltersFragmentDirections.ActionFiltersFragmentToFilterResultFragment action;
-    Chip selectedChip;
+    View _view;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,7 +79,9 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_filters, container, false);
+        View view = inflater.inflate(R.layout.fragment_filters, container, false);
+        _view = view;
+        return view;
 
     }
 
@@ -90,10 +90,27 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
         super.onViewCreated(view, savedInstanceState);
 
         initializeViews(view);
+
+        String category = FiltersFragmentArgs.fromBundle(getArguments()).getCategory();
+        String ingredient = FiltersFragmentArgs.fromBundle(getArguments()).getIngredient();
+        Log.i(TAG, "onViewCreated: args " + category + ingredient);
+        if (category != null) {
+            chipGroup.check(R.id.categoryChip);
+            searchView.setHint("search Categories");
+            searchPlaceholderTxt.setText("enter category name");
+            presenter.getAllCategories();
+        } else if (ingredient != null) {
+            chipGroup.check(R.id.ingredientChip);
+            searchView.setHint("search Ingredients");
+            searchPlaceholderTxt.setText("enter ingredient name");
+            presenter.getAllIngredients();
+        }
+
         chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(@NonNull ChipGroup group, int checkedId) {
-                selectedChip = group.findViewById(checkedId);
+                Chip selectedChip = group.findViewById(checkedId);
+                Log.i(TAG, "onCheckedChanged: checkedID: " + selectedChip);
                 switch (selectedChip == null ? "" : selectedChip.getText().toString()) {
                     case "Category":
                         searchView.setText("");
@@ -103,7 +120,7 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
                         searchPlaceholderTxt.setVisibility(View.VISIBLE);
                         searchAnimation.setAnimation(R.raw.animation_searching);
                         searchAnimation.playAnimation();
-                        searchPlaceholderTxt.setText("enter name of category");
+                        searchPlaceholderTxt.setText("enter category name");
                         presenter.getAllCategories();
                         requestCode = RequestCode.CATEGORIES_REQ;
                         break;
@@ -156,7 +173,7 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!charSequence.toString().equals("")) {
-                    newString.onNext(charSequence.toString());
+                    newString.onNext(charSequence.toString().trim());
                     searchPlaceholderTxt.setText("Searching...");
                 } else
                     resetRecycler();
@@ -168,29 +185,30 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
             }
         });
 
-        /*searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (!newText.equals("")) {
-                    newString.onNext(newText);
-                    searchPlaceholderTxt.setText("Searching...");
-                } else
-                    resetRecycler();
-                return true;
-            }
-        });*/
-
         newString.debounce(300, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         item -> {
-                            if (selectedChip == null) {
+                            int selectedChip = chipGroup.getCheckedChipId();
+                            switch (selectedChip) {
+                                case R.id.mealChip:
+                                    presenter.filterMeals(item);
+                                    break;
+                                case R.id.categoryChip:
+                                    presenter.filterCategories(item);
+                                    break;
+                                case R.id.countryChip:
+                                    presenter.filterCountries(item);
+                                    break;
+                                case R.id.ingredientChip:
+                                    presenter.filterIngredients(item);
+                                    break;
+                                default:
+                                    Toast.makeText(getContext(), "Please choose what to search for", Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                            /*if (selectedChip == null) {
                                 Toast.makeText(getContext(), "Please choose what to search for", Toast.LENGTH_SHORT).show();
                             } else {
                                 Log.i(TAG, "onNext: " + item);
@@ -208,26 +226,16 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
                                         presenter.filterIngredients(item);
                                         break;
                                 }
-                            }
+                            }*/
                         },
                         error -> Log.i(TAG, "onError: " + error.getMessage() + error.getCause())
                 );
-
-        /*ViewGroup.LayoutParams layoutParams1 = categoryChip.getLayoutParams();
-        layoutParams1.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        categoryChip.setLayoutParams(layoutParams1);
-
-        ViewGroup.LayoutParams layoutParams2 = countryChip.getLayoutParams();
-        layoutParams2.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        countryChip.setLayoutParams(layoutParams2);*/
     }
 
     private void initializeViews(View view) {
         searchAnimation = view.findViewById(R.id.searchAnimation);
         searchPlaceholderTxt = view.findViewById(R.id.searchPlaceholderTxt);
         searchView = view.findViewById(R.id.searchView);
-       /* searchView = view.findViewById(R.id.searchView);
-        searchViewET = view.findViewById(R.id.searchViewTxtInET);*/
         chipGroup = view.findViewById(R.id.chipGroup);
         categoryChip = view.findViewById(R.id.categoryChip);
         countryChip = view.findViewById(R.id.countryChip);
@@ -343,6 +351,7 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
             case MEAL_BY_CHAR:
                 mealAdapter.clearMealList();
                 recyclerView.setVisibility(View.INVISIBLE);
+                searchAnimation.setVisibility(View.VISIBLE);
                 searchAnimation.setAnimation(R.raw.animation_search);
                 searchAnimation.playAnimation();
                 break;
@@ -350,30 +359,38 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
     }
 
     @Override
-    public void categoryClicked(Category category) {
-        Log.i(TAG, "getting meal with category: " + category.getStrCategory());
+    public void categoryClicked(String category) {
+        Log.i(TAG, "getting meal with category: " + category);
         action.setCategory(category);
-        Navigation.findNavController(recyclerView).navigate(action);
+        Navigation.findNavController(_view).navigate(action);
     }
 
     @Override
-    public void countryClicked(Country country) {
-        Log.i(TAG, "getting meal with country: " + country.getStrArea());
+    public void countryClicked(String country) {
+        Log.i(TAG, "getting meal with country: " + country);
         action.setCountry(country);
-        Navigation.findNavController(recyclerView).navigate(action);
+        Navigation.findNavController(_view).navigate(action);
     }
 
     @Override
-    public void ingredientClicked(Ingredient ingredient) {
-        Log.i(TAG, "getting meal with ingredient: " + ingredient.getStrIngredient());
+    public void ingredientClicked(String ingredient) {
+        Log.i(TAG, "getting meal with ingredient: " + ingredient);
         action.setIngredient(ingredient);
-        Navigation.findNavController(recyclerView).navigate(action);
+        Navigation.findNavController(_view).navigate(action);
     }
 
     @Override
-    public void mealClicked(Meal meal) {
-        Log.i(TAG, "mealClicked: " + meal.getStrMeal());
-        FiltersFragmentDirections.ActionFiltersFragmentToMealDetailsFragment mealAction = FiltersFragmentDirections.actionFiltersFragmentToMealDetailsFragment(meal.getIdMeal());
-        Navigation.findNavController(recyclerView).navigate(mealAction);
+    public void mealClicked(String meal) {
+        Log.i(TAG, "mealClicked: " + meal);
+        FiltersFragmentDirections.ActionFiltersFragmentToMealDetailsFragment mealAction = FiltersFragmentDirections.actionFiltersFragmentToMealDetailsFragment(meal);
+        Navigation.findNavController(_view).navigate(mealAction);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.i(TAG, "onSaveInstanceState: text, " + searchView.getText().toString());
+        if (!searchView.getText().toString().isEmpty())
+            outState.putString("SEARCH_TXT", searchView.getText().toString());
     }
 }

@@ -17,27 +17,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.filterresult.presenter.FilterResultPresenter;
 import com.project.foodplanner.filterresult.presenter.FilterResultPresenterInterface;
-import com.project.foodplanner.model.Category;
-import com.project.foodplanner.model.Country;
-import com.project.foodplanner.model.Ingredient;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.Repository;
+import com.project.foodplanner.network.FavoriteDelegate;
 import com.project.foodplanner.network.MealClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FilterResultFragment extends Fragment implements FilterResultViewInterface, FilterResultClickListener {
+    private static final String TAG = "TAG filter result fragment";
     TextView resultFilterTxt;
     RecyclerView recyclerView;
     FilterResultAdapter filterResultAdapter;
     FilterResultPresenterInterface presenter;
     LottieAnimationView resultAnimation;
+    View _view;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,25 +56,25 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
         super.onViewCreated(view, savedInstanceState);
 
         Log.i("TAG", "onViewCreated: ");
-
+        _view = getView();
         initializeViews(view);
 
-        Ingredient ingredient = FilterResultFragmentArgs.fromBundle(getArguments()).getIngredient();
-        Category category = FilterResultFragmentArgs.fromBundle(getArguments()).getCategory();
-        Country country = FilterResultFragmentArgs.fromBundle(getArguments()).getCountry();
+        String ingredient = FilterResultFragmentArgs.fromBundle(getArguments()).getIngredient();
+        String category = FilterResultFragmentArgs.fromBundle(getArguments()).getCategory();
+        String country = FilterResultFragmentArgs.fromBundle(getArguments()).getCountry();
 
         if (ingredient != null) {
             Log.i("TAG", "got ingredient: ");
-            presenter.filterByIngredient(ingredient.getStrIngredient());
-            resultFilterTxt.setText("all Meals by " + ingredient.getStrIngredient());
+            presenter.filterByIngredient(ingredient);
+            resultFilterTxt.setText("all Meals by " + ingredient);
         } else if (category != null) {
             Log.i("TAG", "got category");
-            presenter.filterByCategory(category.getStrCategory());
-            resultFilterTxt.setText("all Meals by " + category.getStrCategory());
+            presenter.filterByCategory(category);
+            resultFilterTxt.setText("all Meals by " + category);
         } else if (country != null) {
             Log.i("TAG", "got country");
-            presenter.filterByCountry(country.getStrArea());
-            resultFilterTxt.setText("all Meals from " + country.getStrArea());
+            presenter.filterByCountry(country);
+            resultFilterTxt.setText("all Meals from " + country);
         }
     }
 
@@ -114,6 +114,39 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
     public void showMealDetails(Meal meal) {
         FilterResultFragmentDirections.ActionFilterResultFragmentToMealDetailsFragment action = FilterResultFragmentDirections.actionFilterResultFragmentToMealDetailsFragment(meal.getIdMeal());
         Navigation.findNavController(recyclerView).navigate(action);
+    }
+
+    @Override
+    public void addToFavorite(Meal meal) {
+        presenter.addToFavorite(meal, new FavoriteDelegate() {
+            @Override
+            public void onSuccess(String mealName, int Status) {
+                Snackbar.make(_view, mealName + " added to favorite", Snackbar.LENGTH_SHORT)
+                        .setAction("View", view -> {
+                            Navigation.findNavController(_view).navigate(R.id.action_filterResultFragment_to_favoriteFragment);
+                        }).show();
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.i(TAG, "onError: " + error);
+            }
+        });
+    }
+
+    @Override
+    public void removeFromFavorite(Meal meal) {
+        presenter.removeFromFavorite(meal, new FavoriteDelegate() {
+            @Override
+            public void onSuccess(String mealName, int Status) {
+                Snackbar.make(_view, meal + " removed from favorite", Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.i(TAG, "onError: " + error);
+            }
+        });
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.project.foodplanner.model.Country;
 import com.project.foodplanner.model.Ingredient;
 import com.project.foodplanner.model.Meal;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.CheckedOutputStream;
 
@@ -16,8 +17,10 @@ public class DummyCache {
     private List<Meal> mealCache;
     private List<Meal> filterResultMealCache;
     private Meal todayMealCache;
+    private List<Meal> mealOnDetailsCache;
 
     private DummyCache() {
+        mealOnDetailsCache = new ArrayList<>();
     }
 
     public static DummyCache getInstance() {
@@ -77,5 +80,13 @@ public class DummyCache {
 
     public void setTodayMealCache(Meal todayMealCache) {
         this.todayMealCache = todayMealCache;
+    }
+
+    public List<Meal> getMealOnDetailsCache() {
+        return mealOnDetailsCache;
+    }
+
+    public void addToMealOnDetailsCache(Meal meal) {
+        this.mealOnDetailsCache.add(meal);
     }
 }

@@ -85,14 +85,18 @@ public class FilterPresenter implements FilterPresenterInterface, NetworkCallbac
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             item -> {
-                                Log.i(TAG, "filterMeals: success result: " + Arrays.toString(item.getMeals().toArray()));
-                                cache.setMealCache(item.getMeals());
-                                ArrayList<Meal> filteredMeals = item.getMeals()
-                                        .stream()
-                                        .filter(meal -> meal.getStrMeal().toLowerCase().contains(query.toLowerCase()))
-                                        .collect(Collectors.toCollection(ArrayList::new));
-                                view.showMealList(filteredMeals);
-                                charToSearchWith = query.charAt(0);
+                                if (item.getMeals() != null) {
+                                    Log.i(TAG, "filterMeals: success result: " + Arrays.toString(item.getMeals().toArray()));
+                                    cache.setMealCache(item.getMeals());
+                                    ArrayList<Meal> filteredMeals = item.getMeals()
+                                            .stream()
+                                            .filter(meal -> meal.getStrMeal().toLowerCase().contains(query.toLowerCase()))
+                                            .collect(Collectors.toCollection(ArrayList::new));
+                                    view.showMealList(filteredMeals);
+                                    charToSearchWith = query.charAt(0);
+                                } else {
+                                    view.showMealList(new ArrayList<>());
+                                }
                             },
                             error -> Log.i(TAG, "filterMeals: error: " + error.getMessage() + error.getCause())
                     );

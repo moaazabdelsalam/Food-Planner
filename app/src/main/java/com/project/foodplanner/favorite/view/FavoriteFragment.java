@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +30,7 @@ public class FavoriteFragment extends Fragment implements FavoriteViewInterface,
     RecyclerView recyclerView;
     FavoriteAdapter favoriteAdapter;
     FavoritePresenterInterface presenter;
+    View _view;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,8 @@ public class FavoriteFragment extends Fragment implements FavoriteViewInterface,
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        _view = view;
 
         initializeViews(view);
         presenter.getAllFavMeals().observe(getViewLifecycleOwner(), new Observer<List<Meal>>() {
@@ -79,5 +83,25 @@ public class FavoriteFragment extends Fragment implements FavoriteViewInterface,
     @Override
     public void onFavIconClicked(Meal meal) {
         removeMealFromFav(meal);
+    }
+
+    @Override
+    public void onCategoryTxtClicked(String category) {
+        FavoriteFragmentDirections.ActionFavoriteFragmentToFilterResultFragment action = FavoriteFragmentDirections.actionFavoriteFragmentToFilterResultFragment();
+        action.setCategory(category);
+        Navigation.findNavController(_view).navigate(action);
+    }
+
+    @Override
+    public void onCountryTxtClicked(String country) {
+        FavoriteFragmentDirections.ActionFavoriteFragmentToFilterResultFragment action = FavoriteFragmentDirections.actionFavoriteFragmentToFilterResultFragment();
+        action.setCountry(country);
+        Navigation.findNavController(_view).navigate(action);
+    }
+
+    @Override
+    public void onImgClicked(String mealId) {
+        FavoriteFragmentDirections.ActionFavoriteFragmentToMealDetailsFragment action = FavoriteFragmentDirections.actionFavoriteFragmentToMealDetailsFragment(mealId);
+        Navigation.findNavController(_view).navigate(action);
     }
 }

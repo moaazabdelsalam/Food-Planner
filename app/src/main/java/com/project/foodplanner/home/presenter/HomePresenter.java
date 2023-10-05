@@ -3,6 +3,7 @@ package com.project.foodplanner.home.presenter;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.project.foodplanner.network.FavoriteDelegate;
 import com.project.foodplanner.home.view.HomeViewInterface;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.RepositoryInterface;
@@ -13,6 +14,7 @@ import com.project.foodplanner.utils.DummyCache;
 import java.util.List;
 
 public class HomePresenter implements HomePresenterInterface, NetworkCallback {
+    private static final String TAG = "TAG home presenter";
     HomeViewInterface view;
     RepositoryInterface repository;
 
@@ -31,9 +33,28 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback {
     }
 
     @Override
-    public void addMealToFavorite(Meal meal) {
-        repository.addMealToDatabase(meal);
-        DummyCache.getInstance().setTodayMealCache(meal);
+    public void addMealToFavorite() {
+
+    }
+
+    @Override
+    public void todayMealClick() {
+        repository.todayMealFavoriteClick(new FavoriteDelegate() {
+            @Override
+            public void onSuccess(String mealName, int status) {
+                view.showAddFavoriteMessage(mealName, status);
+            }
+
+            @Override
+            public void onError(String error) {
+                view.showAddFavoriteMessage("NAN", -1);
+            }
+        });
+    }
+
+    @Override
+    public void sendMealID() {
+        view.gotToMealDetails(repository.sendTodayMealId());
     }
 
     @Override

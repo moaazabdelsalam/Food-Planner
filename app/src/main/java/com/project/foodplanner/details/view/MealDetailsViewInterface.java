@@ -4,4 +4,6 @@ import com.project.foodplanner.model.Meal;
 
 public interface MealDetailsViewInterface {
     void showMeal(Meal meal);
+
+    void showFavoriteClickMessage(String meal, int status);
 }

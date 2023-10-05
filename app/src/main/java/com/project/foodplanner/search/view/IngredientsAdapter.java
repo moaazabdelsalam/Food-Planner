@@ -20,10 +20,12 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
 
     private final Context context;
     private List<Ingredient> ingredientList;
+    SearchClickListener searchClickListener;
 
-    public IngredientsAdapter(Context context, List<Ingredient> ingredientList) {
+    public IngredientsAdapter(Context context, List<Ingredient> ingredientList, SearchClickListener searchClickListener) {
         this.context = context;
         this.ingredientList = ingredientList;
+        this.searchClickListener = searchClickListener;
     }
 
     @NonNull
@@ -38,6 +40,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
         Glide.with(context).load("https://www.themealdb.com/images/ingredients/" + ingredientList.get(position).getStrIngredient() + ".png")
                 .placeholder(R.drawable.image_placeholder).into(holder.categoryImgView);
         holder.categoryName.setText(ingredientList.get(position).getStrIngredient());
+        holder.categoryImgView.setOnClickListener(view -> searchClickListener.onIngredientClicked(ingredientList.get(position).getStrIngredient()));
     }
 
     @Override

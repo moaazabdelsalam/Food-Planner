@@ -50,7 +50,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.ViewHold
         holder.filterCountryImg.setVisibility(View.VISIBLE);
         holder.filterCategoryName.setText(country.getStrArea());
         holder.filterCountryImg.setText(country.getStrArea().substring(0, 1));
-        holder.filterCardView.setOnClickListener(view -> filterClickListener.countryClicked(country));
+        holder.filterCardView.setOnClickListener(view -> filterClickListener.countryClicked(country.getStrArea()));
     }
 
     @Override

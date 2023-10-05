@@ -48,6 +48,17 @@ public class FilterResultAdapter extends RecyclerView.Adapter<FilterResultAdapte
         holder.addFavoriteIcon.setImageResource(meal.isFavorite() ? R.drawable.ic_baseline_favorite_24 : R.drawable.ic_baseline_favorite_border_24);
         holder.addToPlanBtn.setOnClickListener(view -> Log.i("TAG", "onBindViewHolder: showing meal..."));
         holder.mealImgView.setOnClickListener(view -> filterClickListener.showMealDetails(meal));
+        holder.addFavoriteIcon.setOnClickListener(view -> {
+            if (meal.isFavorite()) {
+                filterClickListener.removeFromFavorite(meal);
+                meal.setFavorite(false);
+                holder.addFavoriteIcon.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+            } else {
+                filterClickListener.addToFavorite(meal);
+                meal.setFavorite(true);
+                holder.addFavoriteIcon.setImageResource(R.drawable.ic_baseline_favorite_24);
+            }
+        });
     }
 
     @Override

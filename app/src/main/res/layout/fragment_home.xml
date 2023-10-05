@@ -66,14 +66,13 @@
                 android:id="@+id/addFavoriteIcon"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:background="@drawable/oval_shape"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="2dp"
                 android:src="@drawable/ic_baseline_favorite_border_24"
-                app:layout_constraintBottom_toTopOf="@id/todayMealNameTxt"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/todayMealImgView" />
 
             <TextView
                 android:id="@+id/todayMealNameTxt"
@@ -82,8 +81,9 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/addFavoriteIcon"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/todayMealImgView"
+                app:layout_constraintTop_toTopOf="@id/addFavoriteIcon"
                 tools:text="Meal Name" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -99,7 +99,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/todayMealNameTxt" />
+                app:layout_constraintTop_toBottomOf="@id/addFavoriteIcon" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline3"

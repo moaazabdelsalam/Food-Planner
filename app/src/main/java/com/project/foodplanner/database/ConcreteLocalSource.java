@@ -8,6 +8,9 @@ import com.project.foodplanner.model.Meal;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
+
 public class ConcreteLocalSource implements LocalSource {
     private Context context;
     private static ConcreteLocalSource instance = null;
@@ -26,13 +29,13 @@ public class ConcreteLocalSource implements LocalSource {
     }
 
     @Override
-    public void addMeal(Meal meal) {
-        new Thread(() -> mealDAO.insertMeal(meal)).start();
+    public Completable addMeal(Meal meal) {
+        return mealDAO.insertMeal(meal);
     }
 
     @Override
-    public void removeMeal(Meal meal) {
-        new Thread(() -> mealDAO.deleteMeal(meal)).start();
+    public Completable removeMeal(Meal meal) {
+        return mealDAO.deleteMeal(meal);
     }
 
     @Override

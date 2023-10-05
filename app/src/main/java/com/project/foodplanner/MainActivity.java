@@ -19,11 +19,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNav);
-        NavController navController = Navigation.findNavController(this, R.id.mainNavHost);
-        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mainNavHost);
+        NavController navCo = navHostFragment.getNavController();
+        //NavController navController = Navigation.findNavController(this, R.id.mainNavHost);
+        NavigationUI.setupWithNavController(bottomNavigationView, navCo);
 
-        navController.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
-            if (navDestination.getId() == R.id.filtersFragment) {
+        navCo.addOnDestinationChangedListener((navController1, navDestination, bundle) -> {
+            if (navDestination.getId() == R.id.filtersFragment || navDestination.getId() == R.id.filterResultFragment || navDestination.getId() == R.id.mealDetailsFragment) {
                 bottomNavigationView.setVisibility(View.GONE);
             } else {
                 bottomNavigationView.setVisibility(View.VISIBLE);

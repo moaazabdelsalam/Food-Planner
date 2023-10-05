@@ -20,10 +20,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
     private final Context context;
     private List<Category> categoryList;
+    SearchClickListener searchClickListener;
 
-    public CategoriesAdapter(Context context, List<Category> categoryList) {
+    public CategoriesAdapter(Context context, List<Category> categoryList, SearchClickListener searchClickListener) {
         this.context = context;
         this.categoryList = categoryList;
+        this.searchClickListener = searchClickListener;
     }
 
     @NonNull
@@ -37,6 +39,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Glide.with(context).load(categoryList.get(position).getStrCategoryThumb()).placeholder(R.drawable.image_placeholder).into(holder.categoryImgView);
         holder.categoryName.setText(categoryList.get(position).getStrCategory());
+        holder.categoryImgView.setOnClickListener(view -> searchClickListener.onCategoryClicked(categoryList.get(position).getStrCategory()));
     }
 
     @Override

@@ -6,11 +6,11 @@ import com.project.foodplanner.model.Ingredient;
 import com.project.foodplanner.model.Meal;
 
 public interface FilterClickListener {
-    void categoryClicked(Category category);
+    void categoryClicked(String category);
 
-    void countryClicked(Country country);
+    void countryClicked(String country);
 
-    void ingredientClicked(Ingredient ingredient);
+    void ingredientClicked(String ingredient);
 
-    void mealClicked(Meal meal);
+    void mealClicked(String mealID);
 }

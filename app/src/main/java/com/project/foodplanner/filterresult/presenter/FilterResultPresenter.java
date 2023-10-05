@@ -3,7 +3,9 @@ package com.project.foodplanner.filterresult.presenter;
 import android.util.Log;
 
 import com.project.foodplanner.filterresult.view.FilterResultViewInterface;
+import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.RepositoryInterface;
+import com.project.foodplanner.network.FavoriteDelegate;
 import com.project.foodplanner.utils.DummyCache;
 
 import java.util.ArrayList;
@@ -81,6 +83,28 @@ public class FilterResultPresenter implements FilterResultPresenterInterface {
                             cache.setFilterResultMealCache(item.getMeals());
                         },
                         error -> Log.i(TAG, "filterByCountry: error" + error.getMessage())
+                );
+    }
+
+    @Override
+    public void addToFavorite(Meal meal, FavoriteDelegate favoriteDelegate) {
+        repository.addMealToDatabase(meal)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> favoriteDelegate.onSuccess(meal.getStrMeal(), 1),
+                        error -> favoriteDelegate.onError(error.getMessage())
+                );
+    }
+
+    @Override
+    public void removeFromFavorite(Meal meal, FavoriteDelegate favoriteDelegate) {
+        repository.removeMealFromDatabase(meal)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> favoriteDelegate.onSuccess(meal.getStrMeal(), 0),
+                        error -> favoriteDelegate.onError(error.getMessage())
                 );
     }
 

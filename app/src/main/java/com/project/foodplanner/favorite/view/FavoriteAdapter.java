@@ -45,6 +45,9 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         holder.favMealCategory.setText(meal.getStrCategory());
         holder.favMealCountry.setText(meal.getStrArea());
         holder.favIcon.setOnClickListener(view -> favoriteClickListener.onFavIconClicked(meal));
+        holder.favMealCategory.setOnClickListener(view -> favoriteClickListener.onCategoryTxtClicked(meal.getStrCategory()));
+        holder.favMealCountry.setOnClickListener(view -> favoriteClickListener.onCountryTxtClicked(meal.getStrArea()));
+        holder.favMealImgView.setOnClickListener(view -> favoriteClickListener.onImgClicked(meal.getIdMeal()));
     }
 
     @Override

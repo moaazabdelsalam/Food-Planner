@@ -52,7 +52,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
                 .placeholder(R.drawable.image_placeholder).into(holder.filterIngredientImg);
         holder.filterIngredientName.setText(ingredient.getStrIngredient());
         holder.filterIngredientDescription.setText(ingredient.getStrDescription());
-        holder.filterCardView.setOnClickListener(view -> filterClickListener.ingredientClicked(ingredient));
+        holder.filterCardView.setOnClickListener(view -> filterClickListener.ingredientClicked(ingredient.getStrIngredient()));
     }
 
     @Override

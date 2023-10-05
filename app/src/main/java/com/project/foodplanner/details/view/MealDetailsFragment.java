@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.util.Pair;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
@@ -35,19 +37,21 @@ import java.util.Objects;
 
 import io.reactivex.rxjava3.core.Observable;
 
-public class MealDetailsFragment extends Fragment implements MealDetailsViewInterface {
+public class MealDetailsFragment extends Fragment implements MealDetailsViewInterface, DetailsClickListener {
     ImageView mealImg;
     ImageView addToFav;
     TextView mealName;
     TextView mealTags;
     TextView mealInstructionTxt;
     TextView mealIngredientTxt;
+    TextView textProtection;
     AppCompatButton addToPlanBtn;
     YouTubePlayerView youTubePlayerView;
     ShimmerFrameLayout detailsShimmer;
     TextView instructions;
     TextView ingredients;
     MealDetailsPresenterInterface presenter;
+    View _view;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,8 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        _view = getView();
+
         initializeViews(view);
         detailsShimmer.startShimmerAnimation();
 
@@ -79,6 +85,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
         mealTags = view.findViewById(R.id.mealTags);
         mealInstructionTxt = view.findViewById(R.id.mealInstructionTxt);
         mealIngredientTxt = view.findViewById(R.id.mealIngredientTxt);
+        textProtection = view.findViewById(R.id.textProtection);
         instructions = view.findViewById(R.id.instruction);
         ingredients = view.findViewById(R.id.ingredients);
         addToPlanBtn = view.findViewById(R.id.addToPlanBtn);
@@ -94,6 +101,10 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
                         ConcreteLocalSource.getInstance(getContext())
                 )
         );
+
+        addToFav.setOnClickListener(view1 -> {
+            favoriteClick();
+        });
     }
 
     @Override
@@ -103,6 +114,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
         mealImg.setVisibility(View.VISIBLE);
         addToFav.setVisibility(View.VISIBLE);
         youTubePlayerView.setVisibility(View.VISIBLE);
+        textProtection.setVisibility(View.VISIBLE);
         ingredients.setVisibility(View.VISIBLE);
         mealIngredientTxt.setVisibility(View.VISIBLE);
         instructions.setVisibility(View.VISIBLE);
@@ -110,6 +122,8 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
         addToPlanBtn.setVisibility(View.VISIBLE);
 
         Glide.with(requireContext()).load(meal.getStrMealThumb()).placeholder(R.drawable.image_placeholder).into(mealImg);
+        addToFav.setImageResource(meal.isFavorite() ? R.drawable.ic_baseline_favorite_24 : R.drawable.ic_baseline_favorite_border_24);
+
         mealName.setText(meal.getStrMeal());
         if (meal.getStrArea() != null)
             mealTags.append(meal.getStrArea());
@@ -165,5 +179,31 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
         ingredientList.add(new Pair(meal.getStrIngredient20(), meal.getStrMeasure20()));
 
         return ingredientList;
+    }
+
+    @Override
+    public void favoriteClick() {
+        presenter.favoriteClick();
+    }
+
+    @Override
+    public void showFavoriteClickMessage(String meal, int status) {
+        if (status == 1) {
+            addToFav.setImageResource(R.drawable.ic_baseline_favorite_24);
+            Snackbar.make(_view, meal + " added to favorite", Snackbar.LENGTH_SHORT)
+                    .setAction("View", view -> {
+                        Navigation.findNavController(_view).navigate(R.id.action_mealDetailsFragment_to_favoriteFragment);
+                    }).show();
+        } else if (status == 0) {
+            addToFav.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+            Snackbar.make(_view, meal + " removed from favorite", Snackbar.LENGTH_SHORT).show();
+        } else {
+            Snackbar.make(_view, "something error happened", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void addToPlan() {
+
     }
 }
