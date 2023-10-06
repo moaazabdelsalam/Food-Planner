@@ -15,19 +15,27 @@ import android.view.ViewGroup;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.project.foodplanner.R;
+import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.model.Meal;
+import com.project.foodplanner.model.Repository;
+import com.project.foodplanner.model.SimpleMeal;
+import com.project.foodplanner.network.MealClient;
+import com.project.foodplanner.plan.presenter.PlanPresenter;
+import com.project.foodplanner.plan.presenter.PlanPresenterInterface;
 import com.project.foodplanner.utils.DummyCache;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PlanFragment extends Fragment {
+public class PlanFragment extends Fragment implements PlanViewInterface, PlanListener {
 
     private static final String TAG = "TAG plan fragment";
+    ArrayList<PlanRecyclerViewAdapter> adapterList;
     TabLayout tabLayout;
     ViewPager2 planPager;
     PlanPagerAdapter adapter;
+    PlanPresenterInterface presenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,8 +43,7 @@ public class PlanFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_plan, container, false);
     }
@@ -45,7 +52,9 @@ public class PlanFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ArrayList<PlanRecyclerViewAdapter> adapterList = new ArrayList<>();
+        presenter = new PlanPresenter(this, Repository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())));
+
+        adapterList = new ArrayList<>();
         adapterList.add(new PlanRecyclerViewAdapter(getContext(), new ArrayList<>()));
         adapterList.add(new PlanRecyclerViewAdapter(getContext(), new ArrayList<>()));
         adapterList.add(new PlanRecyclerViewAdapter(getContext(), new ArrayList<>()));
@@ -65,16 +74,14 @@ public class PlanFragment extends Fragment {
 
         tabLayout = view.findViewById(R.id.tabLayout);
         planPager = view.findViewById(R.id.viewPager);
-        adapter = new PlanPagerAdapter(getContext(), adapterList);
+        adapter = new PlanPagerAdapter(getContext(), adapterList, this);
 
         planPager.setAdapter(adapter);
         planPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
 
         new TabLayoutMediator(tabLayout, planPager, (tab, position) -> {
-            if (position > days.size() - 1)
-                tab.setText(days.get(position - days.size()) + 1);
-            else
-                tab.setText(days.get(position) + (position + 1));
+            if (position > days.size() - 1) tab.setText(days.get(position - days.size()) + 1);
+            else tab.setText(days.get(position) + (position + 1));
         }).attach();
 
         //adapterList.set(5, );
@@ -84,10 +91,40 @@ public class PlanFragment extends Fragment {
         adapterList.set(5, new PlanRecyclerViewAdapter(getContext(), changedList));*/
         //adapter.notifyDataSetChanged();
 
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                String dayID = String.valueOf(tab.getText().charAt(tab.getText().length() - 1));
+                Log.i(TAG, "onTabSelected: plans of day: " + dayID);
+                getPlanOfDay(dayID);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
         TabLayout.Tab tab = tabLayout.getTabAt(5);
         Log.i(TAG, "onViewCreated: tab at 5: " + tab.getText());
 
         /*planPager.fakeDragBy(5);
         planPager.beginFakeDrag();*/
+    }
+
+    @Override
+    public void getPlanOfDay(String dayID) {
+        presenter.getPlanWithId(dayID);
+    }
+
+    @Override
+    public void updateAdapterWithMeal(String tabID, SimpleMeal planSimpleMeal) {
+        Log.i(TAG, "updateAdapterWithMeal: tab: " + Integer.parseInt(tabID) + " with " + planSimpleMeal);
+        adapterList.get(Integer.parseInt(tabID) - 1).addToList(planSimpleMeal);
     }
 }

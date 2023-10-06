@@ -14,6 +14,9 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public interface LocalSource {
     Completable addMeal(Meal meal);
@@ -25,4 +28,8 @@ public interface LocalSource {
     Completable insertMealToPlan(SimpleMeal simpleMeal);
 
     Completable insertPlan(PlanModel planModel);
+
+    Single<SimpleMeal> getPlanMealWithID(String id);
+
+    Flowable<List<PlanModel>> getAllPlansById(String dayID);
 }

@@ -15,6 +15,9 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 @Dao
 public interface MealDAO {
@@ -28,7 +31,6 @@ public interface MealDAO {
     Completable deleteMeal(Meal meal);
 
 
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Completable insertMealToPlan(SimpleMeal simpleMeal);
 
@@ -36,8 +38,7 @@ public interface MealDAO {
     Completable deleteMealFormPlan(SimpleMeal simpleMeal);
 
     @Query("SELECT * FROM plan_meals WHERE idMeal = :id")
-    Flowable<SimpleMeal> getPlanMealWithID(String id);
-
+    Single<SimpleMeal> getPlanMealWithID(String id);
 
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

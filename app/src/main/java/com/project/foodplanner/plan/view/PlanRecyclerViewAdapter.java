@@ -14,15 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.foodplanner.R;
 import com.project.foodplanner.model.Meal;
+import com.project.foodplanner.model.SimpleMeal;
 
 import java.util.List;
 
 public class PlanRecyclerViewAdapter extends RecyclerView.Adapter<PlanRecyclerViewAdapter.ViewHolder> {
 
     private Context context;
-    private List<Meal> mealList;
+    private List<SimpleMeal> mealList;
 
-    public PlanRecyclerViewAdapter(Context context, List<Meal> mealList) {
+    public PlanRecyclerViewAdapter(Context context, List<SimpleMeal> mealList) {
         this.context = context;
         this.mealList = mealList;
     }
@@ -35,8 +36,8 @@ public class PlanRecyclerViewAdapter extends RecyclerView.Adapter<PlanRecyclerVi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Meal meal = mealList.get(position);
-        holder.mealNameTxt.setText("THis meal set on page ");
+        SimpleMeal meal = mealList.get(position);
+        holder.mealNameTxt.setText(meal.getStrMeal());
     }
 
     @Override
@@ -44,12 +45,12 @@ public class PlanRecyclerViewAdapter extends RecyclerView.Adapter<PlanRecyclerVi
         return mealList.size();
     }
 
-    public void addToList(Meal meal) {
+    public void addToList(SimpleMeal meal) {
         mealList.add(meal);
         notifyDataSetChanged();
     }
 
-    public List<Meal> getMealList() {
+    public List<SimpleMeal> getMealList() {
         return mealList;
     }
 

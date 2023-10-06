@@ -12,6 +12,9 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class ConcreteLocalSource implements LocalSource {
     private Context context;
@@ -53,5 +56,15 @@ public class ConcreteLocalSource implements LocalSource {
     @Override
     public Completable insertPlan(PlanModel planModel) {
         return mealDAO.insertPlan(planModel);
+    }
+
+    @Override
+    public Single<SimpleMeal> getPlanMealWithID(String id) {
+        return mealDAO.getPlanMealWithID(id);
+    }
+
+    @Override
+    public Flowable<List<PlanModel>> getAllPlansById(String dayID) {
+        return mealDAO.getAllPlansById(dayID);
     }
 }

@@ -18,10 +18,12 @@ public class PlanPagerAdapter extends RecyclerView.Adapter<PlanPagerAdapter.View
     public static final String TAG = "TAG plan adapter";
     private List<PlanRecyclerViewAdapter> adapterList;
     private Context context;
+    private PlanListener planListener;
 
-    public PlanPagerAdapter(Context context, List<PlanRecyclerViewAdapter> adapterList) {
+    public PlanPagerAdapter(Context context, List<PlanRecyclerViewAdapter> adapterList, PlanListener planListener) {
         this.context = context;
         this.adapterList = adapterList;
+        this.planListener = planListener;
     }
 
     @NonNull
@@ -36,7 +38,8 @@ public class PlanPagerAdapter extends RecyclerView.Adapter<PlanPagerAdapter.View
         linearLayout.setOrientation(RecyclerView.VERTICAL);
         holder.planRV.setLayoutManager(linearLayout);
         holder.planRV.setAdapter(adapterList.get(position));
-        Log.i(TAG, "onBindViewHolder: adapter list size: " + adapterList.get(position).getItemCount());
+        //planListener.getPlanOfDay(String.valueOf(position + 1));
+        //Log.i(TAG, "onBindViewHolder: adapter list size: " + adapterList.get(position).getItemCount());
     }
 
     @Override

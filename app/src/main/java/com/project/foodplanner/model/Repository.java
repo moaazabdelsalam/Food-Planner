@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.project.foodplanner.database.PlanDelegate;
 import com.project.foodplanner.network.FavoriteDelegate;
 import com.project.foodplanner.database.LocalSource;
 import com.project.foodplanner.network.NetworkCallback;
@@ -13,10 +14,13 @@ import com.project.foodplanner.utils.DummyCache;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class Repository implements RepositoryInterface {
@@ -217,6 +221,37 @@ public class Repository implements RepositoryInterface {
                 },
                 error -> Log.i(TAG, "insertMealToPlan: error " + error.getMessage())
         );
+    }
+
+    @Override
+    public Single<SimpleMeal> getPlanMealWithID(String id) {
+        return localSource.getPlanMealWithID(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
+    public void getAllPlansByDayId(String dayID, PlanDelegate planDelegate) {
+        Log.i(TAG, "getAllPlansByDayId: day: " + dayID);
+        Disposable disposable = localSource.getAllPlansById(dayID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .delay(300, TimeUnit.MILLISECONDS)
+                .subscribe(
+                        planModelList -> {
+                            Log.i(TAG, "getAllPlansByDayId: size: " + planModelList.size());
+                            planModelList.forEach(planModel -> {
+                                Log.i(TAG, "getAllPlansByDayId: meal id: " + planModel.getIdMeal());
+                                getPlanMealWithID(planModel.getIdMeal()).subscribe(
+                                        simpleMeal -> {
+                                            Log.i(TAG, "getAllPlansByDayId:sending simple meal " + simpleMeal.getStrMeal());
+                                            planDelegate.onSuccess(simpleMeal, dayID);
+                                        },
+                                        error -> Log.i(TAG, "getAllPlansById: getPlanMealWithID: error: " + error.getMessage())
+                                );
+                            });
+                        }
+                );
     }
 
     @Override
