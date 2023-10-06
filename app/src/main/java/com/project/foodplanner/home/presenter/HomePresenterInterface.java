@@ -1,9 +1,13 @@
 package com.project.foodplanner.home.presenter;
 
+import com.project.foodplanner.model.Meal;
+
 public interface HomePresenterInterface {
     void getTodayMeal();
 
-    void addMealToFavorite();
+    void addMealToFavorite(Meal meal);
+
+    void removeFromFavorite(Meal meal);
 
     void todayMealFavoriteClick();
 
@@ -12,4 +16,6 @@ public interface HomePresenterInterface {
     void addTodayMealToPlan(String dayID);
 
     void getTodayPlan(String dayID);
+
+    void getMealsOfCountry(String country);
 }

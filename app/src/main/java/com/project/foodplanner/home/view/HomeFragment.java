@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -24,6 +25,9 @@ import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.snackbar.Snackbar;
+import com.project.foodplanner.favorite.view.FavoriteClickListener;
+import com.project.foodplanner.filterresult.view.FilterResultAdapter;
+import com.project.foodplanner.filterresult.view.FilterResultClickListener;
 import com.project.foodplanner.model.DayPickerDialog;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
@@ -31,13 +35,23 @@ import com.project.foodplanner.home.presenter.HomePresenter;
 import com.project.foodplanner.home.presenter.HomePresenterInterface;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.Repository;
+import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.MealClient;
+import com.project.foodplanner.plan.view.PlanClickListener;
+import com.project.foodplanner.plan.view.PlanRecyclerViewAdapter;
 
-public class HomeFragment extends Fragment implements HomeViewInterface {
+import java.util.ArrayList;
+import java.util.List;
+
+public class HomeFragment extends Fragment implements HomeViewInterface, FilterResultClickListener, PlanClickListener {
     private static final String TAG = "TAG home fragment";
     HomePresenterInterface presenter;
     ShimmerFrameLayout todayMealShimmerLayout;
+    ShimmerFrameLayout regionShimmerLayout;
+    RecyclerView popularInRegionRV;
     RecyclerView todayPlanRV;
+    FilterResultAdapter regionAdapter;
+    PlanRecyclerViewAdapter planRecyclerViewAdapter;
     CardView todayMealView;
     ImageView todayMealImgView;
     ImageView addFavoriteIcon;
@@ -68,6 +82,7 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
         initializeViews(view);
         presenter.getTodayMeal();
         presenter.getTodayPlan(String.valueOf(dayOfMonth));
+        presenter.getMealsOfCountry("Egyptian");
 
         addFavoriteIcon.setOnClickListener(view1 -> presenter.todayMealFavoriteClick());
         todayMealImgView.setOnClickListener(view1 -> presenter.sendMealID());
@@ -120,9 +135,14 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
             addToPlanBtn.setVisibility(View.INVISIBLE);
             Snackbar.make(_view, meal + " added to plan", Snackbar.LENGTH_SHORT)
                     .setAction("View", view -> {
-                        //Navigation.findNavController(_view).navigate(R.id.action_homeFragment_to_favoriteFragment);
+                        Navigation.findNavController(_view).navigate(R.id.action_homeFragment_to_planFragment);
                     }).show();
         }
+    }
+
+    @Override
+    public void showTodayPlanMeal(SimpleMeal simpleMeal) {
+        planRecyclerViewAdapter.addToList(simpleMeal);
     }
 
     @Override
@@ -131,11 +151,33 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
         Navigation.findNavController(_view).navigate(action);
     }
 
+    @Override
+    public void showCountryMeals(List<Meal> meals) {
+        regionShimmerLayout.stopShimmerAnimation();
+        regionShimmerLayout.setVisibility(View.GONE);
+        regionAdapter.updateMealList(meals);
+    }
+
     private void initializeViews(View view) {
         todayMealShimmerLayout = view.findViewById(R.id.todayMealShimmerLayout);
         todayMealShimmerLayout.startShimmerAnimation();
 
+        regionShimmerLayout = view.findViewById(R.id.regionShimmerLayout);
+        regionShimmerLayout.startShimmerAnimation();
+
+        popularInRegionRV = view.findViewById(R.id.popularInRegionRV);
+        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getContext());
+        linearLayoutManager2.setOrientation(RecyclerView.HORIZONTAL);
+        regionAdapter = new FilterResultAdapter(getContext(), new ArrayList<>(), this);
+        popularInRegionRV.setLayoutManager(linearLayoutManager2);
+        popularInRegionRV.setAdapter(regionAdapter);
+
         todayPlanRV = view.findViewById(R.id.todayPlanRV);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        planRecyclerViewAdapter = new PlanRecyclerViewAdapter(getContext(), new ArrayList<>(), this);
+        todayPlanRV.setLayoutManager(linearLayoutManager);
+        todayPlanRV.setAdapter(planRecyclerViewAdapter);
 
         todayMealView = view.findViewById(R.id.todayMealView);
         todayMealImgView = view.findViewById(R.id.todayMealImgView);
@@ -143,5 +185,41 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
         todayMealNameTxt = view.findViewById(R.id.todayMealNameTxt);
         addToPlanBtn = view.findViewById(R.id.homeAddToPlanBtn);
         presenter = new HomePresenter(this, Repository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())));
+    }
+
+    @Override
+    public void showMealDetails(Meal meal) {
+        HomeFragmentDirections.ActionHomeFragmentToMealDetailsFragment action = HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(meal.getIdMeal());
+        Navigation.findNavController(_view).navigate(action);
+    }
+
+    @Override
+    public void addToFavorite(Meal meal) {
+        presenter.addMealToFavorite(meal);
+    }
+
+    @Override
+    public void removeFromFavorite(Meal meal) {
+        presenter.removeFromFavorite(meal);
+    }
+
+    @Override
+    public void onMealImgClick(String mealId) {
+        HomeFragmentDirections.ActionHomeFragmentToMealDetailsFragment action = HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(mealId);
+        Navigation.findNavController(_view).navigate(action);
+    }
+
+    @Override
+    public void onCategoryTxtClicked(String category) {
+        HomeFragmentDirections.ActionHomeFragmentToFilterResultFragment action = HomeFragmentDirections.actionHomeFragmentToFilterResultFragment();
+        action.setCategory(category);
+        Navigation.findNavController(_view).navigate(action);
+    }
+
+    @Override
+    public void onCountryTxtClicked(String country) {
+        HomeFragmentDirections.ActionHomeFragmentToFilterResultFragment action = HomeFragmentDirections.actionHomeFragmentToFilterResultFragment();
+        action.setCountry(country);
+        Navigation.findNavController(_view).navigate(action);
     }
 }

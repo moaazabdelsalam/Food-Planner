@@ -10,9 +10,9 @@ public interface FilterResultPresenterInterface {
 
     void filterByCountry(String country);
 
-    void addToFavorite(Meal meal, DatabaseDelegate favoriteDelegate);
+    void addToFavorite(Meal meal);
 
-    void removeFromFavorite(Meal meal, DatabaseDelegate favoriteDelegate);
+    void removeFromFavorite(Meal meal);
 
     void clearCache();
 }

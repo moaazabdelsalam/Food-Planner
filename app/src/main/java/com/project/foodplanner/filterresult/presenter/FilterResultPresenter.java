@@ -6,14 +6,16 @@ import com.project.foodplanner.filterresult.view.FilterResultViewInterface;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.RepositoryInterface;
 import com.project.foodplanner.network.DatabaseDelegate;
+import com.project.foodplanner.network.NetworkDelegate;
 import com.project.foodplanner.utils.DummyCache;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class FilterResultPresenter implements FilterResultPresenterInterface {
+public class FilterResultPresenter implements FilterResultPresenterInterface, NetworkDelegate {
     private static final String TAG = "TAG filter presenter";
     private final FilterResultViewInterface view;
     private final RepositoryInterface repository;
@@ -69,43 +71,38 @@ public class FilterResultPresenter implements FilterResultPresenterInterface {
 
     @Override
     public void filterByCountry(String country) {
-        if (cache.getFilterResultMealCache() != null) {
-            view.updateAdapterList(cache.getFilterResultMealCache());
-            return;
-        }
         Log.i(TAG, "filterByCountry: " + country);
-        repository.filterByCountry(country)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        item -> {
-                            view.updateAdapterList(item.getMeals());
-                            cache.setFilterResultMealCache(item.getMeals());
-                        },
-                        error -> Log.i(TAG, "filterByCountry: error" + error.getMessage())
-                );
+        repository.filterByCountry(country, this);
     }
 
     @Override
-    public void addToFavorite(Meal meal, DatabaseDelegate favoriteDelegate) {
-        repository.addMealToDatabase(meal)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        () -> favoriteDelegate.onSuccess(meal.getStrMeal(), 1),
-                        error -> favoriteDelegate.onError(error.getMessage())
-                );
+    public void addToFavorite(Meal meal) {
+        repository.addMealToDatabase(meal, new DatabaseDelegate() {
+            @Override
+            public void onSuccess(String mealName, int Status) {
+                view.showFavoriteClickMessage(mealName, 1);
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 
     @Override
-    public void removeFromFavorite(Meal meal, DatabaseDelegate favoriteDelegate) {
-        repository.removeMealFromDatabase(meal)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        () -> favoriteDelegate.onSuccess(meal.getStrMeal(), 0),
-                        error -> favoriteDelegate.onError(error.getMessage())
-                );
+    public void removeFromFavorite(Meal meal) {
+        repository.removeMealFromDatabase(meal, new DatabaseDelegate() {
+            @Override
+            public void onSuccess(String mealName, int Status) {
+                view.showFavoriteClickMessage(mealName, 1);
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 
     @Override
@@ -113,4 +110,13 @@ public class FilterResultPresenter implements FilterResultPresenterInterface {
         cache.clearFilterResultMealCache();
     }
 
+    @Override
+    public void onSuccess(List<Meal> mealList) {
+        view.updateAdapterList(mealList);
+    }
+
+    @Override
+    public void onError(String error) {
+
+    }
 }

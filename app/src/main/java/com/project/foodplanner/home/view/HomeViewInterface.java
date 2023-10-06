@@ -1,6 +1,9 @@
 package com.project.foodplanner.home.view;
 
 import com.project.foodplanner.model.Meal;
+import com.project.foodplanner.model.SimpleMeal;
+
+import java.util.List;
 
 public interface HomeViewInterface {
     void showTodayMeal(Meal meal);
@@ -9,5 +12,9 @@ public interface HomeViewInterface {
 
     void showAddToPlanMessage(String meal, int status);
 
+    void showTodayPlanMeal(SimpleMeal simpleMeal);
+
     void gotToMealDetails(String mealID);
+
+    void showCountryMeals(List<Meal> meals);
 }

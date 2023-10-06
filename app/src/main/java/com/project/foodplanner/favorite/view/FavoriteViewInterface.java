@@ -4,4 +4,6 @@ import com.project.foodplanner.model.Meal;
 
 public interface FavoriteViewInterface {
     void removeMealFromFav(Meal meal);
+
+    void showRemoveMealMessage(String mealName);
 }

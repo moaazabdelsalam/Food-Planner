@@ -118,35 +118,26 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
 
     @Override
     public void addToFavorite(Meal meal) {
-        presenter.addToFavorite(meal, new DatabaseDelegate() {
-            @Override
-            public void onSuccess(String mealName, int Status) {
-                Snackbar.make(_view, mealName + " added to favorite", Snackbar.LENGTH_SHORT)
-                        .setAction("View", view -> {
-                            Navigation.findNavController(_view).navigate(R.id.action_filterResultFragment_to_favoriteFragment);
-                        }).show();
-            }
-
-            @Override
-            public void onError(String error) {
-                Log.i(TAG, "onError: " + error);
-            }
-        });
+        presenter.addToFavorite(meal);
     }
 
     @Override
     public void removeFromFavorite(Meal meal) {
-        presenter.removeFromFavorite(meal, new DatabaseDelegate() {
-            @Override
-            public void onSuccess(String mealName, int Status) {
-                Snackbar.make(_view, meal.getStrMeal() + " removed from favorite", Snackbar.LENGTH_SHORT).show();
-            }
+        presenter.removeFromFavorite(meal);
+    }
 
-            @Override
-            public void onError(String error) {
-                Log.i(TAG, "onError: " + error);
-            }
-        });
+    @Override
+    public void showFavoriteClickMessage(String mealName, int status) {
+        if (status == 1) {
+            Snackbar.make(_view, mealName + " added to favorite", Snackbar.LENGTH_SHORT)
+                    .setAction("View", view -> {
+                        Navigation.findNavController(_view).navigate(R.id.action_filterResultFragment_to_favoriteFragment);
+                    }).show();
+        } else if (status == 0) {
+            Snackbar.make(_view, mealName + " removed from favorite", Snackbar.LENGTH_SHORT).show();
+        } else {
+            Snackbar.make(_view, "something error happened", Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     @Override

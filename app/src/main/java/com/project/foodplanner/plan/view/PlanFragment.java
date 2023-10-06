@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
@@ -31,7 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-public class PlanFragment extends Fragment implements PlanViewInterface, PlanListener {
+public class PlanFragment extends Fragment implements PlanViewInterface, PlanListener, PlanClickListener {
 
     private static final String TAG = "TAG plan fragment";
     ArrayList<PlanRecyclerViewAdapter> adapterList;
@@ -40,6 +41,7 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
     PlanPagerAdapter adapter;
     PlanPresenterInterface presenter;
     Calendar calendar = Calendar.getInstance();
+    View _view;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,22 +58,14 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        _view = view;
+
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         adapterList = new ArrayList<>();
         ArrayList<String> tabName = getDates();
 
         presenter = new PlanPresenter(this, Repository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())));
         presenter.getAllPlans();
-
-
-        /*adapterList.add(new PlanRecyclerViewAdapter(getContext(), new ArrayList<>()));
-        adapterList.add(new PlanRecyclerViewAdapter(getContext(), new ArrayList<>()));
-        adapterList.add(new PlanRecyclerViewAdapter(getContext(), new ArrayList<>()));
-        adapterList.add(new PlanRecyclerViewAdapter(getContext(), new ArrayList<>()));
-        adapterList.add(new PlanRecyclerViewAdapter(getContext(), new ArrayList<>()));
-        adapterList.add(new PlanRecyclerViewAdapter(getContext(), new ArrayList<>()));
-        adapterList.add(new PlanRecyclerViewAdapter(getContext(), new ArrayList<>()));*/
-
 
         tabLayout = view.findViewById(R.id.tabLayout);
         planPager = view.findViewById(R.id.viewPager);
@@ -94,13 +88,6 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
 
         planPager.setCurrentItem(dayOfMonth - 1, false);
 
-        //adapterList.set(5, );
-        //adapterList.get(5).addToList(DummyCache.getInstance().getTodayMealCache());
-        /*List<Meal> changedList = adapterList.get(5).getMealList();
-        Log.i(TAG, "onViewCreated: changedListSize: " + changedList.size());
-        adapterList.set(5, new PlanRecyclerViewAdapter(getContext(), changedList));*/
-        //adapter.notifyDataSetChanged();
-
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -121,53 +108,32 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
             }
         });
 
-        /*TabLayout.Tab tab = tabLayout.getTabAt(5);
-        Log.i(TAG, "onViewCreated: tab at 5: " + tab.getText());*/
-
     }
 
     public ArrayList<String> getDates() {
-
         int month = calendar.get(Calendar.MONTH);
-        int year = calendar.get(Calendar.YEAR);
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
         Log.i(TAG, "getDates: calender, now: " + calendar.getTime());
-        //Log.i(TAG, "getDates: current date: " + dayOfMonth + "/" + (month + 1) + "/" + year);
-        //Log.i(TAG, "getDates: day of week: " + dayOfWeek);
 
         String[] dayNames = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
         String[] months = {
                 "Jan", "Feb", "Mar", "Apr", "May", "Jun",
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
         };
-        //Calendar cal = Calendar.getInstance();
 
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        //SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        //System.out.print(df.format(cal.getTime()));
         ArrayList<Integer> days = new ArrayList<>();
         int maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         for (int i = 1; i <= maxDay; i++) {
             days.add(i);
-            adapterList.add(new PlanRecyclerViewAdapter(getContext(), new ArrayList<>()));
-            //cal.set(Calendar.DAY_OF_MONTH, i);
-            /*String formattedNumber = String.format("%02d", i);
-            int parsedNumber = Integer.parseInt(formattedNumber);*/
-            //Log.i(TAG, "getDates: day:" + days.get(i - 1));
-            //System.out.print(", " + df.format(cal.getTime()));
+            adapterList.add(new PlanRecyclerViewAdapter(getContext(), new ArrayList<>(), this));
         }
 
         ArrayList<String> tabNames = new ArrayList<>();
         days.forEach(day -> {
             int index = (day - 1) % dayNames.length;
-            /*Log.i(TAG, "getDates: days of month: " +
-                    dayNames[index] +
-                    " " + day + "/" +
-                    months[month]);*/
             String formattedTabName = String.format(new Locale(Locale.getDefault().getLanguage(), "EG"), "%s %02d/%s", dayNames[index], day, months[month]);
-            //Log.i(TAG, "getDates: day: " + formattedTabName);
             tabNames.add(formattedTabName);
         });
 
@@ -183,5 +149,25 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
     public void updateAdapterWithMeal(String tabID, SimpleMeal planSimpleMeal) {
         Log.i(TAG, "updateAdapterWithMeal: tab: " + Integer.parseInt(tabID) + " with " + planSimpleMeal);
         adapterList.get(Integer.parseInt(tabID) - 1).addToList(planSimpleMeal);
+    }
+
+    @Override
+    public void onMealImgClick(String mealId) {
+        PlanFragmentDirections.ActionPlanFragmentToMealDetailsFragment action = PlanFragmentDirections.actionPlanFragmentToMealDetailsFragment(mealId);
+        Navigation.findNavController(_view).navigate(action);
+    }
+
+    @Override
+    public void onCategoryTxtClicked(String category) {
+        PlanFragmentDirections.ActionPlanFragmentToFilterResultFragment action = PlanFragmentDirections.actionPlanFragmentToFilterResultFragment();
+        action.setCategory(category);
+        Navigation.findNavController(_view).navigate(action);
+    }
+
+    @Override
+    public void onCountryTxtClicked(String country) {
+        PlanFragmentDirections.ActionPlanFragmentToFilterResultFragment action = PlanFragmentDirections.actionPlanFragmentToFilterResultFragment();
+        action.setCountry(country);
+        Navigation.findNavController(_view).navigate(action);
     }
 }

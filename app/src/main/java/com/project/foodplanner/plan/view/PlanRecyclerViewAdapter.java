@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.project.foodplanner.R;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.SimpleMeal;
@@ -22,22 +23,30 @@ public class PlanRecyclerViewAdapter extends RecyclerView.Adapter<PlanRecyclerVi
 
     private Context context;
     private List<SimpleMeal> mealList;
+    PlanClickListener planClickListener;
 
-    public PlanRecyclerViewAdapter(Context context, List<SimpleMeal> mealList) {
+    public PlanRecyclerViewAdapter(Context context, List<SimpleMeal> mealList, PlanClickListener planClickListener) {
         this.context = context;
         this.mealList = mealList;
+        this.planClickListener = planClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.view_item, parent, false));
+        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.plan_view_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         SimpleMeal meal = mealList.get(position);
-        holder.mealNameTxt.setText(meal.getStrMeal());
+        Glide.with(context).load(meal.getStrMealThumb()).placeholder(R.drawable.image_placeholder).into(holder.planMealImgView);
+        holder.planMealNameTxt.setText(meal.getStrMeal());
+        holder.planMealCategory.setText(meal.getStrCategory());
+        holder.planMealCountry.setText(meal.getStrArea());
+        holder.planMealImgView.setOnClickListener(view -> planClickListener.onMealImgClick(meal.getIdMeal()));
+        holder.planMealCountry.setOnClickListener(view -> planClickListener.onCountryTxtClicked(meal.getStrArea()));
+        holder.planMealCategory.setOnClickListener(view -> planClickListener.onCategoryTxtClicked(meal.getStrCategory()));
     }
 
     @Override
@@ -56,17 +65,18 @@ public class PlanRecyclerViewAdapter extends RecyclerView.Adapter<PlanRecyclerVi
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView mealImgView;
-        ImageView addFavoriteIcon;
-        TextView mealNameTxt;
-        AppCompatButton addToPlanBtn;
+        ImageView planMealImgView;
+        TextView planMealNameTxt;
+        TextView planMealCategory;
+        TextView planMealCountry;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            mealImgView = itemView.findViewById(R.id.mealImgView);
-            addFavoriteIcon = itemView.findViewById(R.id.addFavoriteIcon);
-            mealNameTxt = itemView.findViewById(R.id.mealNameTxt);
+            planMealImgView = itemView.findViewById(R.id.planMealImgView);
+            planMealNameTxt = itemView.findViewById(R.id.planMealNameTxt);
+            planMealCategory = itemView.findViewById(R.id.planMealCategory);
+            planMealCountry = itemView.findViewById(R.id.planMealCountry);
         }
     }
 }

@@ -27,7 +27,7 @@ public interface RepositoryInterface {
 
     Single<MealResponse> filterByCategory(String category);
 
-    Single<MealResponse> filterByCountry(String country);
+    void filterByCountry(String country, NetworkDelegate networkDelegate);
 
     void getMealById(String mealId, NetworkDelegate networkDelegate);
 
@@ -39,7 +39,7 @@ public interface RepositoryInterface {
 
     Completable insertMealToPlan(SimpleMeal simpleMeal);
 
-    void getAllMealsOfDay(String dayID);
+    void getAllPlansOfDay(String dayID, PlanDelegate planDelegate);
 
     void insertPlan(PlanModel planModel, SimpleMeal simpleMeal, DatabaseDelegate databaseDelegate);
 
@@ -49,9 +49,9 @@ public interface RepositoryInterface {
 
     void getAllPlans(PlanDelegate planDelegate);
 
-    Completable addMealToDatabase(Meal meal);
+    void addMealToDatabase(Meal meal, DatabaseDelegate databaseDelegate);
 
-    Completable removeMealFromDatabase(Meal meal);
+    void removeMealFromDatabase(Meal meal, DatabaseDelegate databaseDelegate);
 
     LiveData<List<Meal>> getDatabaseContent();
 

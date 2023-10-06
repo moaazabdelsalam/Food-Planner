@@ -16,6 +16,12 @@
         <action
             android:id="@+id/action_homeFragment_to_mealDetailsFragment"
             app:destination="@id/mealDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_planFragment"
+            app:destination="@id/planFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_filterResultFragment"
+            app:destination="@id/filterResultFragment" />
     </fragment>
     <fragment
         android:id="@+id/favoriteFragment"
@@ -45,7 +51,14 @@
         android:id="@+id/planFragment"
         android:name="com.project.foodplanner.plan.view.PlanFragment"
         android:label="fragment_plan"
-        tools:layout="@layout/fragment_plan" />
+        tools:layout="@layout/fragment_plan" >
+        <action
+            android:id="@+id/action_planFragment_to_mealDetailsFragment"
+            app:destination="@id/mealDetailsFragment" />
+        <action
+            android:id="@+id/action_planFragment_to_filterResultFragment"
+            app:destination="@id/filterResultFragment" />
+    </fragment>
     <fragment
         android:id="@+id/filtersFragment"
         android:name="com.project.foodplanner.filter.view.FiltersFragment"

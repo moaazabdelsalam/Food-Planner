@@ -76,8 +76,16 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public Single<MealResponse> filterByCountry(String country) {
-        return remoteSource.filterByCountry(country);
+    public void filterByCountry(String country, NetworkDelegate networkDelegate) {
+        if (cache.getRegionMealsCache() != null)
+            networkDelegate.onSuccess(cache.getRegionMealsCache());
+        else remoteSource.filterByCountry(country)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        mealResponse -> networkDelegate.onSuccess(mealResponse.getMeals()),
+                        error -> networkDelegate.onError(error.getMessage())
+                );
     }
 
     @Override
@@ -110,7 +118,7 @@ public class Repository implements RepositoryInterface {
             Log.i(TAG, "todayMealFavoriteClick: adding to favorite");
             localSource.addMeal(cache.getTodayMealCache())
                     .subscribeOn(Schedulers.io())
-                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             () -> {
                                 favoriteDelegate.onSuccess(cache.getTodayMealCache().getStrMeal(), 1);
@@ -125,7 +133,7 @@ public class Repository implements RepositoryInterface {
             Log.i(TAG, "todayMealFavoriteClick: removing from favorite");
             localSource.removeMeal(cache.getTodayMealCache())
                     .subscribeOn(Schedulers.io())
-                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             () -> {
                                 favoriteDelegate.onSuccess(cache.getTodayMealCache().getStrMeal(), 0);
@@ -145,7 +153,7 @@ public class Repository implements RepositoryInterface {
             Log.i(TAG, "detailsMealClick: adding to favorite");
             localSource.addMeal(cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1))
                     .subscribeOn(Schedulers.io())
-                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             () -> {
                                 favoriteDelegate.onSuccess(cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1).getStrMeal(), 1);
@@ -160,7 +168,7 @@ public class Repository implements RepositoryInterface {
             Log.i(TAG, "todayMealFavoriteClick: removing from favorite");
             localSource.removeMeal(cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1))
                     .subscribeOn(Schedulers.io())
-                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             () -> {
                                 favoriteDelegate.onSuccess(cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1).getStrMeal(), 0);
@@ -204,8 +212,24 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public void getAllMealsOfDay(String dayID) {
-
+    public void getAllPlansOfDay(String dayID, PlanDelegate planDelegate) {
+        Log.i(TAG, "getAllPlansOfDay: " + dayID);
+        localSource.getAllPlansById(dayID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        planModelList ->
+                                planModelList.forEach(planModel -> {
+                                    Log.i(TAG, "getting plans of day: " + planModel.getDayID());
+                                    getPlanMealWithID(planModel.getIdMeal()).subscribe(
+                                            simpleMeal -> {
+                                                Log.i(TAG, "getAllPlansOfDay:sending simple meal " + simpleMeal.getStrMeal());
+                                                planDelegate.onSuccess(simpleMeal, planModel.getDayID());
+                                            },
+                                            error -> Log.i(TAG, "getAllPlansById: getPlanMealWithID: error: " + error.getMessage())
+                                    );
+                                })
+                );
     }
 
     @Override
@@ -286,13 +310,35 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public Completable addMealToDatabase(Meal meal) {
-        return localSource.addMeal(meal);
+    public void addMealToDatabase(Meal meal, DatabaseDelegate databaseDelegate) {
+        localSource.addMeal(meal)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> {
+                            databaseDelegate.onSuccess(meal.getStrMeal(), 1);
+                        },
+                        error -> {
+                            databaseDelegate.onError(error.getMessage());
+                            Log.i(TAG, "todayMealFavoriteClick: error" + error.getMessage());
+                        }
+                );
     }
 
     @Override
-    public Completable removeMealFromDatabase(Meal meal) {
-        return localSource.removeMeal(meal);
+    public void removeMealFromDatabase(Meal meal, DatabaseDelegate databaseDelegate) {
+        localSource.removeMeal(meal)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> {
+                            databaseDelegate.onSuccess(meal.getStrMeal(), 0);
+                        },
+                        error -> {
+                            databaseDelegate.onError(error.getMessage());
+                            Log.i(TAG, "todayMealFavoriteClick: error" + error.getMessage());
+                        }
+                );
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,11 +35,9 @@ public class PlanPagerAdapter extends RecyclerView.Adapter<PlanPagerAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        LinearLayoutManager linearLayout = new LinearLayoutManager(context);
-        linearLayout.setOrientation(RecyclerView.VERTICAL);
-        holder.planRV.setLayoutManager(linearLayout);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2);
+        holder.planRV.setLayoutManager(gridLayoutManager);
         holder.planRV.setAdapter(adapterList.get(position));
-        //planListener.getPlanOfDay(String.valueOf(position + 1));
         //Log.i(TAG, "onBindViewHolder: adapter list size: " + adapterList.get(position).getItemCount());
     }
 

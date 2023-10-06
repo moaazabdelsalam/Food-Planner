@@ -42,6 +42,10 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         Meal meal = favMealList.get(position);
         Glide.with(context).load(meal.getStrMealThumb()).placeholder(R.drawable.image_placeholder).into(holder.favMealImgView);
         holder.favMealNameTxt.setText(meal.getStrMeal());
+        if (meal.getStrCategory() == null)
+            holder.favMealCategory.setVisibility(View.INVISIBLE);
+        if (meal.getStrArea() == null)
+            holder.favMealCountry.setVisibility(View.INVISIBLE);
         holder.favMealCategory.setText(meal.getStrCategory());
         holder.favMealCountry.setText(meal.getStrArea());
         holder.favIcon.setOnClickListener(view -> favoriteClickListener.onFavIconClicked(meal));

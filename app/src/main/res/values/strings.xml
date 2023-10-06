@@ -36,4 +36,5 @@
     <string name="ingredients">Ingredients</string>
     <string name="search_placeholder_text">First choose what to search for then enter your search.</string>
     <string name="search_hint">What are you looking for?</string>
+    <string name="popular_in_egypt">Popular in Egypt</string>
 </resources>

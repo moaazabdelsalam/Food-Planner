@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface FilterResultViewInterface {
     void updateAdapterList(List<Meal> mealList);
+
+    void showFavoriteClickMessage(String mealName, int Status);
 }

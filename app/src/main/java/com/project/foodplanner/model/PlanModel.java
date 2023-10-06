@@ -6,13 +6,15 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "plan_table", foreignKeys = {@ForeignKey(entity = SimpleMeal.class, parentColumns = "idMeal", childColumns = "idMeal", onDelete = ForeignKey.CASCADE)})
+@Entity(tableName = "plan_table",
+        foreignKeys = {@ForeignKey(entity = SimpleMeal.class, parentColumns = "idMeal", childColumns = "idMeal", onDelete = ForeignKey.CASCADE)},
+        primaryKeys = {"dayID", "idMeal"})
 public class PlanModel {
 
-    @PrimaryKey(autoGenerate = true)
-    @NonNull
     long id;
+    @NonNull
     String dayID;
+    @NonNull
     private String idMeal;
 
     public PlanModel(long id, String dayID, String idMeal) {

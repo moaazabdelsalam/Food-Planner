@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.favorite.presenter.FavoritePresenter;
@@ -78,6 +80,11 @@ public class FavoriteFragment extends Fragment implements FavoriteViewInterface,
     @Override
     public void removeMealFromFav(Meal meal) {
         presenter.removeMeal(meal);
+    }
+
+    @Override
+    public void showRemoveMealMessage(String mealName) {
+        Toast.makeText(getContext(), mealName + " removed from favorite", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.project.foodplanner.favorite.view.FavoriteViewInterface;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.RepositoryInterface;
+import com.project.foodplanner.network.DatabaseDelegate;
 
 import java.util.List;
 
@@ -30,14 +31,16 @@ public class FavoritePresenter implements FavoritePresenterInterface {
 
     @Override
     public void removeMeal(Meal meal) {
-        repository.removeMealFromDatabase(meal)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        () -> {
-                            Log.i(TAG, "removeMeal: " + meal.getStrMeal() + " done");
-                        },
-                        error -> Log.i(TAG, "removeMeal: error" + error.getMessage())
-                );
+        repository.removeMealFromDatabase(meal, new DatabaseDelegate() {
+            @Override
+            public void onSuccess(String mealName, int Status) {
+                view.showRemoveMealMessage(mealName);
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
     }
 }
