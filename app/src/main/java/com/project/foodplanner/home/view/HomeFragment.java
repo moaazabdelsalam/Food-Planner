@@ -1,5 +1,7 @@
 package com.project.foodplanner.home.view;
 
+import android.app.DatePickerDialog;
+import android.icu.util.Calendar;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -7,18 +9,22 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.snackbar.Snackbar;
+import com.project.foodplanner.model.DayPickerDialog;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.home.presenter.HomePresenter;
@@ -31,12 +37,14 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
     private static final String TAG = "TAG home fragment";
     HomePresenterInterface presenter;
     ShimmerFrameLayout todayMealShimmerLayout;
+    RecyclerView todayPlanRV;
     CardView todayMealView;
     ImageView todayMealImgView;
     ImageView addFavoriteIcon;
     TextView todayMealNameTxt;
     Button addToPlanBtn;
     View _view;
+    Calendar calendar = Calendar.getInstance();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,15 +62,26 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         _view = getView();
 
         initializeViews(view);
         presenter.getTodayMeal();
+        presenter.getTodayPlan(String.valueOf(dayOfMonth));
+
         addFavoriteIcon.setOnClickListener(view1 -> presenter.todayMealFavoriteClick());
         todayMealImgView.setOnClickListener(view1 -> presenter.sendMealID());
         addToPlanBtn.setOnClickListener(view1 -> {
             Log.i(TAG, "onViewCreated: add to plan clicked");
-            presenter.addTodayMealToPlan("2");
+            MaterialDatePicker<Long> dayPickerDialog = DayPickerDialog.showDialog(requireActivity().getSupportFragmentManager());
+            dayPickerDialog.addOnPositiveButtonClickListener(selection -> {
+
+                calendar.setTimeInMillis(selection);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                Log.i(TAG, "onViewCreated: selected day: " + day);
+                presenter.addTodayMealToPlan(String.valueOf(day));
+            });
         });
     }
 
@@ -95,6 +114,18 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
     }
 
     @Override
+    public void showAddToPlanMessage(String meal, int status) {
+        if (status == 1) {
+            addToPlanBtn.setText(R.string.remove_from_your_plan);
+            addToPlanBtn.setVisibility(View.INVISIBLE);
+            Snackbar.make(_view, meal + " added to plan", Snackbar.LENGTH_SHORT)
+                    .setAction("View", view -> {
+                        //Navigation.findNavController(_view).navigate(R.id.action_homeFragment_to_favoriteFragment);
+                    }).show();
+        }
+    }
+
+    @Override
     public void gotToMealDetails(String mealID) {
         HomeFragmentDirections.ActionHomeFragmentToMealDetailsFragment action = HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(mealID);
         Navigation.findNavController(_view).navigate(action);
@@ -103,6 +134,8 @@ public class HomeFragment extends Fragment implements HomeViewInterface {
     private void initializeViews(View view) {
         todayMealShimmerLayout = view.findViewById(R.id.todayMealShimmerLayout);
         todayMealShimmerLayout.startShimmerAnimation();
+
+        todayPlanRV = view.findViewById(R.id.todayPlanRV);
 
         todayMealView = view.findViewById(R.id.todayMealView);
         todayMealImgView = view.findViewById(R.id.todayMealImgView);

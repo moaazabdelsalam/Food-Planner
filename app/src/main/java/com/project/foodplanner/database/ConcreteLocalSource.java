@@ -67,4 +67,9 @@ public class ConcreteLocalSource implements LocalSource {
     public Flowable<List<PlanModel>> getAllPlansById(String dayID) {
         return mealDAO.getAllPlansById(dayID);
     }
+
+    @Override
+    public Flowable<List<PlanModel>> getAllPlans() {
+        return mealDAO.getAllPlans();
+    }
 }

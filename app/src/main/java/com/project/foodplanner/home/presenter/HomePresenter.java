@@ -2,12 +2,12 @@ package com.project.foodplanner.home.presenter;
 
 import android.util.Log;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.project.foodplanner.model.PlanModel;
-import com.project.foodplanner.model.SimpleMeal;
-import com.project.foodplanner.network.FavoriteDelegate;
+import com.project.foodplanner.network.DatabaseDelegate;
 import com.project.foodplanner.home.view.HomeViewInterface;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.RepositoryInterface;
@@ -43,7 +43,7 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback {
 
     @Override
     public void todayMealFavoriteClick() {
-        repository.todayMealFavoriteClick(new FavoriteDelegate() {
+        repository.todayMealFavoriteClick(new DatabaseDelegate() {
             @Override
             public void onSuccess(String mealName, int status) {
                 view.showAddFavoriteMessage(mealName, status);
@@ -64,7 +64,22 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback {
     @Override
     public void addTodayMealToPlan(String dayID) {
         Log.i(TAG, "addTodayMealToPlan: sending request to repo to add today meal to plan");
-        repository.todayMealAddToPlanClicked(dayID);
+        repository.todayMealAddToPlanClicked(dayID, new DatabaseDelegate() {
+            @Override
+            public void onSuccess(String mealName, int status) {
+                view.showAddToPlanMessage(mealName, status);
+            }
+
+            @Override
+            public void onError(String error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void getTodayPlan(String dayID) {
+        repository.getAllMealsOfDay(dayID);
     }
 
     @Override

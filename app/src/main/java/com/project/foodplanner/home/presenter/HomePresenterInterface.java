@@ -10,4 +10,6 @@ public interface HomePresenterInterface {
     void sendMealID();
 
     void addTodayMealToPlan(String dayID);
+
+    void getTodayPlan(String dayID);
 }

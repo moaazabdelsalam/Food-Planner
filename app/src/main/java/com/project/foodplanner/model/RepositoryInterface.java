@@ -3,7 +3,7 @@ package com.project.foodplanner.model;
 import androidx.lifecycle.LiveData;
 
 import com.project.foodplanner.database.PlanDelegate;
-import com.project.foodplanner.network.FavoriteDelegate;
+import com.project.foodplanner.network.DatabaseDelegate;
 import com.project.foodplanner.network.NetworkCallback;
 import com.project.foodplanner.network.NetworkDelegate;
 
@@ -31,19 +31,23 @@ public interface RepositoryInterface {
 
     void getMealById(String mealId, NetworkDelegate networkDelegate);
 
-    void todayMealFavoriteClick(FavoriteDelegate favoriteDelegate);
+    void todayMealFavoriteClick(DatabaseDelegate favoriteDelegate);
 
-    void detailsMealClick(FavoriteDelegate favoriteDelegate);
+    void detailsMealClick(DatabaseDelegate favoriteDelegate);
 
-    void todayMealAddToPlanClicked(String dayID);
+    void todayMealAddToPlanClicked(String dayID, DatabaseDelegate databaseDelegate);
 
     Completable insertMealToPlan(SimpleMeal simpleMeal);
 
-    void insertPlan(PlanModel planModel, SimpleMeal simpleMeal);
+    void getAllMealsOfDay(String dayID);
+
+    void insertPlan(PlanModel planModel, SimpleMeal simpleMeal, DatabaseDelegate databaseDelegate);
 
     Single<SimpleMeal> getPlanMealWithID(String id);
 
     void getAllPlansByDayId(String dayID, PlanDelegate planDelegate);
+
+    void getAllPlans(PlanDelegate planDelegate);
 
     Completable addMealToDatabase(Meal meal);
 

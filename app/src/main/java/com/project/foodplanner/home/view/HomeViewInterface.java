@@ -7,5 +7,7 @@ public interface HomeViewInterface {
 
     void showAddFavoriteMessage(String meal, int status);
 
+    void showAddToPlanMessage(String meal, int status);
+
     void gotToMealDetails(String mealID);
 }

@@ -9,7 +9,7 @@ import com.project.foodplanner.plan.view.PlanViewInterface;
 
 import java.util.List;
 
-public class PlanPresenter implements PlanPresenterInterface {
+public class PlanPresenter implements PlanPresenterInterface, PlanDelegate {
     public static final String TAG = "TAG plan presenter";
     PlanViewInterface view;
     RepositoryInterface repository;
@@ -23,17 +23,22 @@ public class PlanPresenter implements PlanPresenterInterface {
     @Override
     public void getPlanWithId(String dayID) {
         Log.i(TAG, "getPlanWithId: requesting plans of day: " + dayID);
-        repository.getAllPlansByDayId(dayID, new PlanDelegate() {
-            @Override
-            public void onSuccess(SimpleMeal simpleMeal, String dayID) {
-                Log.i(TAG, "onSuccess: result plan size: " + simpleMeal.getStrMeal());
-                view.updateAdapterWithMeal(dayID, simpleMeal);
-            }
+        repository.getAllPlansByDayId(dayID, this);
+    }
 
-            @Override
-            public void onError(String error) {
+    @Override
+    public void getAllPlans() {
+        repository.getAllPlans(this);
+    }
 
-            }
-        });
+    @Override
+    public void onSuccess(SimpleMeal planSimpleMeal, String dayID) {
+        Log.i(TAG, "onSuccess: result plan size: " + planSimpleMeal.getStrMeal());
+        view.updateAdapterWithMeal(dayID, planSimpleMeal);
+    }
+
+    @Override
+    public void onError(String error) {
+        Log.i(TAG, "onError: " + error);
     }
 }

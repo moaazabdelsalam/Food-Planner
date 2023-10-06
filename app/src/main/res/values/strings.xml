@@ -23,6 +23,7 @@
     <string name="for_you">For You</string>
     <string name="today_plan">Today Plan</string>
     <string name="add_to_your_plan">Add to Your Plan</string>
+    <string name="remove_from_your_plan">Remove from plan</string>
     <string name="all_ingredients">Ingredients</string>
     <string name="all_categories">Categories</string>
     <string name="all_countries">Countries</string>

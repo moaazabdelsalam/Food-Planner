@@ -1,7 +1,7 @@
 package com.project.foodplanner.filterresult.presenter;
 
 import com.project.foodplanner.model.Meal;
-import com.project.foodplanner.network.FavoriteDelegate;
+import com.project.foodplanner.network.DatabaseDelegate;
 
 public interface FilterResultPresenterInterface {
     void filterByIngredient(String ingredient);
@@ -10,9 +10,9 @@ public interface FilterResultPresenterInterface {
 
     void filterByCountry(String country);
 
-    void addToFavorite(Meal meal, FavoriteDelegate favoriteDelegate);
+    void addToFavorite(Meal meal, DatabaseDelegate favoriteDelegate);
 
-    void removeFromFavorite(Meal meal, FavoriteDelegate favoriteDelegate);
+    void removeFromFavorite(Meal meal, DatabaseDelegate favoriteDelegate);
 
     void clearCache();
 }

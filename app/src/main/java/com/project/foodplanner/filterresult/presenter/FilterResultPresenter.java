@@ -5,7 +5,7 @@ import android.util.Log;
 import com.project.foodplanner.filterresult.view.FilterResultViewInterface;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.RepositoryInterface;
-import com.project.foodplanner.network.FavoriteDelegate;
+import com.project.foodplanner.network.DatabaseDelegate;
 import com.project.foodplanner.utils.DummyCache;
 
 import java.util.ArrayList;
@@ -87,7 +87,7 @@ public class FilterResultPresenter implements FilterResultPresenterInterface {
     }
 
     @Override
-    public void addToFavorite(Meal meal, FavoriteDelegate favoriteDelegate) {
+    public void addToFavorite(Meal meal, DatabaseDelegate favoriteDelegate) {
         repository.addMealToDatabase(meal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -98,7 +98,7 @@ public class FilterResultPresenter implements FilterResultPresenterInterface {
     }
 
     @Override
-    public void removeFromFavorite(Meal meal, FavoriteDelegate favoriteDelegate) {
+    public void removeFromFavorite(Meal meal, DatabaseDelegate favoriteDelegate) {
         repository.removeMealFromDatabase(meal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

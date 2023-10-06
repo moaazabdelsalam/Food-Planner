@@ -24,7 +24,7 @@ import com.project.foodplanner.filterresult.presenter.FilterResultPresenter;
 import com.project.foodplanner.filterresult.presenter.FilterResultPresenterInterface;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.Repository;
-import com.project.foodplanner.network.FavoriteDelegate;
+import com.project.foodplanner.network.DatabaseDelegate;
 import com.project.foodplanner.network.MealClient;
 
 import java.util.ArrayList;
@@ -118,7 +118,7 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
 
     @Override
     public void addToFavorite(Meal meal) {
-        presenter.addToFavorite(meal, new FavoriteDelegate() {
+        presenter.addToFavorite(meal, new DatabaseDelegate() {
             @Override
             public void onSuccess(String mealName, int Status) {
                 Snackbar.make(_view, mealName + " added to favorite", Snackbar.LENGTH_SHORT)
@@ -136,7 +136,7 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
 
     @Override
     public void removeFromFavorite(Meal meal) {
-        presenter.removeFromFavorite(meal, new FavoriteDelegate() {
+        presenter.removeFromFavorite(meal, new DatabaseDelegate() {
             @Override
             public void onSuccess(String mealName, int Status) {
                 Snackbar.make(_view, meal.getStrMeal() + " removed from favorite", Snackbar.LENGTH_SHORT).show();

@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.project.foodplanner.database.PlanDelegate;
-import com.project.foodplanner.network.FavoriteDelegate;
+import com.project.foodplanner.network.DatabaseDelegate;
 import com.project.foodplanner.database.LocalSource;
 import com.project.foodplanner.network.NetworkCallback;
 import com.project.foodplanner.network.NetworkDelegate;
@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -105,7 +104,7 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public void todayMealFavoriteClick(FavoriteDelegate favoriteDelegate) {
+    public void todayMealFavoriteClick(DatabaseDelegate favoriteDelegate) {
         Log.i(TAG, "todayMealFavoriteClick: " + cache.getTodayMealCache().getStrMeal());
         if (!cache.getTodayMealCache().isFavorite()) {
             Log.i(TAG, "todayMealFavoriteClick: adding to favorite");
@@ -141,7 +140,7 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public void detailsMealClick(FavoriteDelegate favoriteDelegate) {
+    public void detailsMealClick(DatabaseDelegate favoriteDelegate) {
         if (!cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1).isFavorite()) {
             Log.i(TAG, "detailsMealClick: adding to favorite");
             localSource.addMeal(cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1))
@@ -176,7 +175,7 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public void todayMealAddToPlanClicked(String dayID) {
+    public void todayMealAddToPlanClicked(String dayID, DatabaseDelegate databaseDelegate) {
         Meal meal = DummyCache.getInstance().getTodayMealCache();
         Log.i(TAG, "todayMealAddToPlanClicked: adding meal: " + meal.getStrMeal());
         insertPlan(
@@ -191,7 +190,8 @@ public class Repository implements RepositoryInterface {
                         meal.getStrArea(),
                         meal.getStrMealThumb(),
                         meal.getStrTags()
-                )
+                ),
+                databaseDelegate
         );
     }
 
@@ -204,7 +204,12 @@ public class Repository implements RepositoryInterface {
     }
 
     @Override
-    public void insertPlan(PlanModel planModel, SimpleMeal simpleMeal) {
+    public void getAllMealsOfDay(String dayID) {
+
+    }
+
+    @Override
+    public void insertPlan(PlanModel planModel, SimpleMeal simpleMeal, DatabaseDelegate databaseDelegate) {
         Log.i(TAG, "insertPlan: inserting plan: " + planModel.getIdMeal());
         insertMealToPlan(simpleMeal).subscribe(
                 () -> {
@@ -215,6 +220,7 @@ public class Repository implements RepositoryInterface {
                             .subscribe(
                                     () -> {
                                         Log.i(TAG, "insertPlan: success: " + "day: " + planModel.getDayID() + ", meal: " + planModel.getIdMeal());
+                                        databaseDelegate.onSuccess(simpleMeal.getStrMeal(), 1);
                                     },
                                     error -> Log.i(TAG, "insertPlan: error: " + error.getMessage())
                             );
@@ -251,6 +257,26 @@ public class Repository implements RepositoryInterface {
                                 );
                             });
                         }
+                );
+    }
+
+    @Override
+    public void getAllPlans(PlanDelegate planDelegate) {
+        Disposable disposable = localSource.getAllPlans()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        planModelList ->
+                                planModelList.forEach(planModel -> {
+                                    Log.i(TAG, "getAllPlans: got plan of day: " + planModel.getDayID());
+                                    getPlanMealWithID(planModel.getIdMeal()).subscribe(
+                                            simpleMeal -> {
+                                                Log.i(TAG, "getAllPlansByDayId:sending simple meal " + simpleMeal.getStrMeal());
+                                                planDelegate.onSuccess(simpleMeal, planModel.getDayID());
+                                            },
+                                            error -> Log.i(TAG, "getAllPlansById: getPlanMealWithID: error: " + error.getMessage())
+                                    );
+                                })
                 );
     }
 
