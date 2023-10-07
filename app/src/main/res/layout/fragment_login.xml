@@ -116,11 +116,12 @@
         android:padding="8dp"
         android:text="@string/login_with_google"
         android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/loginBtn"
         app:layout_constraintStart_toStartOf="@id/loginBtn"
         app:layout_constraintTop_toBottomOf="@id/underlineRegisterBtn" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <!--<androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signInWithFacebookBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -135,6 +136,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/loginWithGoogleBtn"
         app:layout_constraintStart_toStartOf="@id/loginWithGoogleBtn"
-        app:layout_constraintTop_toBottomOf="@id/loginWithGoogleBtn" />
+        app:layout_constraintTop_toBottomOf="@id/loginWithGoogleBtn" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

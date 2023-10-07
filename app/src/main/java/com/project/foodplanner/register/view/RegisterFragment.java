@@ -1,5 +1,6 @@
 package com.project.foodplanner.register.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,11 +17,14 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.project.foodplanner.R;
 import com.project.foodplanner.model.CloudRepo;
+import com.project.foodplanner.model.GoogleSingInConfigs;
 import com.project.foodplanner.register.presenter.RegisterPresenter;
 import com.project.foodplanner.register.presenter.RegisterPresenterInterface;
 
@@ -35,7 +39,9 @@ public class RegisterFragment extends Fragment implements RegisterViewInterface 
     TextInputEditText confirmPasswordTxtInET;
     TextView loginBtn;
     AppCompatButton registerBtn;
+    AppCompatButton signInWithGoogleBtn;
     RegisterPresenterInterface presenter;
+    private static final int RC_SIGN_IN = 74;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -135,6 +141,9 @@ public class RegisterFragment extends Fragment implements RegisterViewInterface 
             }
 
         });
+        signInWithGoogleBtn.setOnClickListener(view1 -> {
+            loginWithGoogle();
+        });
     }
 
     private void initializeViews(View view) {
@@ -146,8 +155,25 @@ public class RegisterFragment extends Fragment implements RegisterViewInterface 
         confirmPasswordTxtInET = view.findViewById(R.id.confirmPasswordTxtInET);
         loginBtn = view.findViewById(R.id.underlineLoginBtn);
         registerBtn = view.findViewById(R.id.registerBtn);
+        signInWithGoogleBtn = view.findViewById(R.id.signInWithGoogleBtn);
 
         presenter = new RegisterPresenter(this, CloudRepo.getInstance());
+    }
+
+    void loginWithGoogle() {
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), GoogleSingInConfigs.getInstance().getGso());
+        Intent intent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(intent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            Log.i(TAG, "onActivityResult: sign in request");
+            presenter.validateLoginWithGoogle(data);
+        }
     }
 
     boolean validateEmail(String email) {

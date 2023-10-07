@@ -186,7 +186,6 @@ public class LoginFragment extends Fragment implements LoginViewInterface {
     }
 
     void loginWithGoogle() {
-
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), GoogleSingInConfigs.getInstance().getGso());
         Intent intent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(intent, RC_SIGN_IN);

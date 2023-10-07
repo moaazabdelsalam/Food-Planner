@@ -1,5 +1,9 @@
 package com.project.foodplanner.register.presenter;
 
+import android.content.Intent;
+
+import androidx.annotation.Nullable;
+
 import com.google.firebase.auth.FirebaseUser;
 import com.project.foodplanner.model.CloudDelegate;
 import com.project.foodplanner.model.CloudRepoInterface;
@@ -17,6 +21,11 @@ public class RegisterPresenter implements RegisterPresenterInterface, CloudDeleg
     @Override
     public void registerUserWithEmailAndPass(String email, String password) {
         repository.registerNewUser(email, password, this);
+    }
+
+    @Override
+    public void validateLoginWithGoogle(@Nullable Intent data) {
+        repository.singInWithGoogle(data, this);
     }
 
     @Override
