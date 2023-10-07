@@ -18,16 +18,29 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.identity.SignInCredential;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.project.foodplanner.MainActivity;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.foodplanner.R;
 import com.project.foodplanner.login.presenter.LoginPresenter;
 import com.project.foodplanner.login.presenter.LoginPresenterInterface;
 import com.project.foodplanner.model.CloudRepo;
-import com.project.foodplanner.register.presenter.RegisterPresenter;
-import com.project.foodplanner.register.presenter.RegisterPresenterInterface;
+import com.project.foodplanner.model.User;
 
 public class LoginFragment extends Fragment implements LoginViewInterface {
     public static final String TAG = "TAG login fragment";
@@ -37,7 +50,13 @@ public class LoginFragment extends Fragment implements LoginViewInterface {
     TextInputEditText passwordTxtInET;
     TextView registerBtn;
     AppCompatButton loginBtn;
+    AppCompatButton loginWithGoogleBtn;
     LoginPresenterInterface presenter;
+    private FirebaseAuth mAuth;
+    FirebaseDatabase firebaseDatabase;
+    private GoogleSignInClient mGoogleSignInClient;
+    private static final int RC_SIGN_IN = 74;
+    GoogleSignInOptions gso;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +74,14 @@ public class LoginFragment extends Fragment implements LoginViewInterface {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_client_id))
+                .requestEmail()
+                .build();
+
+        //Log.i(TAG, "onViewCreated: current user: " + mAuth.getCurrentUser().getEmail());
         initializeViews(view);
 
         emailTxtInET.addTextChangedListener(new TextWatcher() {
@@ -116,6 +143,11 @@ public class LoginFragment extends Fragment implements LoginViewInterface {
                 Toast.makeText(getContext(), "error, check you input data", Toast.LENGTH_SHORT).show();
             }
         });
+
+        loginWithGoogleBtn.setOnClickListener(view1 -> {
+            Log.i(TAG, "onViewCreated: login button clicked");
+            loginWithGoogle();
+        });
     }
 
     private void initializeViews(View view) {
@@ -125,6 +157,7 @@ public class LoginFragment extends Fragment implements LoginViewInterface {
         passwordTxtInET = view.findViewById(R.id.loginPasswordTxtInET);
         loginBtn = view.findViewById(R.id.loginBtn);
         registerBtn = view.findViewById(R.id.underlineRegisterBtn);
+        loginWithGoogleBtn = view.findViewById(R.id.loginWithGoogleBtn);
 
         presenter = new LoginPresenter(this, CloudRepo.getInstance());
     }
@@ -162,4 +195,61 @@ public class LoginFragment extends Fragment implements LoginViewInterface {
                 })
                 .show();
     }
+
+    void loginWithGoogle() {
+        mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), gso);
+
+        Intent intent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(intent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            Log.i(TAG, "onActivityResult: sign in request");
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                Log.i(TAG, "onActivityResult: " + account.getIdToken());
+                firebaseAuth(account.getIdToken());
+
+            } catch (ApiException e) {
+                Log.i(TAG, "onActivityResult: exception ");
+                e.printStackTrace();
+                // ...
+            }
+        }
+    }
+
+    private void firebaseAuth(String idToken) {
+        Log.i(TAG, "firebaseAuth: ");
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            User users = new User();
+                            users.setUserId(user.getUid());
+                            users.setName(user.getDisplayName());
+                            users.setProfile(user.getPhotoUrl().toString());
+                            firebaseDatabase.getReference().child("Users").child(user.getUid()).setValue(users);
+
+                            Log.i(TAG, "onComplete: logged in with google with: " + user.getEmail());
+                        } else {
+                            Log.i(TAG, "onComplete: logged in failed: " + task.getException().getMessage());
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i(TAG, "onFailure: " + e.getMessage());
+                    }
+                });
+    }
+
 }

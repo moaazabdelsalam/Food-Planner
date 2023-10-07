@@ -148,11 +148,11 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
             Snackbar.make(_view, mealName + " added to favorite", Snackbar.LENGTH_SHORT)
                     .setAction("View", view -> {
                         Navigation.findNavController(_view).navigate(R.id.action_filterResultFragment_to_favoriteFragment);
-                    }).show();
+                    }).setAnchorView(R.id.bottomNav).show();
         } else if (status == 0) {
-            Snackbar.make(_view, mealName + " removed from favorite", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(_view, mealName + " removed from favorite", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottomNav).show();
         } else {
-            Snackbar.make(_view, "something error happened", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(_view, "something error happened", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottomNav).show();
         }
     }
 
@@ -162,7 +162,7 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
             Snackbar.make(_view, meal + " added to plan", Snackbar.LENGTH_SHORT)
                     .setAction("View", view -> {
                         Navigation.findNavController(_view).navigate(R.id.action_filterResultFragment_to_planFragment);
-                    }).show();
+                    }).setAnchorView(R.id.bottomNav).show();
         }
     }
 

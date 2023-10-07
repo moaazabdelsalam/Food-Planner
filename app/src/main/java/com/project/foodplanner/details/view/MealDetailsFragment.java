@@ -210,12 +210,12 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
             Snackbar.make(_view, meal + " added to favorite", Snackbar.LENGTH_SHORT)
                     .setAction("View", view -> {
                         Navigation.findNavController(_view).navigate(R.id.action_mealDetailsFragment_to_favoriteFragment);
-                    }).show();
+                    }).setAnchorView(R.id.bottomNav).show();
         } else if (status == 0) {
             addToFav.setImageResource(R.drawable.ic_baseline_favorite_border_24);
-            Snackbar.make(_view, meal + " removed from favorite", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(_view, meal + " removed from favorite", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottomNav).show();
         } else {
-            Snackbar.make(_view, "something error happened", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(_view, "something error happened", Snackbar.LENGTH_SHORT).setAnchorView(R.id.bottomNav).show();
         }
     }
 
@@ -225,7 +225,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
             Snackbar.make(_view, meal + " added to plan", Snackbar.LENGTH_SHORT)
                     .setAction("View", view -> {
                         Navigation.findNavController(_view).navigate(R.id.action_mealDetailsFragment_to_planFragment);
-                    }).show();
+                    }).setAnchorView(R.id.bottomNav).show();
         }
     }
 

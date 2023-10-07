@@ -8,6 +8,8 @@ public interface CloudRepoInterface {
 
     void registerNewUser(String email, String password, CloudDelegate cloudDelegate);
 
+    void singInWithGoogle(CloudDelegate cloudDelegate);
+
     boolean checkForRegisteredUser();
 
     void logoutUser(CloudDelegate cloudDelegate);

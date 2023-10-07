@@ -7,8 +7,11 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,5 +35,8 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.setVisibility(View.VISIBLE);
             }
         });
+
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        Log.i("TAG", "onCreate: previous account: " + account);
     }
 }
