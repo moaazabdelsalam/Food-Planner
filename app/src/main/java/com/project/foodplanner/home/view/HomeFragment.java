@@ -42,6 +42,7 @@ import com.project.foodplanner.plan.view.PlanRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment implements HomeViewInterface, FilterResultClickListener, PlanClickListener {
     private static final String TAG = "TAG home fragment";
@@ -106,7 +107,7 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
         todayMealShimmerLayout.setVisibility(View.GONE);
         todayMealView.setVisibility(View.VISIBLE);
 
-        Glide.with(getContext()).load(meal.getStrMealThumb()).placeholder(R.drawable.image_placeholder).into(todayMealImgView);
+        Glide.with(requireContext()).load(meal.getStrMealThumb()).placeholder(R.drawable.image_placeholder).into(todayMealImgView);
         todayMealNameTxt.setText(meal.getStrMeal());
         addFavoriteIcon.setImageResource(meal.isFavorite() ? R.drawable.ic_baseline_favorite_24 : R.drawable.ic_baseline_favorite_border_24);
         addFavoriteIcon.setTag(meal.isFavorite() ? R.drawable.ic_baseline_favorite_24 : R.drawable.ic_baseline_favorite_border_24);
@@ -131,8 +132,6 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
     @Override
     public void showAddToPlanMessage(String meal, int status) {
         if (status == 1) {
-            addToPlanBtn.setText(R.string.remove_from_your_plan);
-            addToPlanBtn.setVisibility(View.INVISIBLE);
             Snackbar.make(_view, meal + " added to plan", Snackbar.LENGTH_SHORT)
                     .setAction("View", view -> {
                         Navigation.findNavController(_view).navigate(R.id.action_homeFragment_to_planFragment);
@@ -146,7 +145,7 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
     }
 
     @Override
-    public void gotToMealDetails(String mealID) {
+    public void goToMealDetails(String mealID) {
         HomeFragmentDirections.ActionHomeFragmentToMealDetailsFragment action = HomeFragmentDirections.actionHomeFragmentToMealDetailsFragment(mealID);
         Navigation.findNavController(_view).navigate(action);
     }
@@ -201,6 +200,19 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
     @Override
     public void removeFromFavorite(Meal meal) {
         presenter.removeFromFavorite(meal);
+    }
+
+    @Override
+    public void pickDateAndAddMealToPlan(Meal meal) {
+        MaterialDatePicker<Long> dayPickerDialog = DayPickerDialog.showDialog(requireActivity().getSupportFragmentManager());
+        dayPickerDialog.addOnPositiveButtonClickListener(selection -> {
+
+            calendar.setTimeInMillis(selection);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            Log.i(TAG, "onViewCreated: selected day: " + day);
+            presenter.addMealToPlan(meal, String.valueOf(day));
+        });
     }
 
     @Override

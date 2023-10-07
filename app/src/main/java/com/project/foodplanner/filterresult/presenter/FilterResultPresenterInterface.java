@@ -15,4 +15,6 @@ public interface FilterResultPresenterInterface {
     void removeFromFavorite(Meal meal);
 
     void clearCache();
+
+    void addMealToPlan(Meal meal, String dayId);
 }

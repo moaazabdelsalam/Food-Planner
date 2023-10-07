@@ -108,6 +108,9 @@
         <action
             android:id="@+id/action_filterResultFragment_to_favoriteFragment"
             app:destination="@id/favoriteFragment" />
+        <action
+            android:id="@+id/action_filterResultFragment_to_planFragment"
+            app:destination="@id/planFragment" />
     </fragment>
     <fragment
         android:id="@+id/mealDetailsFragment"
@@ -120,5 +123,8 @@
         <action
             android:id="@+id/action_mealDetailsFragment_to_favoriteFragment"
             app:destination="@id/favoriteFragment" />
+        <action
+            android:id="@+id/action_mealDetailsFragment_to_planFragment"
+            app:destination="@id/planFragment" />
     </fragment>
 </navigation>

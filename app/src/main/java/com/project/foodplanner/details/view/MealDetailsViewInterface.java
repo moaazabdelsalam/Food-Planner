@@ -6,4 +6,6 @@ public interface MealDetailsViewInterface {
     void showMeal(Meal meal);
 
     void showFavoriteClickMessage(String meal, int status);
+
+    void showAddToPlanMessage(String meal, int status);
 }

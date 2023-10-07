@@ -1,7 +1,6 @@
 package com.project.foodplanner.filterresult.view;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +44,7 @@ public class FilterResultAdapter extends RecyclerView.Adapter<FilterResultAdapte
                 .placeholder(R.drawable.image_placeholder).into(holder.mealImgView);
         holder.mealNameTxt.setText(meal.getStrMeal());
         holder.addFavoriteIcon.setImageResource(meal.isFavorite() ? R.drawable.ic_baseline_favorite_24 : R.drawable.ic_baseline_favorite_border_24);
-        holder.addToPlanBtn.setOnClickListener(view -> Log.i("TAG", "onBindViewHolder: showing meal..."));
+        holder.addToPlanBtn.setOnClickListener(view -> filterClickListener.pickDateAndAddMealToPlan(meal));
         holder.mealImgView.setOnClickListener(view -> filterClickListener.showMealDetails(meal));
         holder.addFavoriteIcon.setOnClickListener(view -> {
             if (meal.isFavorite()) {

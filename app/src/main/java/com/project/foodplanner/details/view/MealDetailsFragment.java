@@ -1,5 +1,6 @@
 package com.project.foodplanner.details.view;
 
+import android.icu.util.Calendar;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,26 +19,26 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.snackbar.Snackbar;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerUtils;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.details.presenter.MealDetailsPresenter;
 import com.project.foodplanner.details.presenter.MealDetailsPresenterInterface;
+import com.project.foodplanner.model.DayPickerDialog;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.Repository;
 import com.project.foodplanner.network.MealClient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import io.reactivex.rxjava3.core.Observable;
 
 public class MealDetailsFragment extends Fragment implements MealDetailsViewInterface, DetailsClickListener {
+    private static final String TAG = "TAG meal details fragment";
     ImageView mealImg;
     ImageView addToFav;
     TextView mealName;
@@ -52,6 +53,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
     TextView ingredients;
     MealDetailsPresenterInterface presenter;
     View _view;
+    Calendar calendar = Calendar.getInstance();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +107,8 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
         addToFav.setOnClickListener(view1 -> {
             favoriteClick();
         });
+
+        addToPlanBtn.setOnClickListener(view1 -> pickDateAndAddMealToPlan());
     }
 
     @Override
@@ -187,6 +191,19 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
     }
 
     @Override
+    public void pickDateAndAddMealToPlan() {
+        MaterialDatePicker<Long> dayPickerDialog = DayPickerDialog.showDialog(requireActivity().getSupportFragmentManager());
+        dayPickerDialog.addOnPositiveButtonClickListener(selection -> {
+
+            calendar.setTimeInMillis(selection);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            Log.i(TAG, "onViewCreated: selected day: " + day);
+            presenter.addDetailsMealToPlan(String.valueOf(day));
+        });
+    }
+
+    @Override
     public void showFavoriteClickMessage(String meal, int status) {
         if (status == 1) {
             addToFav.setImageResource(R.drawable.ic_baseline_favorite_24);
@@ -203,7 +220,13 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
     }
 
     @Override
-    public void addToPlan() {
-
+    public void showAddToPlanMessage(String meal, int status) {
+        if (status == 1) {
+            Snackbar.make(_view, meal + " added to plan", Snackbar.LENGTH_SHORT)
+                    .setAction("View", view -> {
+                        Navigation.findNavController(_view).navigate(R.id.action_mealDetailsFragment_to_planFragment);
+                    }).show();
+        }
     }
+
 }

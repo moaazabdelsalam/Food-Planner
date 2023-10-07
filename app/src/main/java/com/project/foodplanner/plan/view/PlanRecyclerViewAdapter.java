@@ -42,6 +42,10 @@ public class PlanRecyclerViewAdapter extends RecyclerView.Adapter<PlanRecyclerVi
         SimpleMeal meal = mealList.get(position);
         Glide.with(context).load(meal.getStrMealThumb()).placeholder(R.drawable.image_placeholder).into(holder.planMealImgView);
         holder.planMealNameTxt.setText(meal.getStrMeal());
+        if (meal.getStrCategory() == null)
+            holder.planMealCategory.setVisibility(View.INVISIBLE);
+        if (meal.getStrArea() == null)
+            holder.planMealCountry.setVisibility(View.INVISIBLE);
         holder.planMealCategory.setText(meal.getStrCategory());
         holder.planMealCountry.setText(meal.getStrArea());
         holder.planMealImgView.setOnClickListener(view -> planClickListener.onMealImgClick(meal.getIdMeal()));
@@ -55,8 +59,17 @@ public class PlanRecyclerViewAdapter extends RecyclerView.Adapter<PlanRecyclerVi
     }
 
     public void addToList(SimpleMeal meal) {
-        mealList.add(meal);
-        notifyDataSetChanged();
+        boolean exist = false;
+        for (SimpleMeal simpleMeal : mealList) {
+            if (simpleMeal.getIdMeal().equals(meal.getIdMeal())) {
+                exist = true;
+                break;
+            }
+        }
+        if (!exist) {
+            mealList.add(meal);
+            notifyDataSetChanged();
+        }
     }
 
     public List<SimpleMeal> getMealList() {

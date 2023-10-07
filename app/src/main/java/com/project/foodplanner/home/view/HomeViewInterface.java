@@ -14,7 +14,7 @@ public interface HomeViewInterface {
 
     void showTodayPlanMeal(SimpleMeal simpleMeal);
 
-    void gotToMealDetails(String mealID);
+    void goToMealDetails(String mealID);
 
     void showCountryMeals(List<Meal> meals);
 }

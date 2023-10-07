@@ -4,7 +4,9 @@ import android.util.Log;
 
 import com.project.foodplanner.filterresult.view.FilterResultViewInterface;
 import com.project.foodplanner.model.Meal;
+import com.project.foodplanner.model.PlanModel;
 import com.project.foodplanner.model.RepositoryInterface;
+import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.DatabaseDelegate;
 import com.project.foodplanner.network.NetworkDelegate;
 import com.project.foodplanner.utils.DummyCache;
@@ -103,6 +105,30 @@ public class FilterResultPresenter implements FilterResultPresenterInterface, Ne
 
             }
         });
+    }
+
+    @Override
+    public void addMealToPlan(Meal meal, String dayId) {
+        repository.insertPlan(
+                new PlanModel(dayId, meal.getIdMeal()),
+                new SimpleMeal(meal.getIdMeal(),
+                        meal.getStrMeal(),
+                        meal.getStrCategory(),
+                        meal.getStrArea(),
+                        meal.getStrMealThumb(),
+                        meal.getStrTags()),
+                new DatabaseDelegate() {
+                    @Override
+                    public void onSuccess(String mealName, int status) {
+                        view.showAddToPlanMessage(mealName, status);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                }
+        );
     }
 
     @Override

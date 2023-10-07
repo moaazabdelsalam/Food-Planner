@@ -29,6 +29,8 @@ public interface RepositoryInterface {
 
     void filterByCountry(String country, NetworkDelegate networkDelegate);
 
+    void getRegionMeals (String country, NetworkDelegate networkDelegate);
+
     void getMealById(String mealId, NetworkDelegate networkDelegate);
 
     void todayMealFavoriteClick(DatabaseDelegate favoriteDelegate);
@@ -42,6 +44,8 @@ public interface RepositoryInterface {
     void getAllPlansOfDay(String dayID, PlanDelegate planDelegate);
 
     void insertPlan(PlanModel planModel, SimpleMeal simpleMeal, DatabaseDelegate databaseDelegate);
+
+    void insertDetailsMealToPlan(String dayID, DatabaseDelegate databaseDelegate);
 
     Single<SimpleMeal> getPlanMealWithID(String id);
 

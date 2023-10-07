@@ -77,13 +77,34 @@ public class Repository implements RepositoryInterface {
 
     @Override
     public void filterByCountry(String country, NetworkDelegate networkDelegate) {
-        if (cache.getRegionMealsCache() != null)
+        if (cache.getFilterResultMealCache() != null) {
+            Log.i(TAG, "filterByCountry: result: " + cache.getFilterResultMealCache());
             networkDelegate.onSuccess(cache.getRegionMealsCache());
-        else remoteSource.filterByCountry(country)
+        } else remoteSource.filterByCountry(country)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        mealResponse -> networkDelegate.onSuccess(mealResponse.getMeals()),
+                        mealResponse -> {
+                            networkDelegate.onSuccess(mealResponse.getMeals());
+                            cache.setFilterResultMealCache(mealResponse.getMeals());
+                        },
+                        error -> networkDelegate.onError(error.getMessage())
+                );
+    }
+
+    @Override
+    public void getRegionMeals(String country, NetworkDelegate networkDelegate) {
+        if (cache.getRegionMealsCache() != null) {
+            Log.i(TAG, "filterByCountry: result: " + cache.getFilterResultMealCache());
+            networkDelegate.onSuccess(cache.getRegionMealsCache());
+        } else remoteSource.filterByCountry(country)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        mealResponse -> {
+                            networkDelegate.onSuccess(mealResponse.getMeals());
+                            cache.setRegionMealsCache(mealResponse.getMeals());
+                        },
                         error -> networkDelegate.onError(error.getMessage())
                 );
     }
@@ -250,6 +271,26 @@ public class Repository implements RepositoryInterface {
                             );
                 },
                 error -> Log.i(TAG, "insertMealToPlan: error " + error.getMessage())
+        );
+    }
+
+    @Override
+    public void insertDetailsMealToPlan(String dayID, DatabaseDelegate databaseDelegate) {
+        Meal meal = cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1);
+        insertPlan(
+                new PlanModel(
+                        dayID,
+                        meal.getIdMeal()
+                ),
+                new SimpleMeal(
+                        meal.getIdMeal(),
+                        meal.getStrMeal(),
+                        meal.getStrCategory(),
+                        meal.getStrArea(),
+                        meal.getStrMealThumb(),
+                        meal.getStrTags()
+                ),
+                databaseDelegate
         );
     }
 

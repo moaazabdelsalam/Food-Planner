@@ -8,4 +8,6 @@ public interface FilterResultViewInterface {
     void updateAdapterList(List<Meal> mealList);
 
     void showFavoriteClickMessage(String mealName, int Status);
+
+    void showAddToPlanMessage(String meal, int status);
 }

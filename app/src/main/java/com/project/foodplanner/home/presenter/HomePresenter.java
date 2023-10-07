@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.project.foodplanner.database.PlanDelegate;
+import com.project.foodplanner.model.PlanModel;
 import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.DatabaseDelegate;
 import com.project.foodplanner.home.view.HomeViewInterface;
@@ -17,9 +18,6 @@ import com.project.foodplanner.network.NetworkDelegate;
 import com.project.foodplanner.utils.DummyCache;
 
 import java.util.List;
-
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class HomePresenter implements HomePresenterInterface, NetworkCallback, DatabaseDelegate, NetworkDelegate {
     private static final String TAG = "TAG home presenter";
@@ -57,7 +55,7 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback, D
 
     @Override
     public void sendMealID() {
-        view.gotToMealDetails(repository.sendTodayMealId());
+        view.goToMealDetails(repository.sendTodayMealId());
     }
 
     @Override
@@ -94,7 +92,31 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback, D
 
     @Override
     public void getMealsOfCountry(String country) {
-        repository.filterByCountry(country, this);
+        repository.getRegionMeals(country, this);
+    }
+
+    @Override
+    public void addMealToPlan(Meal meal, String dayId) {
+        repository.insertPlan(
+                new PlanModel(dayId, meal.getIdMeal()),
+                new SimpleMeal(meal.getIdMeal(),
+                        meal.getStrMeal(),
+                        meal.getStrCategory(),
+                        meal.getStrArea(),
+                        meal.getStrMealThumb(),
+                        meal.getStrTags()),
+                new DatabaseDelegate() {
+                    @Override
+                    public void onSuccess(String mealName, int status) {
+                        view.showAddToPlanMessage(mealName, status);
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                    }
+                }
+        );
     }
 
     @Override

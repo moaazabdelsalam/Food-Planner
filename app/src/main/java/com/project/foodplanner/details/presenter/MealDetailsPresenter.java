@@ -1,6 +1,8 @@
 package com.project.foodplanner.details.presenter;
 
 import com.project.foodplanner.model.Meal;
+import com.project.foodplanner.model.PlanModel;
+import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.DatabaseDelegate;
 import com.project.foodplanner.details.view.MealDetailsViewInterface;
 import com.project.foodplanner.model.RepositoryInterface;
@@ -45,6 +47,21 @@ public class MealDetailsPresenter implements MealDetailsPresenterInterface {
             @Override
             public void onError(String error) {
                 view.showFavoriteClickMessage("NAN", -1);
+            }
+        });
+    }
+
+    @Override
+    public void addDetailsMealToPlan(String dayId) {
+        repository.insertDetailsMealToPlan(dayId, new DatabaseDelegate() {
+            @Override
+            public void onSuccess(String mealName, int status) {
+                view.showAddToPlanMessage(mealName, status);
+            }
+
+            @Override
+            public void onError(String error) {
+
             }
         });
     }

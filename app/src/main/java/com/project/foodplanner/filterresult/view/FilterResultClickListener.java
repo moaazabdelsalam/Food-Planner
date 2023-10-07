@@ -8,4 +8,6 @@ public interface FilterResultClickListener {
     void addToFavorite(Meal meal);
 
     void removeFromFavorite(Meal meal);
+
+    void pickDateAndAddMealToPlan(Meal meal);
 }

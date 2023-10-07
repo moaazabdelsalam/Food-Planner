@@ -1,5 +1,6 @@
 package com.project.foodplanner.filterresult.view;
 
+import android.icu.util.Calendar;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,11 +18,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.snackbar.Snackbar;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.filterresult.presenter.FilterResultPresenter;
 import com.project.foodplanner.filterresult.presenter.FilterResultPresenterInterface;
+import com.project.foodplanner.model.DayPickerDialog;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.Repository;
 import com.project.foodplanner.network.DatabaseDelegate;
@@ -38,6 +41,7 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
     FilterResultPresenterInterface presenter;
     LottieAnimationView resultAnimation;
     View _view;
+    Calendar calendar = Calendar.getInstance();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,6 +131,19 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
     }
 
     @Override
+    public void pickDateAndAddMealToPlan(Meal meal) {
+        MaterialDatePicker<Long> dayPickerDialog = DayPickerDialog.showDialog(requireActivity().getSupportFragmentManager());
+        dayPickerDialog.addOnPositiveButtonClickListener(selection -> {
+
+            calendar.setTimeInMillis(selection);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            Log.i(TAG, "onViewCreated: selected day: " + day);
+            presenter.addMealToPlan(meal, String.valueOf(day));
+        });
+    }
+
+    @Override
     public void showFavoriteClickMessage(String mealName, int status) {
         if (status == 1) {
             Snackbar.make(_view, mealName + " added to favorite", Snackbar.LENGTH_SHORT)
@@ -137,6 +154,16 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
             Snackbar.make(_view, mealName + " removed from favorite", Snackbar.LENGTH_SHORT).show();
         } else {
             Snackbar.make(_view, "something error happened", Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void showAddToPlanMessage(String meal, int status) {
+        if (status == 1) {
+            Snackbar.make(_view, meal + " added to plan", Snackbar.LENGTH_SHORT)
+                    .setAction("View", view -> {
+                        Navigation.findNavController(_view).navigate(R.id.action_filterResultFragment_to_planFragment);
+                    }).show();
         }
     }
 

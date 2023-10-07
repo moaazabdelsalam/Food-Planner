@@ -18,4 +18,6 @@ public interface HomePresenterInterface {
     void getTodayPlan(String dayID);
 
     void getMealsOfCountry(String country);
+
+    void addMealToPlan(Meal meal, String dayId);
 }
