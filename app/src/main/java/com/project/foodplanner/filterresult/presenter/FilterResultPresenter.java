@@ -5,7 +5,7 @@ import android.util.Log;
 import com.project.foodplanner.filterresult.view.FilterResultViewInterface;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.PlanModel;
-import com.project.foodplanner.model.RepositoryInterface;
+import com.project.foodplanner.model.MealsRepositoryInterface;
 import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.DatabaseDelegate;
 import com.project.foodplanner.network.NetworkDelegate;
@@ -20,10 +20,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class FilterResultPresenter implements FilterResultPresenterInterface, NetworkDelegate {
     private static final String TAG = "TAG filter presenter";
     private final FilterResultViewInterface view;
-    private final RepositoryInterface repository;
+    private final MealsRepositoryInterface repository;
     private final DummyCache cache = DummyCache.getInstance();
 
-    public FilterResultPresenter(FilterResultViewInterface view, RepositoryInterface repository) {
+    public FilterResultPresenter(FilterResultViewInterface view, MealsRepositoryInterface repository) {
         this.view = view;
         this.repository = repository;
     }

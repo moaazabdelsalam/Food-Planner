@@ -26,8 +26,7 @@ import com.project.foodplanner.filterresult.presenter.FilterResultPresenter;
 import com.project.foodplanner.filterresult.presenter.FilterResultPresenterInterface;
 import com.project.foodplanner.model.DayPickerDialog;
 import com.project.foodplanner.model.Meal;
-import com.project.foodplanner.model.Repository;
-import com.project.foodplanner.network.DatabaseDelegate;
+import com.project.foodplanner.model.MealsRepository;
 import com.project.foodplanner.network.MealClient;
 
 import java.util.ArrayList;
@@ -94,7 +93,7 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
 
         presenter = new FilterResultPresenter(
                 this,
-                Repository.getInstance(
+                MealsRepository.getInstance(
                         MealClient.getInstance(),
                         ConcreteLocalSource.getInstance(getContext())
                 ));

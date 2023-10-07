@@ -1,11 +1,9 @@
 package com.project.foodplanner.details.presenter;
 
 import com.project.foodplanner.model.Meal;
-import com.project.foodplanner.model.PlanModel;
-import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.DatabaseDelegate;
 import com.project.foodplanner.details.view.MealDetailsViewInterface;
-import com.project.foodplanner.model.RepositoryInterface;
+import com.project.foodplanner.model.MealsRepositoryInterface;
 import com.project.foodplanner.network.NetworkDelegate;
 import com.project.foodplanner.utils.DummyCache;
 
@@ -13,10 +11,10 @@ import java.util.List;
 
 public class MealDetailsPresenter implements MealDetailsPresenterInterface {
     MealDetailsViewInterface view;
-    RepositoryInterface repository;
+    MealsRepositoryInterface repository;
     DummyCache cache = DummyCache.getInstance();
 
-    public MealDetailsPresenter(MealDetailsViewInterface view, RepositoryInterface repository) {
+    public MealDetailsPresenter(MealDetailsViewInterface view, MealsRepositoryInterface repository) {
         this.view = view;
         this.repository = repository;
     }

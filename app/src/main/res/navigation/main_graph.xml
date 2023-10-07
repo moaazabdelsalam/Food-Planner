@@ -127,4 +127,9 @@
             android:id="@+id/action_mealDetailsFragment_to_planFragment"
             app:destination="@id/planFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.project.foodplanner.profile.view.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

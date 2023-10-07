@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/registerUsernameTxtInLayout"
+        android:id="@+id/registerEmailTxtInLayout"
         style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -31,7 +31,6 @@
         app:boxStrokeWidthFocused="0dp"
         app:endIconMode="clear_text"
         app:endIconTint="@color/black"
-        app:helperText="Required"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/registerTxt"
@@ -39,11 +38,11 @@
         app:startIconTint="@color/black">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/registerUsernameTxtInET"
+            android:id="@+id/registerEmailTxtInET"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/round_corners"
-            android:hint="@string/username"
+            android:hint="@string/email"
             android:inputType="text"
             android:textColor="@color/black"
             tools:ignore="TouchTargetSizeCheck" />
@@ -51,20 +50,19 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/RegisterPasswordTxtInLayout"
+        android:id="@+id/registerPasswordTxtInLayout"
         style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textColorHint="@color/black"
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
         app:endIconMode="password_toggle"
         app:endIconTint="@color/black"
-        app:helperText="Required"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/registerUsernameTxtInLayout"
+        app:layout_constraintTop_toBottomOf="@id/registerEmailTxtInLayout"
         app:startIconDrawable="@drawable/ic_baseline_lock_24"
         app:startIconTint="@color/black">
 
@@ -85,16 +83,15 @@
         style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textColorHint="@color/black"
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
         app:endIconMode="password_toggle"
         app:endIconTint="@color/black"
-        app:helperText="Required"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/RegisterPasswordTxtInLayout"
+        app:layout_constraintTop_toBottomOf="@id/registerPasswordTxtInLayout"
         app:startIconDrawable="@drawable/ic_baseline_lock_24"
         app:startIconTint="@color/black">
 
@@ -114,7 +111,7 @@
         android:id="@+id/registerBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/round_corners"
         android:backgroundTint="?attr/colorSecondary"
         android:text="@string/register"
@@ -133,6 +130,7 @@
         android:text="@string/underline_login_button"
         android:textColor="?attr/textFillColor"
         android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/registerBtn"
         app:layout_constraintStart_toStartOf="@id/registerBtn"
         app:layout_constraintTop_toBottomOf="@id/registerBtn" />
 
@@ -145,7 +143,7 @@
         android:drawableStart="@drawable/ic_google"
         android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
         android:padding="8dp"
-        android:text="@string/register_with_google"
+        android:text="@string/login_with_google"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@id/registerBtn"
         app:layout_constraintStart_toStartOf="@id/registerBtn"
@@ -161,7 +159,7 @@
         android:drawableStart="@drawable/ic_facebook"
         android:drawableEnd="@drawable/ic_baseline_arrow_forward_24"
         android:padding="8dp"
-        android:text="@string/register_with_facebook"
+        android:text="@string/login_with_facebook"
         android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/signInWithGoogleBtn"

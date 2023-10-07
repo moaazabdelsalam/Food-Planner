@@ -10,10 +10,8 @@ import com.project.foodplanner.model.Category;
 import com.project.foodplanner.model.Country;
 import com.project.foodplanner.model.Ingredient;
 import com.project.foodplanner.model.Meal;
-import com.project.foodplanner.model.MealResponse;
-import com.project.foodplanner.model.RepositoryInterface;
+import com.project.foodplanner.model.MealsRepositoryInterface;
 import com.project.foodplanner.model.RequestCode;
-import com.project.foodplanner.model.ResponseModel;
 import com.project.foodplanner.network.NetworkCallback;
 import com.project.foodplanner.utils.DummyCache;
 
@@ -23,17 +21,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class FilterPresenter implements FilterPresenterInterface, NetworkCallback {
     private static final String TAG = "TAG filter presenter";
     private final FilterViewInterface view;
-    private final RepositoryInterface repository;
+    private final MealsRepositoryInterface repository;
     private final DummyCache cache = DummyCache.getInstance();
     char charToSearchWith = ' ';
 
-    public FilterPresenter(FilterViewInterface view, RepositoryInterface repository) {
+    public FilterPresenter(FilterViewInterface view, MealsRepositoryInterface repository) {
         this.view = view;
         this.repository = repository;
     }

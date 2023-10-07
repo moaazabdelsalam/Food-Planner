@@ -4,13 +4,11 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,7 @@ import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.model.Category;
 import com.project.foodplanner.model.Ingredient;
-import com.project.foodplanner.model.Repository;
+import com.project.foodplanner.model.MealsRepository;
 import com.project.foodplanner.network.MealClient;
 import com.project.foodplanner.search.presenter.SearchPresenter;
 
@@ -129,7 +127,7 @@ public class SearchFragment extends Fragment implements SearchViewInterface, Sea
 
         presenter = new SearchPresenter(
                 this,
-                Repository.getInstance(
+                MealsRepository.getInstance(
                         MealClient.getInstance(),
                         ConcreteLocalSource.getInstance(getContext())
                 )

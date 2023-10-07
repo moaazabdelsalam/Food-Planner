@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,17 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.reflect.TypeToken;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.filter.presenter.FilterPresenter;
@@ -36,14 +30,13 @@ import com.project.foodplanner.model.Category;
 import com.project.foodplanner.model.Country;
 import com.project.foodplanner.model.Ingredient;
 import com.project.foodplanner.model.Meal;
-import com.project.foodplanner.model.Repository;
+import com.project.foodplanner.model.MealsRepository;
 import com.project.foodplanner.model.RequestCode;
 import com.project.foodplanner.network.MealClient;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -256,7 +249,7 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
 
         presenter = new FilterPresenter(
                 this,
-                Repository.getInstance(
+                MealsRepository.getInstance(
                         MealClient.getInstance(),
                         ConcreteLocalSource.getInstance(getContext())
                 )

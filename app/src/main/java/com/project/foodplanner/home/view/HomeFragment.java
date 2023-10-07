@@ -1,6 +1,5 @@
 package com.project.foodplanner.home.view;
 
-import android.app.DatePickerDialog;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 
@@ -17,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,7 +23,6 @@ import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.snackbar.Snackbar;
-import com.project.foodplanner.favorite.view.FavoriteClickListener;
 import com.project.foodplanner.filterresult.view.FilterResultAdapter;
 import com.project.foodplanner.filterresult.view.FilterResultClickListener;
 import com.project.foodplanner.model.DayPickerDialog;
@@ -34,7 +31,7 @@ import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.home.presenter.HomePresenter;
 import com.project.foodplanner.home.presenter.HomePresenterInterface;
 import com.project.foodplanner.model.Meal;
-import com.project.foodplanner.model.Repository;
+import com.project.foodplanner.model.MealsRepository;
 import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.MealClient;
 import com.project.foodplanner.plan.view.PlanClickListener;
@@ -42,7 +39,6 @@ import com.project.foodplanner.plan.view.PlanRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class HomeFragment extends Fragment implements HomeViewInterface, FilterResultClickListener, PlanClickListener {
     private static final String TAG = "TAG home fragment";
@@ -183,7 +179,7 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
         addFavoriteIcon = view.findViewById(R.id.addFavoriteIcon);
         todayMealNameTxt = view.findViewById(R.id.todayMealNameTxt);
         addToPlanBtn = view.findViewById(R.id.homeAddToPlanBtn);
-        presenter = new HomePresenter(this, Repository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())));
+        presenter = new HomePresenter(this, MealsRepository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())));
     }
 
     @Override

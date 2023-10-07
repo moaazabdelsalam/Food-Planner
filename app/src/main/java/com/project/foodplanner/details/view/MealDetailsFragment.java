@@ -29,7 +29,7 @@ import com.project.foodplanner.details.presenter.MealDetailsPresenter;
 import com.project.foodplanner.details.presenter.MealDetailsPresenterInterface;
 import com.project.foodplanner.model.DayPickerDialog;
 import com.project.foodplanner.model.Meal;
-import com.project.foodplanner.model.Repository;
+import com.project.foodplanner.model.MealsRepository;
 import com.project.foodplanner.network.MealClient;
 
 import java.util.ArrayList;
@@ -98,7 +98,7 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
         detailsShimmer = view.findViewById(R.id.detailsShimmerLayout);
 
         presenter = new MealDetailsPresenter(this,
-                Repository.getInstance(
+                MealsRepository.getInstance(
                         MealClient.getInstance(),
                         ConcreteLocalSource.getInstance(getContext())
                 )

@@ -22,21 +22,21 @@ import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class Repository implements RepositoryInterface {
+public class MealsRepository implements MealsRepositoryInterface {
     private static final String TAG = "TAG repository";
     RemoteSource remoteSource;
     LocalSource localSource;
-    private static Repository instance = null;
+    private static MealsRepository instance = null;
     DummyCache cache = DummyCache.getInstance();
 
-    private Repository(RemoteSource remoteSource, LocalSource localSource) {
+    private MealsRepository(RemoteSource remoteSource, LocalSource localSource) {
         this.remoteSource = remoteSource;
         this.localSource = localSource;
     }
 
-    public static Repository getInstance(RemoteSource remoteSource, LocalSource localSource) {
+    public static MealsRepository getInstance(RemoteSource remoteSource, LocalSource localSource) {
         if (instance == null)
-            instance = new Repository(remoteSource, localSource);
+            instance = new MealsRepository(remoteSource, localSource);
         return instance;
     }
 

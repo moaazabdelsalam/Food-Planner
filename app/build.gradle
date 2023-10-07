@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'androidx.navigation.safeargs'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -76,4 +77,7 @@ dependencies {
 
     //Lottie animation
     implementation 'com.airbnb.android:lottie:6.1.0'
+
+    //Firebase auth
+    implementation 'com.google.firebase:firebase-auth:21.0.2'
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,13 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.favorite.presenter.FavoritePresenter;
 import com.project.foodplanner.favorite.presenter.FavoritePresenterInterface;
 import com.project.foodplanner.model.Meal;
-import com.project.foodplanner.model.Repository;
+import com.project.foodplanner.model.MealsRepository;
 import com.project.foodplanner.network.MealClient;
 
 import java.util.ArrayList;
@@ -70,7 +68,7 @@ public class FavoriteFragment extends Fragment implements FavoriteViewInterface,
         recyclerView.setAdapter(favoriteAdapter);
 
         presenter = new FavoritePresenter(this,
-                Repository.getInstance(
+                MealsRepository.getInstance(
                         MealClient.getInstance(),
                         ConcreteLocalSource.getInstance(getContext())
                 )

@@ -11,7 +11,7 @@ import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.DatabaseDelegate;
 import com.project.foodplanner.home.view.HomeViewInterface;
 import com.project.foodplanner.model.Meal;
-import com.project.foodplanner.model.RepositoryInterface;
+import com.project.foodplanner.model.MealsRepositoryInterface;
 import com.project.foodplanner.model.RequestCode;
 import com.project.foodplanner.network.NetworkCallback;
 import com.project.foodplanner.network.NetworkDelegate;
@@ -22,9 +22,9 @@ import java.util.List;
 public class HomePresenter implements HomePresenterInterface, NetworkCallback, DatabaseDelegate, NetworkDelegate {
     private static final String TAG = "TAG home presenter";
     HomeViewInterface view;
-    RepositoryInterface repository;
+    MealsRepositoryInterface repository;
 
-    public HomePresenter(HomeViewInterface view, RepositoryInterface repository) {
+    public HomePresenter(HomeViewInterface view, MealsRepositoryInterface repository) {
         this.view = view;
         this.repository = repository;
     }

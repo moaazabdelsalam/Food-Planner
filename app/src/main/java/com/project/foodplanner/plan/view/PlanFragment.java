@@ -1,6 +1,5 @@
 package com.project.foodplanner.plan.view;
 
-import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 
@@ -19,17 +18,13 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
-import com.project.foodplanner.model.Meal;
-import com.project.foodplanner.model.Repository;
+import com.project.foodplanner.model.MealsRepository;
 import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.MealClient;
 import com.project.foodplanner.plan.presenter.PlanPresenter;
 import com.project.foodplanner.plan.presenter.PlanPresenterInterface;
-import com.project.foodplanner.utils.DummyCache;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 
 public class PlanFragment extends Fragment implements PlanViewInterface, PlanListener, PlanClickListener {
@@ -64,7 +59,7 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
         adapterList = new ArrayList<>();
         ArrayList<String> tabName = getDates();
 
-        presenter = new PlanPresenter(this, Repository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())));
+        presenter = new PlanPresenter(this, MealsRepository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())));
         presenter.getAllPlans();
 
         tabLayout = view.findViewById(R.id.tabLayout);

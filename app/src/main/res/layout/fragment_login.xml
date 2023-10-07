@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/loginUsernameTxtInLayout"
+        android:id="@+id/loginEmailTxtInLayout"
         style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -31,7 +31,6 @@
         app:boxStrokeWidthFocused="0dp"
         app:endIconMode="clear_text"
         app:endIconTint="@color/black"
-        app:helperText="*Required"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/singInTxt"
@@ -39,11 +38,11 @@
         app:startIconTint="@color/black">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/loginUsernameTxtInET"
+            android:id="@+id/loginEmailTxtInET"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/round_corners"
-            android:hint="@string/username"
+            android:hint="@string/email"
             android:inputType="text"
             android:textColor="@color/black"
             tools:ignore="TouchTargetSizeCheck" />
@@ -55,16 +54,15 @@
         style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textColorHint="@color/black"
         app:boxStrokeWidth="0dp"
         app:boxStrokeWidthFocused="0dp"
         app:endIconMode="password_toggle"
         app:endIconTint="@color/black"
-        app:helperText="*Required"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/loginUsernameTxtInLayout"
+        app:layout_constraintTop_toBottomOf="@id/loginEmailTxtInLayout"
         app:startIconDrawable="@drawable/ic_baseline_lock_24"
         app:startIconTint="@color/black">
 
@@ -84,7 +82,7 @@
         android:id="@+id/loginBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:background="@drawable/round_corners"
         android:backgroundTint="?attr/colorSecondary"
         android:text="@string/login"
@@ -104,6 +102,7 @@
         android:textColor="?attr/textFillColor"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="@id/loginBtn"
+        app:layout_constraintStart_toStartOf="@+id/loginBtn"
         app:layout_constraintTop_toBottomOf="@id/loginBtn" />
 
     <androidx.appcompat.widget.AppCompatButton

@@ -12,7 +12,7 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 
-public interface RepositoryInterface {
+public interface MealsRepositoryInterface {
     void makeCategoryListCall(NetworkCallback networkCallback);
 
     void makeCountryListCall(NetworkCallback networkCallback);
