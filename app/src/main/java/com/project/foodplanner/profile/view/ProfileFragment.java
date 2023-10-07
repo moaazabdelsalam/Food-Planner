@@ -14,10 +14,12 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.project.foodplanner.LoginActivity;
 import com.project.foodplanner.R;
 import com.project.foodplanner.model.CloudRepo;
+import com.project.foodplanner.model.GoogleSingInConfigs;
 import com.project.foodplanner.profile.presenter.ProfilePresenter;
 import com.project.foodplanner.profile.presenter.ProfilePresenterInterface;
 
@@ -74,9 +76,10 @@ public class ProfileFragment extends Fragment implements ProfileViewInterface {
 
     @Override
     public void logoutMessage(int status) {
-        if (status == 1)
+        if (status == 1) {
             Navigation.findNavController(_view).navigateUp();
-        else
+            GoogleSignIn.getClient(requireContext(), GoogleSingInConfigs.getInstance().getGso()).signOut();
+        } else
             Toast.makeText(getContext(), "Something wrong happened", Toast.LENGTH_SHORT).show();
     }
 }
