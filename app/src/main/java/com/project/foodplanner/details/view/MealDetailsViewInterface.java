@@ -8,4 +8,6 @@ public interface MealDetailsViewInterface {
     void showFavoriteClickMessage(String meal, int status);
 
     void showAddToPlanMessage(String meal, int status);
+
+    void showNotLoggedInMessage();
 }

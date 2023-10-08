@@ -12,6 +12,9 @@ public class ProfilePresenter implements ProfilePresenterInterface, CloudDelegat
     public ProfilePresenter(ProfileViewInterface view, CloudRepoInterface repository) {
         this.view = view;
         this.repository = repository;
+
+        if (repository.getCurrentUser() == null)
+            view.showNotLoggedInMessage();
     }
 
     @Override

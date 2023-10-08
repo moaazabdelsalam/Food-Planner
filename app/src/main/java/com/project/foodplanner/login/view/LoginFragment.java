@@ -37,11 +37,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 import com.project.foodplanner.R;
+import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.login.presenter.LoginPresenter;
 import com.project.foodplanner.login.presenter.LoginPresenterInterface;
 import com.project.foodplanner.model.CloudRepo;
 import com.project.foodplanner.model.GoogleSingInConfigs;
+import com.project.foodplanner.model.MealsRepository;
 import com.project.foodplanner.model.User;
+import com.project.foodplanner.network.MealClient;
 
 public class LoginFragment extends Fragment implements LoginViewInterface {
     public static final String TAG = "TAG login fragment";
@@ -148,7 +151,7 @@ public class LoginFragment extends Fragment implements LoginViewInterface {
         registerBtn = view.findViewById(R.id.underlineRegisterBtn);
         loginWithGoogleBtn = view.findViewById(R.id.loginWithGoogleBtn);
 
-        presenter = new LoginPresenter(this, CloudRepo.getInstance());
+        presenter = new LoginPresenter(this, CloudRepo.getInstance(MealsRepository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext()))));
     }
 
     boolean validateEmail(String email) {

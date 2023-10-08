@@ -23,8 +23,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.project.foodplanner.R;
+import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.model.CloudRepo;
 import com.project.foodplanner.model.GoogleSingInConfigs;
+import com.project.foodplanner.model.MealsRepository;
+import com.project.foodplanner.network.MealClient;
 import com.project.foodplanner.register.presenter.RegisterPresenter;
 import com.project.foodplanner.register.presenter.RegisterPresenterInterface;
 
@@ -157,7 +160,10 @@ public class RegisterFragment extends Fragment implements RegisterViewInterface 
         registerBtn = view.findViewById(R.id.registerBtn);
         signInWithGoogleBtn = view.findViewById(R.id.signInWithGoogleBtn);
 
-        presenter = new RegisterPresenter(this, CloudRepo.getInstance());
+        presenter = new RegisterPresenter(this, CloudRepo.getInstance(MealsRepository.getInstance(
+                MealClient.getInstance(),
+                ConcreteLocalSource.getInstance(getContext())
+        )));
     }
 
     void loginWithGoogle() {

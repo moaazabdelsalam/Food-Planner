@@ -29,7 +29,7 @@ public interface MealsRepositoryInterface {
 
     void filterByCountry(String country, NetworkDelegate networkDelegate);
 
-    void getRegionMeals (String country, NetworkDelegate networkDelegate);
+    void getRegionMeals(String country, NetworkDelegate networkDelegate);
 
     void getMealById(String mealId, NetworkDelegate networkDelegate);
 
@@ -53,11 +53,13 @@ public interface MealsRepositoryInterface {
 
     void getAllPlans(PlanDelegate planDelegate);
 
-    void addMealToDatabase(Meal meal, DatabaseDelegate databaseDelegate);
+    void addMealToFavDB(Meal meal, DatabaseDelegate databaseDelegate);
 
-    void removeMealFromDatabase(Meal meal, DatabaseDelegate databaseDelegate);
+    void removeMealFromFavDB(Meal meal, DatabaseDelegate databaseDelegate);
 
-    LiveData<List<Meal>> getDatabaseContent();
+    LiveData<List<Meal>> getFavDBContent(String userId);
+
+    Completable deleteAllFavorite();
 
     String sendTodayMealId();
 }

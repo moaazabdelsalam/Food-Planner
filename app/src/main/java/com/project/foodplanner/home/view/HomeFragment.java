@@ -1,5 +1,6 @@
 package com.project.foodplanner.home.view;
 
+import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 
@@ -22,9 +23,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.project.foodplanner.LoginActivity;
 import com.project.foodplanner.filterresult.view.FilterResultAdapter;
 import com.project.foodplanner.filterresult.view.FilterResultClickListener;
+import com.project.foodplanner.model.CloudRepo;
 import com.project.foodplanner.model.DayPickerDialog;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
@@ -155,6 +159,24 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
         regionAdapter.updateMealList(meals);
     }
 
+    @Override
+    public void showNotLoggedInMessage() {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Login First")
+                .setMessage("Some features available only when you are logged in, Please login first")
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    // Respond to negative button press
+                    Navigation.findNavController(_view).navigateUp();
+                })
+                .setPositiveButton("Ok", (dialog, which) -> {
+                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    startActivity(intent);
+                })
+                .setOnDismissListener(dialogInterface -> Navigation.findNavController(_view).navigateUp())
+                .show();
+
+    }
+
     private void initializeViews(View view) {
         todayMealShimmerLayout = view.findViewById(R.id.todayMealShimmerLayout);
         todayMealShimmerLayout.startShimmerAnimation();
@@ -181,7 +203,16 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
         addFavoriteIcon = view.findViewById(R.id.addFavoriteIcon);
         todayMealNameTxt = view.findViewById(R.id.todayMealNameTxt);
         addToPlanBtn = view.findViewById(R.id.homeAddToPlanBtn);
-        presenter = new HomePresenter(this, MealsRepository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())));
+        presenter = new HomePresenter(this,
+                MealsRepository.getInstance(
+                        MealClient.getInstance(),
+                        ConcreteLocalSource.getInstance(getContext())
+                ),
+                CloudRepo.getInstance(MealsRepository.getInstance(
+                                MealClient.getInstance(),
+                                ConcreteLocalSource.getInstance(getContext())
+                        )
+                ));
     }
 
     @Override

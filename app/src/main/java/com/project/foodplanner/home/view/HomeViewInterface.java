@@ -17,4 +17,6 @@ public interface HomeViewInterface {
     void goToMealDetails(String mealID);
 
     void showCountryMeals(List<Meal> meals);
+
+    void showNotLoggedInMessage();
 }

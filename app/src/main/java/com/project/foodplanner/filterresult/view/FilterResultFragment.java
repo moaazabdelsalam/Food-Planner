@@ -24,9 +24,11 @@ import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.filterresult.presenter.FilterResultPresenter;
 import com.project.foodplanner.filterresult.presenter.FilterResultPresenterInterface;
+import com.project.foodplanner.model.CloudRepo;
 import com.project.foodplanner.model.DayPickerDialog;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.MealsRepository;
+import com.project.foodplanner.model.NotLoggedInMessage;
 import com.project.foodplanner.network.MealClient;
 
 import java.util.ArrayList;
@@ -59,7 +61,7 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
         super.onViewCreated(view, savedInstanceState);
 
         Log.i("TAG", "onViewCreated: ");
-        _view = getView();
+        _view = view;
         initializeViews(view);
 
         String ingredient = FilterResultFragmentArgs.fromBundle(getArguments()).getIngredient();
@@ -96,7 +98,9 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
                 MealsRepository.getInstance(
                         MealClient.getInstance(),
                         ConcreteLocalSource.getInstance(getContext())
-                ));
+
+                ), CloudRepo.getInstance(MealsRepository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())
+        )));
 
     }
 
@@ -164,6 +168,11 @@ public class FilterResultFragment extends Fragment implements FilterResultViewIn
                         Navigation.findNavController(_view).navigate(R.id.action_filterResultFragment_to_planFragment);
                     }).setAnchorView(R.id.bottomNav).show();
         }
+    }
+
+    @Override
+    public void showNotLoggedInMessage() {
+        NotLoggedInMessage.showNotLoggedInDialogue(getContext(), _view);
     }
 
     @Override

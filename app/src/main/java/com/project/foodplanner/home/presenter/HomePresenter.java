@@ -2,10 +2,13 @@ package com.project.foodplanner.home.presenter;
 
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.project.foodplanner.database.PlanDelegate;
+import com.project.foodplanner.model.CloudRepo;
+import com.project.foodplanner.model.CloudRepoInterface;
 import com.project.foodplanner.model.PlanModel;
 import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.DatabaseDelegate;
@@ -23,10 +26,12 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback, D
     private static final String TAG = "TAG home presenter";
     HomeViewInterface view;
     MealsRepositoryInterface repository;
+    CloudRepoInterface cloudRepo;
 
-    public HomePresenter(HomeViewInterface view, MealsRepositoryInterface repository) {
+    public HomePresenter(HomeViewInterface view, MealsRepositoryInterface repository, CloudRepo cloudRepo) {
         this.view = view;
         this.repository = repository;
+        this.cloudRepo = cloudRepo;
     }
 
     @Override
@@ -40,17 +45,30 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback, D
 
     @Override
     public void addMealToFavorite(Meal meal) {
-        repository.addMealToDatabase(meal, this);
+        if (cloudRepo.getCurrentUser() == null) {
+            view.showNotLoggedInMessage();
+        } else {
+            meal.setUserID(cloudRepo.getCurrentUser().getUid());
+            repository.addMealToFavDB(meal, this);
+            //cloudRepo.addFavMealToRemoteDB(meal);
+        }
     }
 
     @Override
     public void removeFromFavorite(Meal meal) {
-        repository.removeMealFromDatabase(meal, this);
+        if (cloudRepo.getCurrentUser() == null)
+            view.showNotLoggedInMessage();
+        else
+            repository.removeMealFromFavDB(meal, this);
     }
 
     @Override
     public void todayMealFavoriteClick() {
-        repository.todayMealFavoriteClick(this);
+        if (cloudRepo.getCurrentUser() == null)
+            view.showNotLoggedInMessage();
+        else {
+            repository.todayMealFavoriteClick(this);
+        }
     }
 
     @Override
@@ -60,18 +78,22 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback, D
 
     @Override
     public void addTodayMealToPlan(String dayID) {
-        Log.i(TAG, "addTodayMealToPlan: sending request to repo to add today meal to plan");
-        repository.todayMealAddToPlanClicked(dayID, new DatabaseDelegate() {
-            @Override
-            public void onSuccess(String mealName, int status) {
-                view.showAddToPlanMessage(mealName, status);
-            }
+        if (cloudRepo.getCurrentUser() == null)
+            view.showNotLoggedInMessage();
+        else {
+            Log.i(TAG, "addTodayMealToPlan: sending request to repo to add today meal to plan");
+            repository.todayMealAddToPlanClicked(dayID, new DatabaseDelegate() {
+                @Override
+                public void onSuccess(String mealName, int status) {
+                    view.showAddToPlanMessage(mealName, status);
+                }
 
-            @Override
-            public void onError(String error) {
+                @Override
+                public void onError(String error) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     @Override
@@ -97,26 +119,34 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback, D
 
     @Override
     public void addMealToPlan(Meal meal, String dayId) {
-        repository.insertPlan(
-                new PlanModel(dayId, meal.getIdMeal()),
-                new SimpleMeal(meal.getIdMeal(),
-                        meal.getStrMeal(),
-                        meal.getStrCategory(),
-                        meal.getStrArea(),
-                        meal.getStrMealThumb(),
-                        meal.getStrTags()),
-                new DatabaseDelegate() {
-                    @Override
-                    public void onSuccess(String mealName, int status) {
-                        view.showAddToPlanMessage(mealName, status);
-                    }
+        if (cloudRepo.getCurrentUser() == null)
+            view.showNotLoggedInMessage();
+        else
+            repository.insertPlan(
+                    new PlanModel(dayId, meal.getIdMeal()),
+                    new SimpleMeal(meal.getIdMeal(),
+                            meal.getStrMeal(),
+                            meal.getStrCategory(),
+                            meal.getStrArea(),
+                            meal.getStrMealThumb(),
+                            meal.getStrTags()),
+                    new DatabaseDelegate() {
+                        @Override
+                        public void onSuccess(String mealName, int status) {
+                            view.showAddToPlanMessage(mealName, status);
+                        }
 
-                    @Override
-                    public void onError(String error) {
+                        @Override
+                        public void onError(String error) {
 
+                        }
                     }
-                }
-        );
+            );
+    }
+
+    @Override
+    public FirebaseUser getCurrentUser() {
+        return cloudRepo.getCurrentUser();
     }
 
     @Override

@@ -113,7 +113,7 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
                         searchPlaceholderTxt.setVisibility(View.VISIBLE);
                         searchAnimation.setAnimation(R.raw.animation_searching);
                         searchAnimation.playAnimation();
-                        searchPlaceholderTxt.setText("enter category name");
+                        searchPlaceholderTxt.setText("loading categories");
                         presenter.getAllCategories();
                         requestCode = RequestCode.CATEGORIES_REQ;
                         break;
@@ -125,7 +125,7 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
                         searchPlaceholderTxt.setVisibility(View.VISIBLE);
                         searchAnimation.setAnimation(R.raw.animation_searching);
                         searchAnimation.playAnimation();
-                        searchPlaceholderTxt.setText("enter ingredient name");
+                        searchPlaceholderTxt.setText("loading ingredients");
                         presenter.getAllIngredients();
                         requestCode = RequestCode.INGREDIENTS_REQ;
                         break;
@@ -137,7 +137,7 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
                         searchPlaceholderTxt.setVisibility(View.VISIBLE);
                         searchAnimation.setAnimation(R.raw.animation_searching);
                         searchAnimation.playAnimation();
-                        searchPlaceholderTxt.setText("enter country name");
+                        searchPlaceholderTxt.setText("loading countries");
                         presenter.getAllCountries();
                         requestCode = RequestCode.COUNTRIES_REQ;
                         break;
@@ -178,7 +178,7 @@ public class FiltersFragment extends Fragment implements FilterViewInterface, Fi
             }
         });
 
-        newString.debounce(300, TimeUnit.MILLISECONDS)
+        newString.debounce(700, TimeUnit.MILLISECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

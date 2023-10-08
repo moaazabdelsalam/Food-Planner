@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.project.foodplanner.filter.view.FilterViewInterface;
 import com.project.foodplanner.model.Category;
+import com.project.foodplanner.model.CloudRepoInterface;
 import com.project.foodplanner.model.Country;
 import com.project.foodplanner.model.Ingredient;
 import com.project.foodplanner.model.Meal;

@@ -10,4 +10,6 @@ public interface FilterResultViewInterface {
     void showFavoriteClickMessage(String mealName, int Status);
 
     void showAddToPlanMessage(String meal, int status);
+
+    void showNotLoggedInMessage();
 }

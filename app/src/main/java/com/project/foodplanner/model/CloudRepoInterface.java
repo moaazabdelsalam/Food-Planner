@@ -19,4 +19,6 @@ public interface CloudRepoInterface {
     void logoutUser(CloudDelegate cloudDelegate);
 
     FirebaseUser getCurrentUser();
+
+    void addFavMealToRemoteDB(Meal meal);
 }

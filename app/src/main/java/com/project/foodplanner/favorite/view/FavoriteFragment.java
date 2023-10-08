@@ -1,5 +1,6 @@
 package com.project.foodplanner.favorite.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,17 +11,22 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.project.foodplanner.LoginActivity;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.favorite.presenter.FavoritePresenter;
 import com.project.foodplanner.favorite.presenter.FavoritePresenterInterface;
+import com.project.foodplanner.model.CloudRepo;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.MealsRepository;
+import com.project.foodplanner.model.NotLoggedInMessage;
 import com.project.foodplanner.network.MealClient;
 
 import java.util.ArrayList;
@@ -51,12 +57,17 @@ public class FavoriteFragment extends Fragment implements FavoriteViewInterface,
         _view = view;
 
         initializeViews(view);
-        presenter.getAllFavMeals().observe(getViewLifecycleOwner(), new Observer<List<Meal>>() {
-            @Override
-            public void onChanged(List<Meal> meals) {
-                favoriteAdapter.updateFavMealList(meals);
-            }
-        });
+
+        if (presenter.getCurrentUser() == null) {
+            showNotLoggedInMessage();
+        } else {
+            presenter.getAllFavMeals().observe(getViewLifecycleOwner(), new Observer<List<Meal>>() {
+                @Override
+                public void onChanged(List<Meal> meals) {
+                    favoriteAdapter.updateFavMealList(meals);
+                }
+            });
+        }
     }
 
     private void initializeViews(View view) {
@@ -71,6 +82,10 @@ public class FavoriteFragment extends Fragment implements FavoriteViewInterface,
                 MealsRepository.getInstance(
                         MealClient.getInstance(),
                         ConcreteLocalSource.getInstance(getContext())
+                ),
+                CloudRepo.getInstance(MealsRepository.getInstance(
+                        MealClient.getInstance(),
+                        ConcreteLocalSource.getInstance(getContext()))
                 )
         );
     }
@@ -83,6 +98,11 @@ public class FavoriteFragment extends Fragment implements FavoriteViewInterface,
     @Override
     public void showRemoveMealMessage(String mealName) {
         Toast.makeText(getContext(), mealName + " removed from favorite", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showNotLoggedInMessage() {
+        NotLoggedInMessage.showNotLoggedInDialogue(getContext(), _view);
     }
 
     @Override

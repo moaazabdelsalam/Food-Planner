@@ -12,9 +12,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class ConcreteLocalSource implements LocalSource {
     private Context context;
@@ -34,18 +32,23 @@ public class ConcreteLocalSource implements LocalSource {
     }
 
     @Override
-    public Completable addMeal(Meal meal) {
-        return mealDAO.insertMeal(meal);
+    public Completable addMealToFav(Meal meal) {
+        return mealDAO.insertMealToFav(meal);
     }
 
     @Override
-    public Completable removeMeal(Meal meal) {
-        return mealDAO.deleteMeal(meal);
+    public Completable removeMealFromFav(Meal meal) {
+        return mealDAO.deleteMealFromFav(meal);
     }
 
     @Override
-    public LiveData<List<Meal>> getFavMealList() {
-        return mealDAO.getAllMeals();
+    public LiveData<List<Meal>> getFavMealList(String userId) {
+        return mealDAO.getAllFavMeals(userId);
+    }
+
+    @Override
+    public Completable deleteAllFavorite() {
+        return mealDAO.deleteAllFavorite();
     }
 
     @Override

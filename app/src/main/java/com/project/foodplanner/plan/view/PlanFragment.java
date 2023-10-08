@@ -1,5 +1,6 @@
 package com.project.foodplanner.plan.view;
 
+import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 
@@ -13,12 +14,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.project.foodplanner.LoginActivity;
 import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
+import com.project.foodplanner.model.CloudRepo;
 import com.project.foodplanner.model.MealsRepository;
+import com.project.foodplanner.model.NotLoggedInMessage;
 import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.MealClient;
 import com.project.foodplanner.plan.presenter.PlanPresenter;
@@ -54,12 +60,21 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
         super.onViewCreated(view, savedInstanceState);
 
         _view = view;
+        presenter = new PlanPresenter(this,
+                MealsRepository.getInstance(
+                        MealClient.getInstance(),
+                        ConcreteLocalSource.getInstance(getContext())
+                ),
+                CloudRepo.getInstance(MealsRepository.getInstance(
+                        MealClient.getInstance(),
+                        ConcreteLocalSource.getInstance(getContext()))
+                )
+        );
 
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         adapterList = new ArrayList<>();
         ArrayList<String> tabName = getDates();
 
-        presenter = new PlanPresenter(this, MealsRepository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(getContext())));
         presenter.getAllPlans();
 
         tabLayout = view.findViewById(R.id.tabLayout);
@@ -144,6 +159,11 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
     public void updateAdapterWithMeal(String tabID, SimpleMeal planSimpleMeal) {
         Log.i(TAG, "updateAdapterWithMeal: tab: " + Integer.parseInt(tabID) + " with " + planSimpleMeal);
         adapterList.get(Integer.parseInt(tabID) - 1).addToList(planSimpleMeal);
+    }
+
+    @Override
+    public void showNotLoggedInMessage() {
+        NotLoggedInMessage.showNotLoggedInDialogue(getContext(), _view);
     }
 
     @Override

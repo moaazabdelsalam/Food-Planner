@@ -16,11 +16,13 @@ public class PlanModel {
     String dayID;
     @NonNull
     private String idMeal;
+    private String userID;
 
-    public PlanModel(long id, String dayID, String idMeal) {
+    public PlanModel(long id, String dayID, String idMeal, String userID) {
         this.id = id;
         this.dayID = dayID;
         this.idMeal = idMeal;
+        this.userID = userID;
     }
 
     @Ignore
@@ -51,6 +53,14 @@ public class PlanModel {
 
     public void setIdMeal(String idMeal) {
         this.idMeal = idMeal;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 }
 

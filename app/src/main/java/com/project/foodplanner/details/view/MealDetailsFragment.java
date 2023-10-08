@@ -27,9 +27,11 @@ import com.project.foodplanner.R;
 import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.details.presenter.MealDetailsPresenter;
 import com.project.foodplanner.details.presenter.MealDetailsPresenterInterface;
+import com.project.foodplanner.model.CloudRepo;
 import com.project.foodplanner.model.DayPickerDialog;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.MealsRepository;
+import com.project.foodplanner.model.NotLoggedInMessage;
 import com.project.foodplanner.network.MealClient;
 
 import java.util.ArrayList;
@@ -101,7 +103,11 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
                 MealsRepository.getInstance(
                         MealClient.getInstance(),
                         ConcreteLocalSource.getInstance(getContext())
-                )
+                ),
+                CloudRepo.getInstance(MealsRepository.getInstance(
+                        MealClient.getInstance(),
+                        ConcreteLocalSource.getInstance(getContext())
+                ))
         );
 
         addToFav.setOnClickListener(view1 -> {
@@ -229,4 +235,8 @@ public class MealDetailsFragment extends Fragment implements MealDetailsViewInte
         }
     }
 
+    @Override
+    public void showNotLoggedInMessage() {
+        NotLoggedInMessage.showNotLoggedInDialogue(getContext(), _view);
+    }
 }

@@ -24,6 +24,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MealsRepository implements MealsRepositoryInterface {
     private static final String TAG = "TAG repository";
+    CloudRepoInterface cloudRepoInterface;
     RemoteSource remoteSource;
     LocalSource localSource;
     private static MealsRepository instance = null;
@@ -32,6 +33,7 @@ public class MealsRepository implements MealsRepositoryInterface {
     private MealsRepository(RemoteSource remoteSource, LocalSource localSource) {
         this.remoteSource = remoteSource;
         this.localSource = localSource;
+        this.cloudRepoInterface = CloudRepo.getInstance(this);
     }
 
     public static MealsRepository getInstance(RemoteSource remoteSource, LocalSource localSource) {
@@ -137,7 +139,7 @@ public class MealsRepository implements MealsRepositoryInterface {
         //Log.i(TAG, "todayMealFavoriteClick: " + cache.getTodayMealCache().getStrMeal());
         if (!cache.getTodayMealCache().isFavorite()) {
             //Log.i(TAG, "todayMealFavoriteClick: adding to favorite");
-            localSource.addMeal(cache.getTodayMealCache())
+            localSource.addMealToFav(cache.getTodayMealCache())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -152,7 +154,7 @@ public class MealsRepository implements MealsRepositoryInterface {
                     );
         } else {
             //Log.i(TAG, "todayMealFavoriteClick: removing from favorite");
-            localSource.removeMeal(cache.getTodayMealCache())
+            localSource.removeMealFromFav(cache.getTodayMealCache())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -172,7 +174,9 @@ public class MealsRepository implements MealsRepositoryInterface {
     public void detailsMealClick(DatabaseDelegate favoriteDelegate) {
         if (!cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1).isFavorite()) {
             //Log.i(TAG, "detailsMealClick: adding to favorite");
-            localSource.addMeal(cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1))
+            Meal meal = cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1);
+            meal.setUserID(cloudRepoInterface.getCurrentUser().getUid());
+            localSource.addMealToFav(meal)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -187,7 +191,7 @@ public class MealsRepository implements MealsRepositoryInterface {
                     );
         } else {
             //Log.i(TAG, "todayMealFavoriteClick: removing from favorite");
-            localSource.removeMeal(cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1))
+            localSource.removeMealFromFav(cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -351,12 +355,13 @@ public class MealsRepository implements MealsRepositoryInterface {
     }
 
     @Override
-    public void addMealToDatabase(Meal meal, DatabaseDelegate databaseDelegate) {
-        localSource.addMeal(meal)
+    public void addMealToFavDB(Meal meal, DatabaseDelegate databaseDelegate) {
+        localSource.addMealToFav(meal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         () -> {
+                            cloudRepoInterface.addFavMealToRemoteDB(meal);
                             databaseDelegate.onSuccess(meal.getStrMeal(), 1);
                         },
                         error -> {
@@ -367,8 +372,8 @@ public class MealsRepository implements MealsRepositoryInterface {
     }
 
     @Override
-    public void removeMealFromDatabase(Meal meal, DatabaseDelegate databaseDelegate) {
-        localSource.removeMeal(meal)
+    public void removeMealFromFavDB(Meal meal, DatabaseDelegate databaseDelegate) {
+        localSource.removeMealFromFav(meal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -383,7 +388,12 @@ public class MealsRepository implements MealsRepositoryInterface {
     }
 
     @Override
-    public LiveData<List<Meal>> getDatabaseContent() {
-        return localSource.getFavMealList();
+    public LiveData<List<Meal>> getFavDBContent(String userID) {
+        return localSource.getFavMealList(userID);
+    }
+
+    @Override
+    public Completable deleteAllFavorite() {
+        return localSource.deleteAllFavorite();
     }
 }

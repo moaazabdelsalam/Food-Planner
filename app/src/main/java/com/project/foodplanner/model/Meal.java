@@ -19,6 +19,7 @@ public class Meal implements Parcelable {
     private String strArea;
     private String strMealThumb;
     private String strTags;
+    private String userID;
     @Ignore
     private String strInstructions;
     @Ignore
@@ -109,7 +110,7 @@ public class Meal implements Parcelable {
     public Meal() {
     }
 
-    public Meal(String idMeal, String strMeal, String strCategory, String strArea, String strMealThumb, String strTags, boolean isFavorite) {
+    public Meal(String idMeal, String strMeal, String strCategory, String strArea, String strMealThumb, String strTags, boolean isFavorite, String userID) {
         this.idMeal = idMeal;
         this.strMeal = strMeal;
         this.strCategory = strCategory;
@@ -117,6 +118,7 @@ public class Meal implements Parcelable {
         this.strMealThumb = strMealThumb;
         this.strTags = strTags;
         this.isFavorite = isFavorite;
+        this.userID = userID;
     }
 
     protected Meal(Parcel in) {
@@ -227,6 +229,14 @@ public class Meal implements Parcelable {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getStrYoutube() {

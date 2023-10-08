@@ -1,5 +1,6 @@
 package com.project.foodplanner.home.presenter;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.project.foodplanner.model.Meal;
 
 public interface HomePresenterInterface {
@@ -20,4 +21,6 @@ public interface HomePresenterInterface {
     void getMealsOfCountry(String country);
 
     void addMealToPlan(Meal meal, String dayId);
+
+    FirebaseUser getCurrentUser();
 }

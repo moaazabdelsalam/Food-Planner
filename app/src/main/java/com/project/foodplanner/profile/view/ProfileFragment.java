@@ -18,8 +18,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.project.foodplanner.LoginActivity;
 import com.project.foodplanner.R;
+import com.project.foodplanner.database.ConcreteLocalSource;
 import com.project.foodplanner.model.CloudRepo;
 import com.project.foodplanner.model.GoogleSingInConfigs;
+import com.project.foodplanner.model.MealsRepository;
+import com.project.foodplanner.model.NotLoggedInMessage;
+import com.project.foodplanner.network.MealClient;
 import com.project.foodplanner.profile.presenter.ProfilePresenter;
 import com.project.foodplanner.profile.presenter.ProfilePresenterInterface;
 
@@ -48,30 +52,13 @@ public class ProfileFragment extends Fragment implements ProfileViewInterface {
         _view = view;
         initializeViews(view);
 
-        if (presenter.getCurrentUser() == null) {
-            new MaterialAlertDialogBuilder(getContext())
-                    .setTitle("Login First")
-                    .setMessage("Some features available only when you are logged in, Please login first")
-                    .setNegativeButton("Cancel", (dialog, which) -> {
-                        // Respond to negative button press
-                        Navigation.findNavController(_view).navigateUp();
-                    })
-                    .setPositiveButton("Ok", (dialog, which) -> {
-                        Intent intent = new Intent(getContext(), LoginActivity.class);
-                        startActivity(intent);
-                    })
-                    .setOnDismissListener(dialogInterface -> Navigation.findNavController(_view).navigateUp())
-                    .show();
-        } else {
-            Log.i("TAG", "onViewCreated: current user: " + presenter.getCurrentUser().getEmail());
-        }
         logoutBtn.setOnClickListener(view1 -> presenter.logoutUser());
     }
 
     private void initializeViews(View view) {
         logoutBtn = view.findViewById(R.id.logoutBtn);
 
-        presenter = new ProfilePresenter(this, CloudRepo.getInstance());
+        presenter = new ProfilePresenter(this, CloudRepo.getInstance(MealsRepository.getInstance(MealClient.getInstance(), ConcreteLocalSource.getInstance(requireContext()))));
     }
 
     @Override
@@ -81,5 +68,10 @@ public class ProfileFragment extends Fragment implements ProfileViewInterface {
             GoogleSignIn.getClient(requireContext(), GoogleSingInConfigs.getInstance().getGso()).signOut();
         } else
             Toast.makeText(getContext(), "Something wrong happened", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showNotLoggedInMessage() {
+        NotLoggedInMessage.showNotLoggedInDialogue(getContext(), _view);
     }
 }

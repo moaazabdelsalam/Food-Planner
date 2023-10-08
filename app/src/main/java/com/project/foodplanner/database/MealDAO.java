@@ -15,20 +15,21 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.subjects.PublishSubject;
 
 @Dao
 public interface MealDAO {
-    @Query("SELECT * FROM favorite_meals")
-    LiveData<List<Meal>> getAllMeals();
+    @Query("SELECT * FROM favorite_meals WHERE userID =:userId")
+    LiveData<List<Meal>> getAllFavMeals(String userId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    Completable insertMeal(Meal meal);
+    Completable insertMealToFav(Meal meal);
 
     @Delete
-    Completable deleteMeal(Meal meal);
+    Completable deleteMealFromFav(Meal meal);
+
+    @Query("DELETE FROM favorite_meals")
+    Completable deleteAllFavorite();
 
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

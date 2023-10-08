@@ -6,4 +6,6 @@ public interface FavoriteViewInterface {
     void removeMealFromFav(Meal meal);
 
     void showRemoveMealMessage(String mealName);
+
+    void showNotLoggedInMessage();
 }
