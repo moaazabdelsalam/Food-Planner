@@ -241,17 +241,17 @@ public class MealsRepository implements MealsRepositoryInterface {
 
     @Override
     public void getAllPlansOfDay(String dayID, PlanDelegate planDelegate) {
-        //Log.i(TAG, "getAllPlansOfDay: " + dayID);
+        Log.i(TAG, "getAllPlansOfDay: " + dayID);
         localSource.getAllPlansById(cloudRepoInterface.getCurrentUser().getUid(), dayID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         planModelList ->
                                 planModelList.forEach(planModel -> {
-                                    //Log.i(TAG, "getting plans of day: " + planModel.getDayID());
+                                    Log.i(TAG, "getting plans of day: " + planModel.getDayID());
                                     getPlanMealWithID(planModel.getIdMeal()).subscribe(
                                             simpleMeal -> {
-                                                //Log.i(TAG, "getAllPlansOfDay:sending simple meal " + simpleMeal.getStrMeal());
+                                                Log.i(TAG, "getAllPlansOfDay:sending simple meal " + simpleMeal.getStrMeal());
                                                 planDelegate.onSuccess(simpleMeal, planModel.getDayID());
                                             },
                                             error -> Log.i(TAG, "getAllPlansById: getPlanMealWithID: error: " + error.getMessage())

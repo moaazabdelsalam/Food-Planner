@@ -83,11 +83,18 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
         _view = getView();
 
         initializeViews(view);
-        if (!NetworkUtils.isNetworkAvailable(getContext()))
-            Toast.makeText(getContext(), "not network available", Toast.LENGTH_SHORT).show();
-
+        if (!NetworkUtils.isNetworkAvailable(getContext())) {
+            new MaterialAlertDialogBuilder(getContext())
+                    .setTitle("No Network")
+                    .setMessage("no internet connection found please check you wifi or mobile data to be able to use all features of application")
+                    .setPositiveButton("Ok", (dialog, which) -> {
+                        dialog.dismiss();
+                    })
+                    .show();
+        }
+        if (presenter.getCurrentUser() != null)
+            presenter.getTodayPlan(String.valueOf(dayOfMonth));
         presenter.getTodayMeal();
-        presenter.getTodayPlan(String.valueOf(dayOfMonth));
         presenter.getMealsOfCountry("Egyptian");
 
         addFavoriteIcon.setOnClickListener(view1 -> presenter.todayMealFavoriteClick());

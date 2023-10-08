@@ -99,9 +99,6 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback, D
     @Override
     public void getTodayPlan(String dayID) {
         Log.i(TAG, "getTodayPlan: ");
-        if (cloudRepo.getCurrentUser() != null)
-            //view.showNotLoggedInMessage();
-
             repository.getAllPlansOfDay(dayID, new PlanDelegate() {
                 @Override
                 public void onSuccess(SimpleMeal planSimpleMeal, String dayID) {
