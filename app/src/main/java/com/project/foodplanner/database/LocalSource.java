@@ -27,7 +27,7 @@ public interface LocalSource {
 
     Single<SimpleMeal> getPlanMealWithID(String id);
 
-    Flowable<List<PlanModel>> getAllPlansById(String dayID);
+    Flowable<List<PlanModel>> getAllPlansById(String userID, String dayID);
 
-    Flowable<List<PlanModel>> getAllPlans();
+    Flowable<List<PlanModel>> getAllPlans(String userID);
 }

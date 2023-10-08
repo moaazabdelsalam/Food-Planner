@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -36,6 +37,7 @@ import com.project.foodplanner.home.presenter.HomePresenter;
 import com.project.foodplanner.home.presenter.HomePresenterInterface;
 import com.project.foodplanner.model.Meal;
 import com.project.foodplanner.model.MealsRepository;
+import com.project.foodplanner.model.NetworkUtils;
 import com.project.foodplanner.model.SimpleMeal;
 import com.project.foodplanner.network.MealClient;
 import com.project.foodplanner.plan.view.PlanClickListener;
@@ -81,6 +83,9 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
         _view = getView();
 
         initializeViews(view);
+        if (!NetworkUtils.isNetworkAvailable(getContext()))
+            Toast.makeText(getContext(), "not network available", Toast.LENGTH_SHORT).show();
+
         presenter.getTodayMeal();
         presenter.getTodayPlan(String.valueOf(dayOfMonth));
         presenter.getMealsOfCountry("Egyptian");

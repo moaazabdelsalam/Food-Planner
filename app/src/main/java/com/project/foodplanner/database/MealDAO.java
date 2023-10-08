@@ -45,9 +45,9 @@ public interface MealDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Completable insertPlan(PlanModel planModel);
 
-    @Query("SELECT * FROM plan_table WHERE dayID = :dayID")
-    Flowable<List<PlanModel>> getAllPlansById(String dayID);
+    @Query("SELECT * FROM plan_table WHERE userID = :userID & dayID = :dayID")
+    Flowable<List<PlanModel>> getAllPlansById(String userID, String dayID);
 
-    @Query("SELECT * FROM plan_table")
-    Flowable<List<PlanModel>> getAllPlans();
+    @Query("SELECT * FROM plan_table WHERE userID = :userID")
+    Flowable<List<PlanModel>> getAllPlans(String userID);
 }
