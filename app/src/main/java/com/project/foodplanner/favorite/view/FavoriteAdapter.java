@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.project.foodplanner.R;
 import com.project.foodplanner.model.Meal;
+import com.project.foodplanner.model.SimpleMeal;
 
 import java.util.List;
 
@@ -62,6 +63,20 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
     public void updateFavMealList(List<Meal> updatedFavMealList) {
         favMealList = updatedFavMealList;
         notifyDataSetChanged();
+    }
+
+    public void addMealToList(Meal meal) {
+        boolean exist = false;
+        for (Meal _meal : favMealList) {
+            if (_meal.getIdMeal().equals(meal.getIdMeal())) {
+                exist = true;
+                break;
+            }
+        }
+        if (!exist) {
+            favMealList.add(meal);
+            notifyDataSetChanged();
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

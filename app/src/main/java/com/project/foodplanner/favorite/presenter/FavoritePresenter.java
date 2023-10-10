@@ -1,5 +1,7 @@
 package com.project.foodplanner.favorite.presenter;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -22,11 +24,28 @@ public class FavoritePresenter implements FavoritePresenterInterface {
         this.repository = repository;
         this.cloudRepository = cloudRepository;
 
+        if (cloudRepository.getCurrentUser() == null) {
+            view.showNotLoggedInMessage();
+        } else {
+            getAllFavMeals();
+        }
     }
 
     @Override
-    public LiveData<List<Meal>> getAllFavMeals() {
-        return repository.getFavDBContent(cloudRepository.getCurrentUser().getUid());
+    public void getAllFavMeals() {
+        repository.getFavDBContent(cloudRepository.getCurrentUser().getUid())
+                .subscribe(
+                        mealList -> {
+                            Log.i(TAG, "getAllFavMeals: got list of " + mealList.size());
+                            if (!mealList.isEmpty()) {
+                                view.hidePlaceholders();
+                                view.showAllFavoriteMeals(mealList);
+                            } else
+                                view.showPlaceholders();
+                            //mealList.forEach(meal -> view.showFavoriteMeal(meal));
+                        },
+                        error -> Log.i(TAG, "getAllFavMeals: " + error.getMessage())
+                );
     }
 
     @Override
@@ -35,6 +54,7 @@ public class FavoritePresenter implements FavoritePresenterInterface {
             @Override
             public void onSuccess(String mealName, int Status) {
                 view.showRemoveMealMessage(mealName);
+                getAllFavMeals();
             }
 
             @Override

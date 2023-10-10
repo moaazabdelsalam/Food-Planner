@@ -130,11 +130,32 @@
             app:layout_constraintTop_toBottomOf="@id/guideline2" />
 
 
+        <ImageView
+            android:id="@+id/noPlansImgPlaceholder"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/no_data"
+            app:layout_constraintBottom_toTopOf="@id/guideline12"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/todayPlanTxt" />
+
+        <TextView
+            android:id="@+id/noPlansTxtPlaceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Your today Plan will appear here"
+            app:layout_constraintBottom_toBottomOf="@id/noPlansImgPlaceholder"
+            app:layout_constraintEnd_toEndOf="@id/noPlansImgPlaceholder"
+            app:layout_constraintStart_toStartOf="@id/noPlansImgPlaceholder" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/todayPlanRV"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/guideline12"
             app:layout_constraintTop_toBottomOf="@id/todayPlanTxt" />
 
@@ -165,6 +186,7 @@
                 <include layout="@layout/list_item_shimmer" />
             </LinearLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/popularInRegionRV"
             android:layout_width="match_parent"

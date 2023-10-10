@@ -60,6 +60,8 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
     ImageView addFavoriteIcon;
     TextView todayMealNameTxt;
     Button addToPlanBtn;
+    ImageView noPlansImagePlaceholder;
+    TextView noPlansTxtPlaceholder;
     View _view;
     Calendar calendar = Calendar.getInstance();
 
@@ -155,6 +157,9 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
 
     @Override
     public void showTodayPlanMeal(SimpleMeal simpleMeal) {
+        noPlansTxtPlaceholder.setVisibility(View.GONE);
+        noPlansImagePlaceholder.setVisibility(View.GONE);
+        todayPlanRV.setVisibility(View.VISIBLE);
         planRecyclerViewAdapter.addToList(simpleMeal);
     }
 
@@ -215,6 +220,9 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
         addFavoriteIcon = view.findViewById(R.id.addFavoriteIcon);
         todayMealNameTxt = view.findViewById(R.id.todayMealNameTxt);
         addToPlanBtn = view.findViewById(R.id.homeAddToPlanBtn);
+        noPlansImagePlaceholder = view.findViewById(R.id.noPlansImgPlaceholder);
+        noPlansTxtPlaceholder = view.findViewById(R.id.noPlansTxtPlaceholder);
+
         presenter = new HomePresenter(this,
                 MealsRepository.getInstance(
                         MealClient.getInstance(),

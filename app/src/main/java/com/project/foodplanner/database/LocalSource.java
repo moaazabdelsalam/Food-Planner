@@ -17,7 +17,7 @@ public interface LocalSource {
 
     Completable removeMealFromFav(Meal meal);
 
-    LiveData<List<Meal>> getFavMealList(String userId);
+    Flowable<List<Meal>> getFavMealList(String userId);
 
     Completable deleteAllFavorite();
 

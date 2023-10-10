@@ -8,7 +8,7 @@ import com.project.foodplanner.model.Meal;
 import java.util.List;
 
 public interface FavoritePresenterInterface {
-    LiveData<List<Meal>> getAllFavMeals();
+    void getAllFavMeals();
     void removeMeal(Meal meal);
     FirebaseUser getCurrentUser();
 }

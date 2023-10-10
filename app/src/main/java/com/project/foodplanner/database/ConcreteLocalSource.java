@@ -42,7 +42,7 @@ public class ConcreteLocalSource implements LocalSource {
     }
 
     @Override
-    public LiveData<List<Meal>> getFavMealList(String userId) {
+    public Flowable<List<Meal>> getFavMealList(String userId) {
         return mealDAO.getAllFavMeals(userId);
     }
 

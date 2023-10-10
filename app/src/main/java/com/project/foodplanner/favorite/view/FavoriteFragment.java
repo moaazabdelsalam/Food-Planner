@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -33,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteFragment extends Fragment implements FavoriteViewInterface, FavoriteClickListener {
+    ImageView noFavImgPlaceholder;
+    TextView noFavTxtPlaceholder;
     RecyclerView recyclerView;
     FavoriteAdapter favoriteAdapter;
     FavoritePresenterInterface presenter;
@@ -58,19 +62,11 @@ public class FavoriteFragment extends Fragment implements FavoriteViewInterface,
 
         initializeViews(view);
 
-        if (presenter.getCurrentUser() == null) {
-            showNotLoggedInMessage();
-        } else {
-            presenter.getAllFavMeals().observe(getViewLifecycleOwner(), new Observer<List<Meal>>() {
-                @Override
-                public void onChanged(List<Meal> meals) {
-                    favoriteAdapter.updateFavMealList(meals);
-                }
-            });
-        }
     }
 
     private void initializeViews(View view) {
+        noFavImgPlaceholder = view.findViewById(R.id.noFavImgPlaceholder);
+        noFavTxtPlaceholder = view.findViewById(R.id.noFavTxtPlaceholder);
         recyclerView = view.findViewById(R.id.favoriteRV);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
@@ -103,6 +99,30 @@ public class FavoriteFragment extends Fragment implements FavoriteViewInterface,
     @Override
     public void showNotLoggedInMessage() {
         NotLoggedInMessage.showNotLoggedInDialogue(getContext(), _view);
+    }
+
+    @Override
+    public void showAllFavoriteMeals(List<Meal> meals) {
+        favoriteAdapter.updateFavMealList(meals);
+    }
+
+    @Override
+    public void showFavoriteMeal(Meal meal) {
+        favoriteAdapter.addMealToList(meal);
+    }
+
+    @Override
+    public void hidePlaceholders() {
+        noFavTxtPlaceholder.setVisibility(View.GONE);
+        noFavImgPlaceholder.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showPlaceholders() {
+        noFavTxtPlaceholder.setVisibility(View.VISIBLE);
+        noFavImgPlaceholder.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
     }
 
     @Override

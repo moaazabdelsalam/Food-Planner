@@ -10,6 +10,7 @@ import com.project.foodplanner.network.NetworkDelegate;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 
 public interface MealsRepositoryInterface {
@@ -57,7 +58,7 @@ public interface MealsRepositoryInterface {
 
     void removeMealFromFavDB(Meal meal, DatabaseDelegate databaseDelegate);
 
-    LiveData<List<Meal>> getFavDBContent(String userId);
+    Flowable<List<Meal>> getFavDBContent(String userId);
 
     Completable deleteAllFavorite();
 

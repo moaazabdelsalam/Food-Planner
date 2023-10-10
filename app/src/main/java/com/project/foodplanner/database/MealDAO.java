@@ -20,7 +20,7 @@ import io.reactivex.rxjava3.core.Single;
 @Dao
 public interface MealDAO {
     @Query("SELECT * FROM favorite_meals WHERE userID =:userId")
-    LiveData<List<Meal>> getAllFavMeals(String userId);
+    Flowable<List<Meal>> getAllFavMeals(String userId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     Completable insertMealToFav(Meal meal);

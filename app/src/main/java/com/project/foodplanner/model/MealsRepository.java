@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -394,8 +395,10 @@ public class MealsRepository implements MealsRepositoryInterface {
     }
 
     @Override
-    public LiveData<List<Meal>> getFavDBContent(String userID) {
-        return localSource.getFavMealList(userID);
+    public Flowable<List<Meal>> getFavDBContent(String userID) {
+        return localSource.getFavMealList(userID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
