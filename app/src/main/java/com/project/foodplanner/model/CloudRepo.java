@@ -136,7 +136,14 @@ public class CloudRepo implements CloudRepoInterface {
 
     @Override
     public void logoutUser(CloudDelegate cloudDelegate) {
-        mealRepo.deleteAllFavorite()
+        mAuth.signOut();
+        Log.i(TAG, "singOutUser: current user: " + getCurrentUser());
+        if (getCurrentUser() == null)
+            cloudDelegate.onSuccess(null);
+        else
+            cloudDelegate.onFailure("ERROR");
+        Log.i(TAG, "deleteAllFavorite: success");
+        /*mealRepo.deleteAllFavorite()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -150,7 +157,7 @@ public class CloudRepo implements CloudRepoInterface {
                             Log.i(TAG, "deleteAllFavorite: success");
                         },
                         error -> Log.i(TAG, "deleteAllFavorite: failed: " + error.getMessage())
-                );
+                );*/
     }
 
     @Override

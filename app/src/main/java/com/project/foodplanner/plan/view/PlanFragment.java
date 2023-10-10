@@ -75,7 +75,7 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
         adapterList = new ArrayList<>();
         ArrayList<String> tabName = getDates();
 
-        presenter.getAllPlans();
+        //presenter.getAllPlans();
 
         tabLayout = view.findViewById(R.id.tabLayout);
         planPager = view.findViewById(R.id.viewPager);

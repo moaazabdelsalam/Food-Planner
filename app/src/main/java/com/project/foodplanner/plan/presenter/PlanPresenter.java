@@ -22,6 +22,9 @@ public class PlanPresenter implements PlanPresenterInterface, PlanDelegate {
 
         if (cloudRepository.getCurrentUser() == null)
             view.showNotLoggedInMessage();
+        else
+            getAllPlans();
+        Log.i(TAG, "PlanPresenter: current user: " + cloudRepository.getCurrentUser());
     }
 
 
