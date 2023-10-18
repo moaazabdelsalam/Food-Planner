@@ -1,6 +1,6 @@
 # Food Planner Android App
 
-![Home_screen](./images/food_planner_home.jpg)
+<img src="./images/food_planner_home.jpg" alt="Home screenshot" width="270" height="600">
 
 **Description:**
 The Food Planner Android app is your culinary companion, designed to make meal planning and cooking a delightful experience. This app allows users to search for meals, access detailed recipes, plan their monthly meals, and more. Here's an overview of its features and the technologies used.
@@ -10,15 +10,28 @@ The Food Planner Android app is your culinary companion, designed to make meal p
 1. **Meal Search:**
    - Search for meals by name, ingredients, category, and area of origin.
 
+<img src="./images/food_planner_filter_by_name.jpg" alt="search screenshot" width="270" height="600"> <img src="./images/food_planner_filter_by_category.jpg" alt="search screenshot" width="270" height="600">
+<img src="./images/food_planner_filter_by_ingredient.jpg" alt="search screenshot" width="270" height="600"> <img src="./images/food_planner_filter_by_country.jpg" alt="search screenshot" width="270" height="600">
+
+
 2. **Detailed Meal Information:**
    - View complete details for each meal, including ingredients and step-by-step instructions.
    - Watch instructional cooking videos for each meal.
+     
+<img src="./images/food_planner_filter_by_name.jpg" alt="details screenshot" width="270" height="600">
+
 
 3. **Favorites:**
    - Add meals to your list of favorite dishes for quick access.
 
+<img src="./images/food_planner_fav.jpg" alt="favorite screenshot" width="270" height="600">
+
+
 4. **Meal Planning:**
    - Plan your entire month by scheduling meals for specific days.
+
+<img src="./images/food_planner_plan.jpg" alt="plan screenshot" width="270" height="600">
+
 
 5. **User Modes:**
    - The app supports both guest and registered user modes.
@@ -26,7 +39,11 @@ The Food Planner Android app is your culinary companion, designed to make meal p
 
 6. **Registration:**
    - Users can register using their email and password.
+   - Users can also login with their existing account.
    - Alternatively, they can register quickly and securely using their Google account.
+
+<img src="./images/food_planner_login.jpg" alt="login screenshot" width="270" height="600"> <img src="./images/food_planner_register.jpg" alt="register screenshot" width="270" height="600">
+
 
 ## Technologies Used
 
