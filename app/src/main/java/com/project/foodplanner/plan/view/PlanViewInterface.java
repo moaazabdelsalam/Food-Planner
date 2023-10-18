@@ -7,5 +7,7 @@ import java.util.List;
 public interface PlanViewInterface {
     void updateAdapterWithMeal(String tabId, SimpleMeal planSimpleMeal);
 
+    void resetAdapterList(String dayId);
+
     void showNotLoggedInMessage();
 }

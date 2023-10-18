@@ -9,5 +9,7 @@ public interface PlanPresenterInterface {
 
     void getAllPlans();
 
+    void removePlan(String dayID, String mealID);
+
     FirebaseUser getCurrentUser();
 }

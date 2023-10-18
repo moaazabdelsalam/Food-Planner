@@ -64,6 +64,7 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
     TextView noPlansTxtPlaceholder;
     View _view;
     Calendar calendar = Calendar.getInstance();
+    int dayOfMonth;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,7 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         _view = getView();
 
         initializeViews(view);
@@ -194,6 +195,11 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
 
     }
 
+    @Override
+    public void resetAdapterList(String dayID) {
+        planRecyclerViewAdapter.resetList();
+    }
+
     private void initializeViews(View view) {
         todayMealShimmerLayout = view.findViewById(R.id.todayMealShimmerLayout);
         todayMealShimmerLayout.startShimmerAnimation();
@@ -282,5 +288,10 @@ public class HomeFragment extends Fragment implements HomeViewInterface, FilterR
         HomeFragmentDirections.ActionHomeFragmentToFilterResultFragment action = HomeFragmentDirections.actionHomeFragmentToFilterResultFragment();
         action.setCountry(country);
         Navigation.findNavController(_view).navigate(action);
+    }
+
+    @Override
+    public void onRemovePlanClicked(String mealId) {
+        presenter.removePlan(String.valueOf(dayOfMonth), mealId);
     }
 }

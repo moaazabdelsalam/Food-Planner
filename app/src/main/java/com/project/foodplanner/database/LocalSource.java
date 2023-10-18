@@ -30,4 +30,6 @@ public interface LocalSource {
     Flowable<List<PlanModel>> getAllPlansById(String userID, String dayID);
 
     Flowable<List<PlanModel>> getAllPlans(String userID);
+
+    Completable deletePlan(PlanModel planModel);
 }

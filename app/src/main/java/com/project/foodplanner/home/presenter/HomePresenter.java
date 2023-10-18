@@ -99,85 +99,108 @@ public class HomePresenter implements HomePresenterInterface, NetworkCallback, D
     @Override
     public void getTodayPlan(String dayID) {
         Log.i(TAG, "getTodayPlan: ");
-            repository.getAllPlansOfDay(dayID, new PlanDelegate() {
-                @Override
-                public void onSuccess(SimpleMeal planSimpleMeal, String dayID) {
-                    view.showTodayPlanMeal(planSimpleMeal);
-                }
+        repository.getAllPlansOfDay(dayID, new PlanDelegate() {
+            @Override
+            public void onSuccess(SimpleMeal planSimpleMeal, String dayID) {
+                view.showTodayPlanMeal(planSimpleMeal);
+            }
 
-                @Override
-                public void onError(String error) {
+            @Override
+            public void onError(String error) {
 
-                }
-            });
-        }
+            }
+        });
+    }
 
-        @Override
-        public void getMealsOfCountry (String country){
-            repository.getRegionMeals(country, this);
-        }
+    @Override
+    public void getMealsOfCountry(String country) {
+        repository.getRegionMeals(country, this);
+    }
 
-        @Override
-        public void addMealToPlan (Meal meal, String dayId){
-            if (cloudRepo.getCurrentUser() == null)
-                view.showNotLoggedInMessage();
-            else
-                repository.insertPlan(
-                        new PlanModel(dayId, meal.getIdMeal()),
-                        new SimpleMeal(meal.getIdMeal(),
-                                meal.getStrMeal(),
-                                meal.getStrCategory(),
-                                meal.getStrArea(),
-                                meal.getStrMealThumb(),
-                                meal.getStrTags()),
-                        new DatabaseDelegate() {
-                            @Override
-                            public void onSuccess(String mealName, int status) {
-                                view.showAddToPlanMessage(mealName, status);
-                            }
+    @Override
+    public void addMealToPlan(Meal meal, String dayId) {
+        if (cloudRepo.getCurrentUser() == null)
+            view.showNotLoggedInMessage();
+        else
+            repository.insertPlan(
+                    new PlanModel(dayId, meal.getIdMeal()),
+                    new SimpleMeal(meal.getIdMeal(),
+                            meal.getStrMeal(),
+                            meal.getStrCategory(),
+                            meal.getStrArea(),
+                            meal.getStrMealThumb(),
+                            meal.getStrTags()),
+                    new DatabaseDelegate() {
+                        @Override
+                        public void onSuccess(String mealName, int status) {
+                            view.showAddToPlanMessage(mealName, status);
+                        }
 
-                            @Override
-                            public void onError(String error) {
+                        @Override
+                        public void onError(String error) {
 
-                            }
+                        }
+                    }
+            );
+    }
+
+    @Override
+    public void removePlan(String dayID, String mealID) {
+        repository.getAllPlansOfDay(dayID)
+                .subscribe(
+                        planModelList -> {
+                            Log.i(TAG, "all plans of day: " + dayID + "are: " + planModelList.size());
+                            planModelList.stream()
+                                    .filter(planModel -> planModel.getIdMeal().equals(mealID))
+                                    .findAny()
+                                    .ifPresent(planModel -> {
+                                        repository.removePlan(planModel).subscribe(
+                                                () -> {
+                                                    view.resetAdapterList(dayID);
+                                                    Log.i(TAG, "removePlan: done!");
+                                                    getTodayPlan(dayID);
+                                                },
+                                                throwable -> Log.i(TAG, "removePlan: error " + throwable.getMessage())
+                                        );
+                                    });
                         }
                 );
-        }
+    }
 
-        @Override
-        public FirebaseUser getCurrentUser () {
-            return cloudRepo.getCurrentUser();
-        }
+    @Override
+    public FirebaseUser getCurrentUser() {
+        return cloudRepo.getCurrentUser();
+    }
 
-        @Override
-        public void onSuccessResult (RequestCode requestCode, JsonObject jsonObject){
-            switch (requestCode) {
-                case RANDOM_MEAL_REQ:
-                    TypeToken<List<Meal>> mealTypeToken = new TypeToken<List<Meal>>() {
-                    };
-                    List<Meal> todayMeal = new Gson().fromJson(jsonObject.get("meals"), mealTypeToken.getType());
-                    DummyCache.getInstance().setTodayMealCache(todayMeal.get(0));
-                    view.showTodayMeal(todayMeal.get(0));
-            }
-        }
-
-        @Override
-        public void onFailureResult (RequestCode requestCode, String errorMsg){
-
-        }
-
-        @Override
-        public void onSuccess (String mealName,int status){
-            view.showAddFavoriteMessage(mealName, status);
-        }
-
-        @Override
-        public void onSuccess (List < Meal > mealList) {
-            view.showCountryMeals(mealList);
-        }
-
-        @Override
-        public void onError (String error){
-
+    @Override
+    public void onSuccessResult(RequestCode requestCode, JsonObject jsonObject) {
+        switch (requestCode) {
+            case RANDOM_MEAL_REQ:
+                TypeToken<List<Meal>> mealTypeToken = new TypeToken<List<Meal>>() {
+                };
+                List<Meal> todayMeal = new Gson().fromJson(jsonObject.get("meals"), mealTypeToken.getType());
+                DummyCache.getInstance().setTodayMealCache(todayMeal.get(0));
+                view.showTodayMeal(todayMeal.get(0));
         }
     }
+
+    @Override
+    public void onFailureResult(RequestCode requestCode, String errorMsg) {
+
+    }
+
+    @Override
+    public void onSuccess(String mealName, int status) {
+        view.showAddFavoriteMessage(mealName, status);
+    }
+
+    @Override
+    public void onSuccess(List<Meal> mealList) {
+        view.showCountryMeals(mealList);
+    }
+
+    @Override
+    public void onError(String error) {
+
+    }
+}

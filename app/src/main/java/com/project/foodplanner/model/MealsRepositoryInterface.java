@@ -44,6 +44,8 @@ public interface MealsRepositoryInterface {
 
     void getAllPlansOfDay(String dayID, PlanDelegate planDelegate);
 
+    Flowable<List<PlanModel>> getAllPlansOfDay(String dayID);
+
     void insertPlan(PlanModel planModel, SimpleMeal simpleMeal, DatabaseDelegate databaseDelegate);
 
     void insertDetailsMealToPlan(String dayID, DatabaseDelegate databaseDelegate);
@@ -53,6 +55,8 @@ public interface MealsRepositoryInterface {
     void getAllPlansByDayId(String dayID, PlanDelegate planDelegate);
 
     void getAllPlans(PlanDelegate planDelegate);
+
+    Completable removePlan(PlanModel planModel);
 
     void addMealToFavDB(Meal meal, DatabaseDelegate databaseDelegate);
 

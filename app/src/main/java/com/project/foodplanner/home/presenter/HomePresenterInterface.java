@@ -22,5 +22,7 @@ public interface HomePresenterInterface {
 
     void addMealToPlan(Meal meal, String dayId);
 
+    void removePlan(String dayID, String mealID);
+
     FirebaseUser getCurrentUser();
 }

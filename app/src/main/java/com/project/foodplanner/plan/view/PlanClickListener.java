@@ -6,4 +6,6 @@ public interface PlanClickListener {
     void onCategoryTxtClicked(String category);
 
     void onCountryTxtClicked(String country);
+
+    void onRemovePlanClicked(String mealId);
 }

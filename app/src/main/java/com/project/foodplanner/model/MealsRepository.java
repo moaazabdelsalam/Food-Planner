@@ -2,8 +2,6 @@ package com.project.foodplanner.model;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
-
 import com.project.foodplanner.database.PlanDelegate;
 import com.project.foodplanner.network.DatabaseDelegate;
 import com.project.foodplanner.database.LocalSource;
@@ -25,7 +23,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MealsRepository implements MealsRepositoryInterface {
     private static final String TAG = "TAG repository";
-    CloudRepoInterface cloudRepoInterface;
+    CloudRepoInterface cloudRepo;
     RemoteSource remoteSource;
     LocalSource localSource;
     private static MealsRepository instance = null;
@@ -34,7 +32,7 @@ public class MealsRepository implements MealsRepositoryInterface {
     private MealsRepository(RemoteSource remoteSource, LocalSource localSource) {
         this.remoteSource = remoteSource;
         this.localSource = localSource;
-        this.cloudRepoInterface = CloudRepo.getInstance(this);
+        this.cloudRepo = CloudRepo.getInstance(this);
     }
 
     public static MealsRepository getInstance(RemoteSource remoteSource, LocalSource localSource) {
@@ -140,7 +138,7 @@ public class MealsRepository implements MealsRepositoryInterface {
         //Log.i(TAG, "todayMealFavoriteClick: " + cache.getTodayMealCache().getStrMeal());
         if (!cache.getTodayMealCache().isFavorite()) {
             //Log.i(TAG, "todayMealFavoriteClick: adding to favorite");
-            cache.getTodayMealCache().setUserID(cloudRepoInterface.getCurrentUser().getUid());
+            cache.getTodayMealCache().setUserID(cloudRepo.getCurrentUser().getUid());
             localSource.addMealToFav(cache.getTodayMealCache())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -156,7 +154,7 @@ public class MealsRepository implements MealsRepositoryInterface {
                     );
         } else {
             //Log.i(TAG, "todayMealFavoriteClick: removing from favorite");
-            cache.getTodayMealCache().setUserID(cloudRepoInterface.getCurrentUser().getUid());
+            cache.getTodayMealCache().setUserID(cloudRepo.getCurrentUser().getUid());
             localSource.removeMealFromFav(cache.getTodayMealCache())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -176,7 +174,7 @@ public class MealsRepository implements MealsRepositoryInterface {
     @Override
     public void detailsMealClick(DatabaseDelegate favoriteDelegate) {
         Meal meal = cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1);
-        meal.setUserID(cloudRepoInterface.getCurrentUser().getUid());
+        meal.setUserID(cloudRepo.getCurrentUser().getUid());
         if (!meal.isFavorite()) {
             //Log.i(TAG, "detailsMealClick: adding to favorite");
             localSource.addMealToFav(meal)
@@ -213,7 +211,7 @@ public class MealsRepository implements MealsRepositoryInterface {
     @Override
     public void todayMealAddToPlanClicked(String dayID, DatabaseDelegate databaseDelegate) {
         Meal meal = DummyCache.getInstance().getTodayMealCache();
-        meal.setUserID(cloudRepoInterface.getCurrentUser().getUid());
+        meal.setUserID(cloudRepo.getCurrentUser().getUid());
         //Log.i(TAG, "todayMealAddToPlanClicked: adding meal: " + meal.getStrMeal());
         insertPlan(
                 new PlanModel(
@@ -243,7 +241,7 @@ public class MealsRepository implements MealsRepositoryInterface {
     @Override
     public void getAllPlansOfDay(String dayID, PlanDelegate planDelegate) {
         Log.i(TAG, "getAllPlansOfDay: " + dayID);
-        localSource.getAllPlansById(cloudRepoInterface.getCurrentUser().getUid(), dayID)
+        localSource.getAllPlansById(cloudRepo.getCurrentUser().getUid(), dayID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -262,9 +260,16 @@ public class MealsRepository implements MealsRepositoryInterface {
     }
 
     @Override
+    public Flowable<List<PlanModel>> getAllPlansOfDay(String dayID) {
+        return localSource.getAllPlansById(cloudRepo.getCurrentUser().getUid(), dayID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
     public void insertPlan(PlanModel planModel, SimpleMeal simpleMeal, DatabaseDelegate databaseDelegate) {
         //Log.i(TAG, "insertPlan: inserting plan: " + planModel.getIdMeal());
-        planModel.setUserID(cloudRepoInterface.getCurrentUser().getUid());
+        planModel.setUserID(cloudRepo.getCurrentUser().getUid());
         insertMealToPlan(simpleMeal).subscribe(
                 () -> {
                     //Log.i(TAG, "insertMealToPlan: success" + simpleMeal.getStrMeal() + ", id: " + simpleMeal.getIdMeal());
@@ -286,7 +291,7 @@ public class MealsRepository implements MealsRepositoryInterface {
     @Override
     public void insertDetailsMealToPlan(String dayID, DatabaseDelegate databaseDelegate) {
         Meal meal = cache.getMealOnDetailsCache().get(cache.getMealOnDetailsCache().size() - 1);
-        meal.setUserID(cloudRepoInterface.getCurrentUser().getUid());
+        meal.setUserID(cloudRepo.getCurrentUser().getUid());
         insertPlan(
                 new PlanModel(
                         dayID,
@@ -314,7 +319,7 @@ public class MealsRepository implements MealsRepositoryInterface {
     @Override
     public void getAllPlansByDayId(String dayID, PlanDelegate planDelegate) {
         //Log.i(TAG, "getAllPlansByDayId: day: " + dayID);
-        Disposable disposable = localSource.getAllPlansById(cloudRepoInterface.getCurrentUser().getUid(), dayID)
+        Disposable disposable = localSource.getAllPlansById(cloudRepo.getCurrentUser().getUid(), dayID)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .delay(300, TimeUnit.MILLISECONDS)
@@ -337,7 +342,7 @@ public class MealsRepository implements MealsRepositoryInterface {
 
     @Override
     public void getAllPlans(PlanDelegate planDelegate) {
-        Disposable disposable = localSource.getAllPlans(cloudRepoInterface.getCurrentUser().getUid())
+        Disposable disposable = localSource.getAllPlans(cloudRepo.getCurrentUser().getUid())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -356,19 +361,26 @@ public class MealsRepository implements MealsRepositoryInterface {
     }
 
     @Override
+    public Completable removePlan(PlanModel planModel) {
+        return localSource.deletePlan(planModel)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    @Override
     public String sendTodayMealId() {
         return cache.getTodayMealCache().getIdMeal();
     }
 
     @Override
     public void addMealToFavDB(Meal meal, DatabaseDelegate databaseDelegate) {
-        meal.setUserID(cloudRepoInterface.getCurrentUser().getUid());
+        meal.setUserID(cloudRepo.getCurrentUser().getUid());
         localSource.addMealToFav(meal)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         () -> {
-                            cloudRepoInterface.addFavMealToRemoteDB(meal);
+                            cloudRepo.addFavMealToRemoteDB(meal);
                             databaseDelegate.onSuccess(meal.getStrMeal(), 1);
                         },
                         error -> {

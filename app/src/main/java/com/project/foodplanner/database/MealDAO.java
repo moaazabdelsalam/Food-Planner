@@ -36,7 +36,7 @@ public interface MealDAO {
     Completable insertMealToPlan(SimpleMeal simpleMeal);
 
     @Delete
-    Completable deleteMealFormPlan(SimpleMeal simpleMeal);
+    Completable deletePlan(PlanModel planModel);
 
     @Query("SELECT * FROM plan_meals WHERE idMeal = :id")
     Single<SimpleMeal> getPlanMealWithID(String id);

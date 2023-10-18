@@ -1,6 +1,7 @@
 package com.project.foodplanner.database;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -74,5 +75,11 @@ public class ConcreteLocalSource implements LocalSource {
     @Override
     public Flowable<List<PlanModel>> getAllPlans(String userID) {
         return mealDAO.getAllPlans(userID);
+    }
+
+    @Override
+    public Completable deletePlan(PlanModel planModel) {
+        //Log.i("TAG concrete local source", "deletePlan: of day " + planModel.getDayID() + " ,meal " + planModel.getIdMeal());
+        return mealDAO.deletePlan(planModel);
     }
 }

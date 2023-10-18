@@ -51,6 +51,7 @@ public class PlanRecyclerViewAdapter extends RecyclerView.Adapter<PlanRecyclerVi
         holder.planMealImgView.setOnClickListener(view -> planClickListener.onMealImgClick(meal.getIdMeal()));
         holder.planMealCountry.setOnClickListener(view -> planClickListener.onCountryTxtClicked(meal.getStrArea()));
         holder.planMealCategory.setOnClickListener(view -> planClickListener.onCategoryTxtClicked(meal.getStrCategory()));
+        holder.removeFromPlan.setOnClickListener(view -> planClickListener.onRemovePlanClicked(meal.getIdMeal()));
     }
 
     @Override
@@ -72,6 +73,10 @@ public class PlanRecyclerViewAdapter extends RecyclerView.Adapter<PlanRecyclerVi
         }
     }
 
+    public void resetList() {
+        mealList.clear();
+    }
+
     public List<SimpleMeal> getMealList() {
         return mealList;
     }
@@ -79,6 +84,7 @@ public class PlanRecyclerViewAdapter extends RecyclerView.Adapter<PlanRecyclerVi
     class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView planMealImgView;
+        ImageView removeFromPlan;
         TextView planMealNameTxt;
         TextView planMealCategory;
         TextView planMealCountry;
@@ -87,6 +93,7 @@ public class PlanRecyclerViewAdapter extends RecyclerView.Adapter<PlanRecyclerVi
             super(itemView);
 
             planMealImgView = itemView.findViewById(R.id.planMealImgView);
+            removeFromPlan = itemView.findViewById(R.id.removeFromPlan);
             planMealNameTxt = itemView.findViewById(R.id.planMealNameTxt);
             planMealCategory = itemView.findViewById(R.id.planMealCategory);
             planMealCountry = itemView.findViewById(R.id.planMealCountry);

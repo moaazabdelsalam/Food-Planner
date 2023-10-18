@@ -19,4 +19,6 @@ public interface HomeViewInterface {
     void showCountryMeals(List<Meal> meals);
 
     void showNotLoggedInMessage();
+
+    void resetAdapterList(String dayID);
 }

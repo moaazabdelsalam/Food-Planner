@@ -42,6 +42,7 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
     PlanPagerAdapter adapter;
     PlanPresenterInterface presenter;
     Calendar calendar = Calendar.getInstance();
+    int dayOfMonth;
     View _view;
 
     @Override
@@ -71,7 +72,7 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
                 )
         );
 
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         adapterList = new ArrayList<>();
         ArrayList<String> tabName = getDates();
 
@@ -84,7 +85,7 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
         planPager.setAdapter(adapter);
         planPager.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
 
-        Log.i(TAG, "onViewCreated: day of month " + dayOfMonth);
+        //Log.i(TAG, "onViewCreated: day of month " + dayOfMonth);
         new TabLayoutMediator(tabLayout, planPager, (tab, position) -> {
             if (position + 1 == dayOfMonth)
                 tab.setText("Today");
@@ -102,7 +103,7 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 String dayID = String.valueOf(tab.getText().charAt(tab.getText().length() - 1));
-                Log.i(TAG, "onTabSelected: plans of day: " + dayID);
+                //Log.i(TAG, "onTabSelected: plans of day: " + dayID);
                 //getPlanOfDay(dayID);
             }
 
@@ -114,7 +115,7 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
                 String dayID = String.valueOf(tab.getText().charAt(tab.getText().length() - 1));
-                Log.i(TAG, "onTabReselected: plans of day: " + dayID);
+                //Log.i(TAG, "onTabReselected: plans of day: " + dayID);
             }
         });
 
@@ -157,8 +158,13 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
 
     @Override
     public void updateAdapterWithMeal(String tabID, SimpleMeal planSimpleMeal) {
-        Log.i(TAG, "updateAdapterWithMeal: tab: " + Integer.parseInt(tabID) + " with " + planSimpleMeal);
+        //Log.i(TAG, "updateAdapterWithMeal: tab: " + Integer.parseInt(tabID) + " with " + planSimpleMeal);
         adapterList.get(Integer.parseInt(tabID) - 1).addToList(planSimpleMeal);
+    }
+
+    @Override
+    public void resetAdapterList(String tabID) {
+        adapterList.get(Integer.parseInt(tabID) - 1).resetList();
     }
 
     @Override
@@ -184,5 +190,11 @@ public class PlanFragment extends Fragment implements PlanViewInterface, PlanLis
         PlanFragmentDirections.ActionPlanFragmentToFilterResultFragment action = PlanFragmentDirections.actionPlanFragmentToFilterResultFragment();
         action.setCountry(country);
         Navigation.findNavController(_view).navigate(action);
+    }
+
+    @Override
+    public void onRemovePlanClicked(String mealId) {
+        Log.i(TAG, "onRemovePlanClicked: " + mealId);
+        presenter.removePlan(String.valueOf(dayOfMonth), mealId);
     }
 }
